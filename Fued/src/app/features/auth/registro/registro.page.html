@@ -1,0 +1,89 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login" [text]="'volver' | t"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'registro_titulo' | t }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="agrupado">
+  <div class="ion-padding-horizontal ion-padding-top">
+    <ion-segment [value]="vm.rol()" (ionChange)="cambiarRol($event.detail.value)" [attr.aria-label]="'registro_tipo_cuenta' | t">
+      <ion-segment-button value="paciente">
+        <ion-label>{{ 'rol_paciente' | t }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="medico">
+        <ion-label>{{ 'rol_medico' | t }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div class="titulo-seccion">{{ 'registro_seccion_cuenta' | t }}</div>
+  <ion-list [inset]="true" lines="full">
+    <ion-item>
+      <ion-input type="email" inputmode="email" autocomplete="email" labelPlacement="stacked" [label]="'campo_email' | t"
+        [value]="vm.datos().email" (ionInput)="vm.actualizar('email', $event.detail.value)"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input type="password" autocomplete="new-password" labelPlacement="stacked" [label]="'campo_password' | t"
+        [helperText]="'registro_password_ayuda' | t" [value]="vm.datos().password" (ionInput)="vm.actualizar('password', $event.detail.value)">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+    </ion-item>
+  </ion-list>
+
+  <div class="titulo-seccion">{{ 'registro_seccion_personal' | t }}</div>
+  <ion-list [inset]="true" lines="full">
+    <ion-item>
+      <ion-input autocomplete="given-name" labelPlacement="stacked" [label]="'campo_nombre' | t"
+        [value]="vm.datos().nombre" (ionInput)="vm.actualizar('nombre', $event.detail.value)"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input autocomplete="family-name" labelPlacement="stacked" [label]="'campo_apellidos' | t"
+        [value]="vm.datos().apellidos" (ionInput)="vm.actualizar('apellidos', $event.detail.value)"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input type="tel" inputmode="tel" autocomplete="tel" labelPlacement="stacked" [label]="'campo_telefono' | t"
+        [placeholder]="'campo_telefono_placeholder' | t" [value]="vm.datos().telefono" (ionInput)="vm.actualizar('telefono', $event.detail.value)"></ion-input>
+    </ion-item>
+
+    @if (vm.rol() === 'paciente') {
+      <ion-item>
+        <ion-input type="date" labelPlacement="stacked" [label]="'campo_fecha_nacimiento' | t"
+          [value]="vm.datos().fechaNacimiento" (ionInput)="vm.actualizar('fechaNacimiento', $event.detail.value)"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input labelPlacement="stacked" [label]="'campo_curp' | t" [maxlength]="18" autocapitalize="characters"
+          [helperText]="'campo_opcional' | t" [value]="vm.datos().curp" (ionInput)="vm.actualizar('curp', $event.detail.value)"></ion-input>
+      </ion-item>
+    } @else {
+      <ion-item>
+        <ion-input inputmode="numeric" labelPlacement="stacked" [label]="'campo_cedula_profesional' | t" [maxlength]="20"
+          [value]="vm.datos().cedulaProfesional" (ionInput)="vm.actualizar('cedulaProfesional', $event.detail.value)"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input labelPlacement="stacked" [label]="'campo_especialidad' | t"
+          [value]="vm.datos().especialidad" (ionInput)="vm.actualizar('especialidad', $event.detail.value)"></ion-input>
+      </ion-item>
+    }
+  </ion-list>
+
+  @if (vm.rol() === 'medico') {
+    <ion-note class="ion-padding-horizontal">{{ 'registro_nota_medico' | t }}</ion-note>
+  }
+
+  @if (vm.error(); as error) {
+    <p class="ion-padding-horizontal" role="alert"><ion-note color="danger">{{ error }}</ion-note></p>
+  }
+
+  <div class="acciones-formulario">
+    <ion-button expand="block" [disabled]="!vm.puedeEnviar()" (click)="vm.registrar()">
+      @if (vm.enviando()) {
+        <ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner>
+      } @else {
+        {{ 'registro_boton' | t }}
+      }
+    </ion-button>
+  </div>
+</ion-content>

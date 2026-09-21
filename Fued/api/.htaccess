@@ -1,0 +1,9 @@
+# Apache: todas las peticiones pasan por index.php y el resto de archivos no se sirven.
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    RewriteCond %{REQUEST_URI} !index\.php$
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>

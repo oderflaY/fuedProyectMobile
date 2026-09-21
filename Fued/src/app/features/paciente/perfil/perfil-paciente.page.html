@@ -1,0 +1,120 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ 'tab_perfil' | t }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="agrupado">
+  @if (vm.cargando()) {
+    <div class="ion-text-center ion-padding"><ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner></div>
+  } @else if (vm.error(); as error) {
+    <div class="estado-vacio" role="alert">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p>{{ error }}</p>
+      <ion-button fill="outline" (click)="vm.cargar()">{{ 'reintentar' | t }}</ion-button>
+    </div>
+  } @else if (vm.expediente(); as exp) {
+    <ion-list [inset]="true">
+      <ion-item [button]="true" (click)="editarDatos()">
+        <div slot="start" class="avatar-grande" aria-hidden="true">
+          <div class="avatar-iniciales">{{ exp.datosPersonales.nombre + ' ' + exp.datosPersonales.apellidos | iniciales }}</div>
+        </div>
+        <ion-label>
+          <h2>{{ exp.datosPersonales.nombre }} {{ exp.datosPersonales.apellidos }}</h2>
+          <p>{{ vm.usuario()?.email }}</p>
+          <p>{{ exp.datosPersonales.telefono ?? ('sin_dato' | t) }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <div class="titulo-seccion">{{ 'perfil_datos_medicos' | t }}</div>
+    <ion-list [inset]="true" lines="full">
+      <ion-item>
+        <ion-icon slot="start" name="water-outline" color="danger" aria-hidden="true"></ion-icon>
+        <ion-select
+          interface="action-sheet"
+          [label]="'perfil_tipo_sangre' | t"
+          [cancelText]="'cancelar' | t"
+          [placeholder]="'seleccionar' | t"
+          [value]="exp.perfilEmergenciaReducido.tipoSangre"
+          (ionChange)="cambiarTipoSangre($event.detail.value)"
+        >
+          @for (tipo of tiposSangre; track tipo) {
+            <ion-select-option [value]="tipo">{{ tipo }}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-icon slot="start" name="heart-outline" color="success" aria-hidden="true"></ion-icon>
+        <ion-toggle [checked]="exp.perfilEmergenciaReducido.donadorOrganos" (ionChange)="cambiarDonador($event.detail.checked)">
+          {{ 'perfil_donador' | t }}
+        </ion-toggle>
+      </ion-item>
+      <ion-item [button]="true" (click)="editarIdentificaciones()">
+        <ion-icon slot="start" name="card" color="medium" aria-hidden="true"></ion-icon>
+        <ion-label>
+          <h3>{{ 'perfil_identificaciones' | t }}</h3>
+          <p>{{ 'campo_curp' | t }}: {{ exp.identificaciones.curp ?? ('sin_dato' | t) }}</p>
+          <p>{{ 'campo_nss' | t }}: {{ exp.identificaciones.nss ?? ('sin_dato' | t) }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <div class="titulo-seccion">
+      <span>{{ 'perfil_mis_medicos' | t }}</span>
+      <ion-button fill="clear" size="small" (click)="autorizarMedico()">{{ 'perfil_autorizar' | t }}</ion-button>
+    </div>
+    <ion-list [inset]="true" lines="full">
+      @for (medico of vm.medicosAutorizados(); track medico.idMedico) {
+        <ion-item>
+          <ion-icon slot="start" name="shield-checkmark-outline" color="success" aria-hidden="true"></ion-icon>
+          <ion-label>
+            <h3>{{ medico.nombreCompleto }}</h3>
+            <p>{{ medico.especialidad }}</p>
+            <p>{{ 'acceso_' + medico.nivelAcceso | t }}</p>
+          </ion-label>
+          <ion-button slot="end" fill="clear" color="danger" (click)="revocar(medico)"
+            [attr.aria-label]="'perfil_revocar_a' | t: { nombre: medico.nombreCompleto }">
+            {{ 'perfil_revocar' | t }}
+          </ion-button>
+        </ion-item>
+      } @empty {
+        <ion-item><ion-label class="texto-secundario ion-text-wrap">{{ 'perfil_sin_medicos' | t }}</ion-label></ion-item>
+      }
+    </ion-list>
+    <p class="texto-secundario ion-padding-horizontal nota">{{ 'perfil_accesos_explicacion' | t }}</p>
+
+    <div class="titulo-seccion">
+      <span>{{ 'perfil_tarjetas' | t }}</span>
+      <ion-button fill="clear" size="small" (click)="asignarTarjeta()">{{ 'agregar' | t }}</ion-button>
+    </div>
+    <ion-list [inset]="true" lines="full">
+      @for (tarjeta of vm.tarjetas(); track tarjeta.idTarjetaRfid) {
+        <ion-item>
+          <ion-icon slot="start" name="card" [color]="tarjeta.estado === 'activa' ? 'primary' : 'medium'" aria-hidden="true"></ion-icon>
+          <ion-label>
+            <h3>{{ tarjeta.idTarjetaRfid }}</h3>
+            <p>{{ 'perfil_asignada' | t: { fecha: (tarjeta.fechaAsignacion | fecha: 'fecha') } }}</p>
+            @if (tarjeta.fechaRevocacion) {
+              <p>{{ 'perfil_revocada' | t: { fecha: (tarjeta.fechaRevocacion | fecha: 'fecha') } }}</p>
+            }
+          </ion-label>
+          @if (tarjeta.estado === 'activa') {
+            <ion-button slot="end" fill="clear" color="danger" (click)="reportarExtraviada(tarjeta.idTarjetaRfid)">{{ 'perfil_reportar' | t }}</ion-button>
+          } @else {
+            <ion-badge slot="end" color="medium">{{ 'tarjeta_' + tarjeta.estado | t }}</ion-badge>
+          }
+        </ion-item>
+      } @empty {
+        <ion-item><ion-label class="texto-secundario">{{ 'perfil_sin_tarjetas' | t }}</ion-label></ion-item>
+      }
+    </ion-list>
+
+    <ion-list [inset]="true" class="ultima-lista">
+      <ion-item [button]="true" [detail]="false" (click)="cerrarSesion()">
+        <ion-icon slot="start" name="log-out-outline" color="danger" aria-hidden="true"></ion-icon>
+        <ion-label color="danger">{{ 'cerrar_sesion' | t }}</ion-label>
+      </ion-item>
+    </ion-list>
+  }
+</ion-content>

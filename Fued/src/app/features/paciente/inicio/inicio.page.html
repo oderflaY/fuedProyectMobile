@@ -1,0 +1,144 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ 'inicio_titulo' | t }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="agrupado">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{ 'inicio_saludo' | t: { nombre: vm.usuario()?.nombre } }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (vm.error(); as error) {
+    <div class="estado-vacio" role="alert">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p>{{ error }}</p>
+      <ion-button fill="outline" (click)="vm.cargar()">{{ 'reintentar' | t }}</ion-button>
+    </div>
+  }
+
+  <!-- Próxima cita -->
+  <div class="titulo-seccion">
+    <span>{{ 'inicio_proxima_cita' | t }}</span>
+    <ion-button fill="clear" size="small" (click)="agendarCita()">{{ 'inicio_agendar' | t }}</ion-button>
+  </div>
+  @if (vm.cargando()) {
+    <ion-list [inset]="true"><ion-item><ion-skeleton-text [animated]="true"></ion-skeleton-text></ion-item></ion-list>
+  } @else if (vm.proximaCita(); as cita) {
+    <ion-list [inset]="true">
+      <app-cita-item [cita]="cita" rol="paciente" (click)="verCitas()"></app-cita-item>
+      <ion-item [button]="true" [detail]="true" (click)="escribirAlMedico(cita.idMedico)">
+        <ion-icon slot="start" name="chatbubbles-outline" color="primary" aria-hidden="true"></ion-icon>
+        <ion-label>{{ 'inicio_escribir_medico' | t: { nombre: cita.nombreMedico } }}</ion-label>
+      </ion-item>
+    </ion-list>
+  } @else {
+    <ion-list [inset]="true">
+      <ion-item button [detail]="true" (click)="agendarCita()">
+        <ion-icon slot="start" name="calendar-outline" color="primary" aria-hidden="true"></ion-icon>
+        <ion-label>{{ 'inicio_sin_citas' | t }}</ion-label>
+      </ion-item>
+    </ion-list>
+  }
+
+  <!-- Medicamentos del día -->
+  <div class="titulo-seccion">
+    <span>{{ 'inicio_medicamentos' | t }}</span>
+  </div>
+  <div class="navegador-dia">
+    <ion-button fill="clear" size="small" (click)="vm.cambiarDia(-1)" [attr.aria-label]="'dia_anterior' | t">
+      <ion-icon slot="icon-only" name="chevron-back" aria-hidden="true"></ion-icon>
+    </ion-button>
+    <div class="dia" aria-live="polite">
+      <strong>{{ vm.esHoy() ? ('hoy' | t) : (vm.fecha() | fecha: 'fechaLarga') }}</strong>
+      @if (vm.agenda(); as agenda) {
+        <span class="texto-secundario">
+          {{ 'inicio_progreso' | t: { hechas: agenda.tomas.length - agenda.resumen.pendientes, total: agenda.tomas.length } }}
+        </span>
+      }
+    </div>
+    <ion-button fill="clear" size="small" (click)="vm.cambiarDia(1)" [attr.aria-label]="'dia_siguiente' | t">
+      <ion-icon slot="icon-only" name="chevron-forward" aria-hidden="true"></ion-icon>
+    </ion-button>
+  </div>
+  <ion-progress-bar class="progreso" [value]="vm.progreso()" [attr.aria-label]="'inicio_progreso_accesible' | t: { porcentaje: (vm.progreso() * 100).toFixed(0) }"></ion-progress-bar>
+
+  @if (vm.agenda(); as agenda) {
+    @if (agenda.tomas.length === 0) {
+      <div class="estado-vacio">
+        <ion-icon name="medkit-outline" aria-hidden="true"></ion-icon>
+        <p>{{ 'inicio_sin_medicamentos' | t }}</p>
+      </div>
+    } @else {
+      <ion-list [inset]="true" lines="full">
+        @for (toma of agenda.tomas; track claveToma(toma)) {
+          <ion-item [button]="true" [detail]="false" (click)="opcionesToma(toma)">
+            <div slot="start" class="hora">{{ toma.horario }}</div>
+            <ion-label>
+              <h3>{{ toma.medicamento }}</h3>
+              <p>{{ toma.dosis }} - {{ toma.viaAdministracion }}</p>
+              @if (toma.registro?.sintomasAsociados; as sintomas) {
+                <p><ion-icon name="pulse-outline" aria-hidden="true"></ion-icon> {{ sintomas }}</p>
+              }
+              @if (toma.inventarioBajo) {
+                <p><ion-text color="warning">{{ 'inicio_quedan' | t: { cantidad: toma.inventario.cantidadRestante } }}</ion-text></p>
+              }
+            </ion-label>
+            @if (vm.tomaEnProceso() === claveToma(toma)) {
+              <ion-spinner slot="end" name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner>
+            } @else if (toma.registro; as registro) {
+              <ion-badge slot="end" [color]="colorEstado[registro.estado]">{{ 'toma_estado_' + registro.estado | t }}</ion-badge>
+            } @else {
+              <ion-buttons slot="end">
+                <ion-button color="success" (click)="$event.stopPropagation(); vm.marcarToma(toma, 'tomado')"
+                  [attr.aria-label]="'inicio_marcar_tomado_de' | t: { medicamento: toma.medicamento, hora: toma.horario }">
+                  <ion-icon slot="icon-only" name="checkmark-circle-outline" aria-hidden="true"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            }
+          </ion-item>
+        }
+      </ion-list>
+    }
+  }
+
+  <!-- Signos vitales -->
+  <div class="titulo-seccion">
+    <span>{{ 'inicio_signos_vitales' | t }}</span>
+    <ion-button fill="clear" size="small" (click)="registrarMetrica()">{{ 'inicio_registrar' | t }}</ion-button>
+  </div>
+  @if (vm.ultimaMetrica(); as m) {
+    <div class="metricas-grid">
+      <div class="metrica">
+        <div class="etiqueta"><ion-icon name="heart-outline" aria-hidden="true"></ion-icon>{{ 'metrica_presion' | t }}</div>
+        <div class="valor">{{ m.presionArterial ?? '--' }} <span class="unidad">{{ 'unidad_mmhg' | t }}</span></div>
+      </div>
+      <div class="metrica">
+        <div class="etiqueta"><ion-icon name="pulse-outline" aria-hidden="true"></ion-icon>{{ 'metrica_frecuencia' | t }}</div>
+        <div class="valor">{{ m.frecuenciaCardiaca ?? '--' }} <span class="unidad">{{ 'unidad_lpm' | t }}</span></div>
+      </div>
+      <div class="metrica">
+        <div class="etiqueta"><ion-icon name="water-outline" aria-hidden="true"></ion-icon>{{ 'metrica_glucosa' | t }}</div>
+        <div class="valor">{{ m.glucosaMgDl ?? '--' }} <span class="unidad">{{ 'unidad_mgdl' | t }}</span></div>
+      </div>
+      <div class="metrica">
+        <div class="etiqueta"><ion-icon name="fitness-outline" aria-hidden="true"></ion-icon>{{ 'metrica_peso' | t }}</div>
+        <div class="valor">{{ m.pesoKg ?? '--' }} <span class="unidad">{{ 'unidad_kg' | t }}</span></div>
+      </div>
+    </div>
+    <p class="texto-secundario ion-padding-horizontal nota-fecha">{{ 'inicio_ultima_medicion' | t: { fecha: (m.fechaToma | fecha: 'fechaHora') } }}</p>
+  } @else if (!vm.cargando()) {
+    <ion-list [inset]="true">
+      <ion-item button [detail]="true" (click)="registrarMetrica()">
+        <ion-icon slot="start" name="heart-outline" color="primary" aria-hidden="true"></ion-icon>
+        <ion-label>{{ 'inicio_sin_metricas' | t }}</ion-label>
+      </ion-item>
+    </ion-list>
+  }
+</ion-content>

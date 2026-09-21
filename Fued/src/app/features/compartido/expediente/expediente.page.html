@@ -1,0 +1,316 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    @if (vm.esMedico()) {
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/medico/pacientes" [text]="'volver' | t"></ion-back-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-button (click)="abrirChat()" [attr.aria-label]="'expediente_enviar_mensaje' | t">
+          <ion-icon slot="icon-only" name="chatbubbles-outline" aria-hidden="true"></ion-icon>
+        </ion-button>
+        <ion-button (click)="agendarCita()" [attr.aria-label]="'cita_nueva_titulo' | t">
+          <ion-icon slot="icon-only" name="calendar-outline" aria-hidden="true"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    }
+    <ion-title>{{ vm.esMedico() ? vm.nombreCompleto() : ('tab_historial' | t) }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="agrupado">
+  <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (vm.cargando()) {
+    <div class="ion-text-center ion-padding"><ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner></div>
+  } @else if (vm.error(); as error) {
+    <div class="estado-vacio" role="alert">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p>{{ error }}</p>
+      <ion-button fill="outline" (click)="vm.cargar()">{{ 'reintentar' | t }}</ion-button>
+    </div>
+  } @else if (vm.expediente(); as exp) {
+    <!-- Resumen -->
+    <section class="resumen" [attr.aria-label]="'expediente_resumen' | t">
+      <h2>{{ vm.nombreCompleto() }}</h2>
+      <p class="texto-secundario">
+        @if (vm.edad() !== null) {
+          {{ 'expediente_edad' | t: { edad: vm.edad() } }}
+        }
+        @if (exp.datosPersonales.genero) {
+          - {{ exp.datosPersonales.genero }}
+        }
+      </p>
+      <div class="chips">
+        <ion-chip color="danger">
+          <ion-icon name="water-outline" aria-hidden="true"></ion-icon>
+          <ion-label>{{ 'expediente_tipo_sangre' | t: { tipo: exp.perfilEmergenciaReducido.tipoSangre ?? ('sin_dato' | t) } }}</ion-label>
+        </ion-chip>
+        @if (exp.perfilEmergenciaReducido.donadorOrganos) {
+          <ion-chip color="success">
+            <ion-icon name="heart-outline" aria-hidden="true"></ion-icon>
+            <ion-label>{{ 'expediente_donador' | t }}</ion-label>
+          </ion-chip>
+        }
+        @if (vm.acceso() === 'lectura') {
+          <ion-chip color="medium">
+            <ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>
+            <ion-label>{{ 'expediente_solo_lectura' | t }}</ion-label>
+          </ion-chip>
+        }
+      </div>
+    </section>
+
+    <!-- Perfil de emergencia -->
+    <div class="titulo-seccion">
+      <span>{{ 'expediente_alergias' | t }}</span>
+      @if (vm.puedeEscribir()) {
+        <ion-button fill="clear" size="small" (click)="agregar('alergias')">{{ 'agregar' | t }}</ion-button>
+      }
+    </div>
+    <ion-list [inset]="true" lines="full">
+      @for (alergia of exp.perfilEmergenciaReducido.alergias; track alergia.id) {
+        <ion-item>
+          <ion-icon slot="start" name="alert-circle" color="danger" aria-hidden="true"></ion-icon>
+          <ion-label>
+            <h3>{{ alergia.alergeno }}</h3>
+            <p>{{ alergia.severidad }}{{ alergia.reaccion ? ' - ' + alergia.reaccion : '' }}</p>
+          </ion-label>
+          @if (vm.puedeEscribir()) {
+            <ion-button slot="end" fill="clear" color="medium" (click)="eliminar('alergias', alergia.id, alergia.alergeno)"
+              [attr.aria-label]="'eliminar_elemento' | t: { elemento: alergia.alergeno }">
+              <ion-icon slot="icon-only" name="trash-outline" aria-hidden="true"></ion-icon>
+            </ion-button>
+          }
+        </ion-item>
+      } @empty {
+        <ion-item><ion-label class="texto-secundario">{{ 'expediente_sin_alergias' | t }}</ion-label></ion-item>
+      }
+    </ion-list>
+
+    <div class="titulo-seccion">
+      <span>{{ 'expediente_condiciones' | t }}</span>
+      @if (vm.puedeEscribir()) {
+        <ion-button fill="clear" size="small" (click)="agregar('condiciones')">{{ 'agregar' | t }}</ion-button>
+      }
+    </div>
+    <ion-list [inset]="true" lines="full">
+      @for (condicion of vm.condiciones(); track condicion.id) {
+        <ion-item>
+          <ion-label>{{ condicion.descripcion }}</ion-label>
+          @if (vm.puedeEscribir()) {
+            <ion-button slot="end" fill="clear" color="medium" (click)="eliminar('condiciones', condicion.id, condicion.descripcion)"
+              [attr.aria-label]="'eliminar_elemento' | t: { elemento: condicion.descripcion }">
+              <ion-icon slot="icon-only" name="trash-outline" aria-hidden="true"></ion-icon>
+            </ion-button>
+          }
+        </ion-item>
+      } @empty {
+        <ion-item><ion-label class="texto-secundario">{{ 'sin_registros' | t }}</ion-label></ion-item>
+      }
+    </ion-list>
+
+    <div class="titulo-seccion">
+      <span>{{ 'expediente_rescate' | t }}</span>
+      @if (vm.puedeEscribir()) {
+        <ion-button fill="clear" size="small" (click)="agregar('medicacion-rescate')">{{ 'agregar' | t }}</ion-button>
+      }
+    </div>
+    <ion-list [inset]="true" lines="full">
+      @for (item of vm.medicacionRescate(); track item.id) {
+        <ion-item>
+          <ion-icon slot="start" name="medical-outline" color="warning" aria-hidden="true"></ion-icon>
+          <ion-label class="ion-text-wrap">{{ item.descripcion }}</ion-label>
+          @if (vm.puedeEscribir()) {
+            <ion-button slot="end" fill="clear" color="medium" (click)="eliminar('medicacion-rescate', item.id, item.descripcion)"
+              [attr.aria-label]="'eliminar_elemento' | t: { elemento: item.descripcion }">
+              <ion-icon slot="icon-only" name="trash-outline" aria-hidden="true"></ion-icon>
+            </ion-button>
+          }
+        </ion-item>
+      } @empty {
+        <ion-item><ion-label class="texto-secundario">{{ 'sin_registros' | t }}</ion-label></ion-item>
+      }
+    </ion-list>
+
+    <!-- Tratamientos -->
+    <div class="titulo-seccion">
+      <span>{{ 'expediente_tratamientos' | t }}</span>
+      @if (vm.puedeEscribir()) {
+        <ion-button fill="clear" size="small" (click)="nuevoTratamiento()">{{ 'agregar' | t }}</ion-button>
+      }
+    </div>
+    <ion-list [inset]="true" lines="full">
+      @for (trt of exp.tratamientosActivos; track trt.idTratamiento) {
+        <ion-item [button]="vm.puedeEscribir()" [detail]="false" (click)="opcionesTratamiento(trt)">
+          <ion-icon slot="start" name="medkit-outline" color="primary" aria-hidden="true"></ion-icon>
+          <ion-label>
+            <h3>{{ trt.medicamento }} {{ trt.dosis }}</h3>
+            <p>{{ 'tratamiento_resumen' | t: { horas: trt.frecuenciaHoras, horarios: trt.horariosSugeridos.join(', ') } }}</p>
+            <p>
+              {{ trt.viaAdministracion }}
+              @if (trt.fechaFin) {
+                - {{ 'tratamiento_hasta' | t: { fecha: (trt.fechaFin | fecha: 'fecha') } }}
+              }
+            </p>
+          </ion-label>
+          <ion-note slot="end" [color]="trt.inventario.cantidadRestante <= trt.inventario.umbralAlerta ? 'warning' : 'medium'">
+            {{ 'tratamiento_restantes' | t: { cantidad: trt.inventario.cantidadRestante } }}
+          </ion-note>
+        </ion-item>
+      } @empty {
+        <ion-item><ion-label class="texto-secundario">{{ 'expediente_sin_tratamientos' | t }}</ion-label></ion-item>
+      }
+    </ion-list>
+
+    <!-- Adherencia -->
+    <div class="titulo-seccion">{{ 'expediente_adherencia' | t }}</div>
+    @if (vm.adherencia(); as adh) {
+      <div class="metricas-grid">
+        <div class="metrica">
+          <div class="etiqueta">{{ 'adherencia_cumplimiento' | t }}</div>
+          <div class="valor">
+            {{ adh.resumen.porcentajeCumplimiento ?? '--' }}<span class="unidad">%</span>
+          </div>
+        </div>
+        <div class="metrica">
+          <div class="etiqueta">{{ 'adherencia_detalle' | t }}</div>
+          <div class="detalle-adherencia">
+            <span>{{ 'adherencia_tomadas' | t: { n: adh.resumen.tomadas } }}</span>
+            <span>{{ 'adherencia_tarde' | t: { n: adh.resumen.tomadasTarde } }}</span>
+            <span>{{ 'adherencia_omitidas' | t: { n: adh.resumen.omitidas } }}</span>
+          </div>
+        </div>
+      </div>
+      <ion-list [inset]="true" lines="full">
+        @for (registro of adh.registros.slice(0, 8); track registro.idToma) {
+          <ion-item>
+            <ion-label>
+              <h3>{{ registro.medicamento }}</h3>
+              <p>{{ registro.fechaHoraProgramada | fecha: 'fechaHora' }}</p>
+              @if (registro.sintomasAsociados) {
+                <p><ion-icon name="pulse-outline" aria-hidden="true"></ion-icon> {{ registro.sintomasAsociados }}</p>
+              }
+            </ion-label>
+            <ion-badge slot="end" [color]="colorToma[registro.estado]">{{ 'toma_estado_' + registro.estado | t }}</ion-badge>
+          </ion-item>
+        } @empty {
+          <ion-item><ion-label class="texto-secundario">{{ 'sin_registros' | t }}</ion-label></ion-item>
+        }
+      </ion-list>
+    }
+
+    <!-- Signos vitales -->
+    <div class="titulo-seccion">
+      <span>{{ 'inicio_signos_vitales' | t }}</span>
+      @if (vm.puedeEscribir()) {
+        <ion-button fill="clear" size="small" (click)="registrarMetrica()">{{ 'agregar' | t }}</ion-button>
+      }
+    </div>
+    <ion-list [inset]="true" lines="full">
+      @for (m of vm.metricas(); track m.idMetrica) {
+        <ion-item>
+          <ion-label>
+            <h3>{{ m.fechaToma | fecha: 'fechaHora' }}</h3>
+            <p class="valores-metrica">
+              @if (m.presionArterial) {
+                <span>{{ m.presionArterial }} {{ 'unidad_mmhg' | t }}</span>
+              }
+              @if (m.frecuenciaCardiaca) {
+                <span>{{ m.frecuenciaCardiaca }} {{ 'unidad_lpm' | t }}</span>
+              }
+              @if (m.glucosaMgDl) {
+                <span>{{ m.glucosaMgDl }} {{ 'unidad_mgdl' | t }}</span>
+              }
+              @if (m.pesoKg) {
+                <span>{{ m.pesoKg }} {{ 'unidad_kg' | t }}</span>
+              }
+              @if (m.imc) {
+                <span>{{ 'metrica_imc' | t: { imc: m.imc } }}</span>
+              }
+              @if (m.temperaturaC) {
+                <span>{{ m.temperaturaC }} {{ 'unidad_celsius' | t }}</span>
+              }
+            </p>
+            @if (m.notas) {
+              <p>{{ m.notas }}</p>
+            }
+          </ion-label>
+        </ion-item>
+      } @empty {
+        <ion-item><ion-label class="texto-secundario">{{ 'inicio_sin_metricas' | t }}</ion-label></ion-item>
+      }
+    </ion-list>
+
+    <!-- Historial clínico -->
+    <div class="titulo-seccion">
+      <span>{{ 'expediente_cirugias' | t }}</span>
+      @if (vm.puedeEscribir()) {
+        <ion-button fill="clear" size="small" (click)="agregar('cirugias')">{{ 'agregar' | t }}</ion-button>
+      }
+    </div>
+    <ion-list [inset]="true" lines="full">
+      @for (cirugia of exp.historialClinico.cirugias; track cirugia.id) {
+        <ion-item>
+          <ion-label>
+            <h3>{{ cirugia.procedimiento }}</h3>
+            <p>{{ cirugia.fecha | fecha: 'fecha' }}{{ cirugia.notas ? ' - ' + cirugia.notas : '' }}</p>
+          </ion-label>
+          @if (vm.puedeEscribir()) {
+            <ion-button slot="end" fill="clear" color="medium" (click)="eliminar('cirugias', cirugia.id, cirugia.procedimiento)"
+              [attr.aria-label]="'eliminar_elemento' | t: { elemento: cirugia.procedimiento }">
+              <ion-icon slot="icon-only" name="trash-outline" aria-hidden="true"></ion-icon>
+            </ion-button>
+          }
+        </ion-item>
+      } @empty {
+        <ion-item><ion-label class="texto-secundario">{{ 'sin_registros' | t }}</ion-label></ion-item>
+      }
+    </ion-list>
+
+    <div class="titulo-seccion">
+      <span>{{ 'expediente_contactos' | t }}</span>
+      @if (vm.puedeEscribir()) {
+        <ion-button fill="clear" size="small" (click)="agregar('contactos')">{{ 'agregar' | t }}</ion-button>
+      }
+    </div>
+    <ion-list [inset]="true" lines="full">
+      @for (contacto of exp.contactosEmergencia; track contacto.id) {
+        <ion-item>
+          <ion-label>
+            <h3>{{ contacto.nombre }}</h3>
+            <p>{{ contacto.relacion }} - {{ contacto.telefono }}</p>
+          </ion-label>
+          <ion-button slot="end" fill="clear" [href]="'tel:' + contacto.telefono" [attr.aria-label]="'llamar_a' | t: { nombre: contacto.nombre }">
+            <ion-icon slot="icon-only" name="call-outline" aria-hidden="true"></ion-icon>
+          </ion-button>
+          @if (vm.puedeEscribir()) {
+            <ion-button slot="end" fill="clear" color="medium" (click)="eliminar('contactos', contacto.id, contacto.nombre)"
+              [attr.aria-label]="'eliminar_elemento' | t: { elemento: contacto.nombre }">
+              <ion-icon slot="icon-only" name="trash-outline" aria-hidden="true"></ion-icon>
+            </ion-button>
+          }
+        </ion-item>
+      } @empty {
+        <ion-item><ion-label class="texto-secundario">{{ 'sin_registros' | t }}</ion-label></ion-item>
+      }
+    </ion-list>
+
+    <div class="titulo-seccion">{{ 'expediente_medicos_acceso' | t }}</div>
+    <ion-list [inset]="true" lines="full" class="ultima-lista">
+      @for (medico of exp.controlAccesos.medicosAutorizados; track medico.idMedico) {
+        <ion-item>
+          <ion-icon slot="start" name="shield-checkmark-outline" color="success" aria-hidden="true"></ion-icon>
+          <ion-label>
+            <h3>{{ medico.nombreCompleto }}</h3>
+            <p>{{ medico.especialidad }}</p>
+          </ion-label>
+          <ion-note slot="end">{{ 'acceso_' + medico.nivelAcceso | t }}</ion-note>
+        </ion-item>
+      } @empty {
+        <ion-item><ion-label class="texto-secundario">{{ 'sin_registros' | t }}</ion-label></ion-item>
+      }
+    </ion-list>
+  }
+</ion-content>

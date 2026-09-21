@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ (vm.rol() === 'medico' ? 'tab_agenda' : 'tab_citas') | t }}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [value]="vm.filtro()" (ionChange)="cambiarFiltro($event.detail.value)" [attr.aria-label]="'citas_filtro' | t">
+      @if (vm.rol() === 'medico') {
+        <ion-segment-button value="pendientes">
+          <ion-label>
+            {{ 'citas_pendientes' | t }}
+            @if (vm.totalPendientes() > 0) {
+              <ion-badge color="warning">{{ vm.totalPendientes() }}</ion-badge>
+            }
+          </ion-label>
+        </ion-segment-button>
+      }
+      <ion-segment-button value="proximas">
+        <ion-label>{{ 'citas_proximas' | t }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="historial">
+        <ion-label>{{ 'citas_historial' | t }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="agrupado">
+  <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (vm.cargando()) {
+    <div class="ion-text-center ion-padding"><ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner></div>
+  } @else if (vm.error(); as error) {
+    <div class="estado-vacio" role="alert">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p>{{ error }}</p>
+      <ion-button fill="outline" (click)="vm.cargar()">{{ 'reintentar' | t }}</ion-button>
+    </div>
+  } @else if (vm.visibles().length === 0) {
+    <div class="estado-vacio">
+      <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>
+      <p>{{ 'citas_vacio_' + vm.filtro() | t }}</p>
+    </div>
+  } @else {
+    <ion-list [inset]="true" lines="full">
+      @for (cita of vm.visibles(); track cita.idCita) {
+        <app-cita-item [cita]="cita" [rol]="vm.rol() ?? 'paciente'" (click)="opciones(cita)"></app-cita-item>
+      }
+    </ion-list>
+  }
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="nuevaCita()" [attr.aria-label]="'cita_nueva_titulo' | t">
+      <ion-icon name="add-outline" aria-hidden="true"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

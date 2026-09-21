@@ -1,0 +1,33 @@
+.resumen {
+  text-align: center;
+  padding: 1.5rem 1rem 0.5rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0.25rem 0 0.75rem;
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.detalle-adherencia {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8125rem;
+  margin-top: 0.25rem;
+}
+
+.valores-metrica {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+}

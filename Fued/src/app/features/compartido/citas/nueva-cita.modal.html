@@ -1,0 +1,93 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancelar()">{{ 'cancelar' | t }}</ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'cita_nueva_titulo' | t }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [strong]="true" [disabled]="!vm.puedeGuardar()" (click)="guardar()">
+        @if (vm.guardando()) {
+          <ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner>
+        } @else {
+          {{ 'cita_confirmar' | t }}
+        }
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="agrupado">
+  <ion-list [inset]="true">
+    <ion-item>
+      <ion-select
+        interface="action-sheet"
+        labelPlacement="stacked"
+        [label]="(vm.rol() === 'paciente' ? 'cita_medico' : 'cita_paciente') | t"
+        [placeholder]="'seleccionar' | t"
+        [cancelText]="'cancelar' | t"
+        [value]="vm.seleccion()"
+        (ionChange)="vm.elegir($event.detail.value)"
+      >
+        @for (opcion of vm.opciones(); track opcion.id) {
+          <ion-select-option [value]="opcion.id">
+            {{ opcion.nombre }}{{ opcion.detalle ? ' - ' + opcion.detalle : '' }}
+          </ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+  <div class="titulo-seccion">{{ 'cita_fecha' | t }}</div>
+  <ion-list [inset]="true">
+    <ion-datetime
+      presentation="date"
+      [locale]="locale"
+      [firstDayOfWeek]="1"
+      [min]="vm.hoy"
+      [value]="vm.fecha()"
+      (ionChange)="cambiarFecha($event.detail.value)"
+    ></ion-datetime>
+  </ion-list>
+
+  <div class="titulo-seccion">{{ 'cita_horario' | t }}</div>
+  @if (!vm.idMedico()) {
+    <p class="texto-secundario ion-padding-horizontal">{{ 'cita_elige_medico' | t }}</p>
+  } @else if (vm.cargandoHorarios()) {
+    <div class="ion-text-center ion-padding"><ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner></div>
+  } @else if (!vm.hayHorariosLibres()) {
+    <p class="texto-secundario ion-padding-horizontal">{{ 'cita_sin_horarios' | t }}</p>
+  } @else {
+    <div class="horarios-grid" role="radiogroup" [attr.aria-label]="'cita_horario' | t">
+      @for (horario of vm.disponibilidad()?.horarios ?? []; track horario.fechaHora) {
+        <ion-button
+          size="small"
+          role="radio"
+          [attr.aria-checked]="vm.horario() === horario.fechaHora"
+          [fill]="vm.horario() === horario.fechaHora ? 'solid' : 'outline'"
+          [disabled]="!horario.disponible"
+          (click)="vm.horario.set(horario.fechaHora)"
+        >
+          {{ horario.fechaHora | fecha: 'hora' }}
+        </ion-button>
+      }
+    </div>
+  }
+
+  <div class="titulo-seccion">{{ 'cita_motivo' | t }}</div>
+  <ion-list [inset]="true">
+    <ion-item>
+      <ion-textarea
+        [attr.aria-label]="'cita_motivo' | t"
+        [placeholder]="'cita_motivo_placeholder' | t"
+        [autoGrow]="true"
+        [maxlength]="500"
+        [value]="vm.motivo()"
+        (ionInput)="vm.motivo.set($event.detail.value ?? '')"
+      ></ion-textarea>
+    </ion-item>
+  </ion-list>
+
+  @if (vm.error(); as error) {
+    <p class="ion-padding-horizontal" role="alert"><ion-note color="danger">{{ error }}</ion-note></p>
+  }
+</ion-content>

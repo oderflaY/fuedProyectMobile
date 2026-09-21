@@ -1,0 +1,71 @@
+<ion-content class="agrupado">
+  <div class="pantalla-centrada">
+    <main class="contenedor">
+      <header class="marca">
+        <div class="logo" aria-hidden="true">
+          <ion-icon name="medkit"></ion-icon>
+        </div>
+        <h1>{{ 'app_nombre' | t }}</h1>
+        <p class="texto-secundario">{{ 'login_subtitulo' | t }}</p>
+      </header>
+
+      <ion-list [inset]="true" lines="full">
+        <ion-item>
+          <ion-input
+            type="email"
+            inputmode="email"
+            autocomplete="email"
+            labelPlacement="stacked"
+            [label]="'campo_email' | t"
+            [placeholder]="'campo_email_placeholder' | t"
+            [value]="vm.email()"
+            (ionInput)="vm.email.set($event.detail.value ?? '')"
+          ></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input
+            type="password"
+            autocomplete="current-password"
+            labelPlacement="stacked"
+            [label]="'campo_password' | t"
+            [value]="vm.password()"
+            (ionInput)="vm.password.set($event.detail.value ?? '')"
+            (keyup.enter)="vm.iniciarSesion()"
+          >
+            <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+          </ion-input>
+        </ion-item>
+      </ion-list>
+
+      @if (vm.error(); as error) {
+        <p class="error" role="alert">{{ error }}</p>
+      }
+
+      <div class="acciones">
+        <ion-button expand="block" [disabled]="!vm.puedeEnviar()" (click)="vm.iniciarSesion()">
+          @if (vm.enviando()) {
+            <ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner>
+          } @else {
+            {{ 'login_boton' | t }}
+          }
+        </ion-button>
+        <ion-button expand="block" fill="clear" routerLink="/registro">{{ 'login_crear_cuenta' | t }}</ion-button>
+      </div>
+
+      @if (vm.cuentasDemo.length > 0) {
+        <ion-list [inset]="true">
+          <ion-list-header>{{ 'login_cuentas_demo' | t }}</ion-list-header>
+          @for (cuenta of vm.cuentasDemo; track cuenta.email) {
+            <ion-item button [detail]="false" (click)="vm.usarCuentaDemo(cuenta)">
+              <ion-icon slot="start" aria-hidden="true" [name]="cuenta.rol === 'medico' ? 'medkit-outline' : 'person-outline'"></ion-icon>
+              <ion-label>
+                <h3>{{ cuenta.nombre }}</h3>
+                <p>{{ (cuenta.rol === 'medico' ? 'rol_medico' : 'rol_paciente') | t }} - {{ cuenta.email }}</p>
+              </ion-label>
+            </ion-item>
+          }
+        </ion-list>
+      }
+    </main>
+  </div>
+</ion-content>

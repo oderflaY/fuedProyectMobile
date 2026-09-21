@@ -1,0 +1,95 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ 'tab_perfil' | t }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="agrupado">
+  @if (vm.cargando()) {
+    <div class="ion-text-center ion-padding"><ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner></div>
+  } @else if (vm.error(); as error) {
+    <div class="estado-vacio" role="alert">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p>{{ error }}</p>
+      <ion-button fill="outline" (click)="vm.cargar()">{{ 'reintentar' | t }}</ion-button>
+    </div>
+  } @else if (vm.perfil(); as perfil) {
+    <ion-list [inset]="true">
+      <ion-item [button]="true" (click)="editarDatos()">
+        <div slot="start" class="avatar-grande" aria-hidden="true">
+          <div class="avatar-iniciales">{{ perfil.datosPersonales.nombre + ' ' + perfil.datosPersonales.apellidos | iniciales }}</div>
+        </div>
+        <ion-label>
+          <h2>{{ 'medico_titulo_nombre' | t: { nombre: perfil.datosPersonales.nombre + ' ' + perfil.datosPersonales.apellidos } }}</h2>
+          <p>{{ perfil.datosPersonales.email }}</p>
+          <p>{{ perfil.datosPersonales.telefono ?? ('sin_dato' | t) }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <div class="titulo-seccion">{{ 'perfil_credenciales' | t }}</div>
+    <ion-list [inset]="true" lines="full">
+      <ion-item [button]="true" (click)="editarCredenciales()">
+        <ion-icon slot="start" name="medkit-outline" color="primary" aria-hidden="true"></ion-icon>
+        <ion-label>
+          <h3>{{ perfil.credenciales.especialidad ?? ('sin_dato' | t) }}</h3>
+          <p>{{ perfil.credenciales.universidad ?? ('sin_dato' | t) }}</p>
+          <p>{{ 'medico_cedula' | t: { cedula: perfil.credenciales.cedulaProfesional } }}</p>
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-icon slot="start" name="shield-checkmark-outline" [color]="perfil.credenciales.estadoVerificacion === 'aprobado' ? 'success' : 'warning'" aria-hidden="true"></ion-icon>
+        <ion-label>{{ 'medico_verificacion' | t }}</ion-label>
+        <ion-badge slot="end" [color]="perfil.credenciales.estadoVerificacion === 'aprobado' ? 'success' : 'warning'">
+          {{ 'verificacion_' + perfil.credenciales.estadoVerificacion | t }}
+        </ion-badge>
+      </ion-item>
+    </ion-list>
+
+    <div class="titulo-seccion">{{ 'perfil_lugar_trabajo' | t }}</div>
+    <ion-list [inset]="true">
+      <ion-item [button]="true" (click)="editarLugarTrabajo()">
+        <ion-icon slot="start" name="home-outline" color="primary" aria-hidden="true"></ion-icon>
+        <ion-label>
+          <h3>{{ perfil.lugarTrabajo.nombreClinica ?? ('sin_dato' | t) }}</h3>
+          <p class="ion-text-wrap">{{ perfil.lugarTrabajo.direccion ?? ('sin_dato' | t) }}</p>
+          <p>{{ perfil.lugarTrabajo.telefonoRecepcion ?? ('sin_dato' | t) }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <div class="titulo-seccion">{{ 'medico_configuracion' | t }}</div>
+    <ion-list [inset]="true" lines="full">
+      <ion-item>
+        <ion-toggle [checked]="perfil.configuracionDashboard.alertasAdherenciaBaja"
+          (ionChange)="cambiarConfiguracion('alertasAdherenciaBaja', $event.detail.checked)">
+          {{ 'medico_alertas_adherencia' | t }}
+        </ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-toggle [checked]="perfil.configuracionDashboard.notificacionesUrgencia"
+          (ionChange)="cambiarConfiguracion('notificacionesUrgencia', $event.detail.checked)">
+          {{ 'medico_notificaciones_urgencia' | t }}
+        </ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-select interface="action-sheet" [label]="'medico_tema_dashboard' | t" [cancelText]="'cancelar' | t"
+          [value]="perfil.configuracionDashboard.temaVisual" (ionChange)="cambiarConfiguracion('temaVisual', $event.detail.value)">
+          <ion-select-option value="sistema">{{ 'tema_sistema' | t }}</ion-select-option>
+          <ion-select-option value="claro">{{ 'tema_claro' | t }}</ion-select-option>
+          <ion-select-option value="oscuro">{{ 'tema_oscuro' | t }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+    <p class="texto-secundario ion-padding-horizontal nota">
+      {{ 'medico_miembro_desde' | t: { fecha: (perfil.metadatos.fechaRegistro | fecha: 'fecha') } }}
+    </p>
+
+    <ion-list [inset]="true" class="ultima-lista">
+      <ion-item [button]="true" [detail]="false" (click)="cerrarSesion()">
+        <ion-icon slot="start" name="log-out-outline" color="danger" aria-hidden="true"></ion-icon>
+        <ion-label color="danger">{{ 'cerrar_sesion' | t }}</ion-label>
+      </ion-item>
+    </ion-list>
+  }
+</ion-content>

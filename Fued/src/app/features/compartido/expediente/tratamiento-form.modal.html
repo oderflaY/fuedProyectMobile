@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancelar()">{{ 'cancelar' | t }}</ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'tratamiento_nuevo' | t }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [strong]="true" [disabled]="!puedeGuardar()" (click)="guardar()">{{ 'guardar' | t }}</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="agrupado">
+  <ion-list [inset]="true" lines="full">
+    <ion-item>
+      <ion-input labelPlacement="stacked" [label]="'tratamiento_medicamento' | t" [maxlength]="120"
+        [value]="medicamento()" (ionInput)="medicamento.set($event.detail.value ?? '')"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input labelPlacement="stacked" [label]="'tratamiento_dosis' | t" [placeholder]="'tratamiento_dosis_placeholder' | t" [maxlength]="60"
+        [value]="dosis()" (ionInput)="dosis.set($event.detail.value ?? '')"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-select interface="action-sheet" labelPlacement="stacked" [label]="'tratamiento_via' | t" [cancelText]="'cancelar' | t"
+        [value]="via()" (ionChange)="via.set($event.detail.value)">
+        @for (opcion of vias; track opcion) {
+          <ion-select-option [value]="opcion">{{ 'via_' + opcion | t }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+  <div class="titulo-seccion">{{ 'tratamiento_horario' | t }}</div>
+  <ion-list [inset]="true" lines="full">
+    <ion-item>
+      <ion-select interface="action-sheet" labelPlacement="stacked" [label]="'tratamiento_frecuencia' | t" [cancelText]="'cancelar' | t"
+        [value]="frecuenciaHoras()" (ionChange)="cambiarFrecuencia($event.detail.value)">
+        @for (horas of frecuencias; track horas) {
+          <ion-select-option [value]="horas">{{ 'tratamiento_cada_horas' | t: { horas: horas } }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-input labelPlacement="stacked" [label]="'tratamiento_horarios' | t" [helperText]="'tratamiento_horarios_ayuda' | t"
+        [value]="horarios()" (ionInput)="horarios.set($event.detail.value ?? '')"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input type="date" labelPlacement="stacked" [label]="'tratamiento_inicio' | t"
+        [value]="fechaInicio()" (ionInput)="fechaInicio.set($event.detail.value ?? '')"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input type="date" labelPlacement="stacked" [label]="'tratamiento_fin' | t" [helperText]="'campo_opcional' | t"
+        [value]="fechaFin()" (ionInput)="fechaFin.set($event.detail.value ?? '')"></ion-input>
+    </ion-item>
+  </ion-list>
+  @if (!horariosValidos()) {
+    <ion-note color="warning" class="ion-padding-horizontal" role="alert">{{ 'tratamiento_horarios_invalidos' | t }}</ion-note>
+  }
+
+  <div class="titulo-seccion">{{ 'tratamiento_inventario' | t }}</div>
+  <ion-list [inset]="true" lines="full">
+    <ion-item>
+      <ion-input type="number" inputmode="numeric" labelPlacement="fixed" [label]="'tratamiento_cantidad' | t" placeholder="0"
+        [value]="cantidad()" (ionInput)="cantidad.set($event.detail.value ?? '')"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input type="number" inputmode="numeric" labelPlacement="fixed" [label]="'tratamiento_umbral' | t"
+        [value]="umbral()" (ionInput)="umbral.set($event.detail.value ?? '')"></ion-input>
+    </ion-item>
+  </ion-list>
+</ion-content>

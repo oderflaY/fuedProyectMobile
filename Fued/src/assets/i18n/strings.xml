@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Archivo central de textos de la interfaz (DM_Arquitectura_App.md, sección 5).
+  Ningún texto visible vive en el código: se usa la clave con el pipe `| t` o con I18nService.t().
+  Los parámetros se escriben entre llaves: {nombre}.
+  Para traducir la app basta con copiar este archivo y cambiar los valores (y `locale`).
+-->
+<resources>
+  <string name="locale">es-MX</string>
+  <string name="app_nombre">Fued</string>
+
+  <!-- Genéricos -->
+  <string name="aceptar">Aceptar</string>
+  <string name="agregar">Agregar</string>
+  <string name="cancelar">Cancelar</string>
+  <string name="cargando">Cargando</string>
+  <string name="cerrar">Cerrar</string>
+  <string name="eliminar">Eliminar</string>
+  <string name="eliminar_elemento">Eliminar {elemento}</string>
+  <string name="guardar">Guardar</string>
+  <string name="hoy">Hoy</string>
+  <string name="llamar_a">Llamar a {nombre}</string>
+  <string name="no">No</string>
+  <string name="reintentar">Reintentar</string>
+  <string name="seleccionar">Seleccionar</string>
+  <string name="sin_dato">Sin registrar</string>
+  <string name="sin_registros">Sin registros</string>
+  <string name="volver">Atrás</string>
+  <string name="dia_anterior">Día anterior</string>
+  <string name="dia_siguiente">Día siguiente</string>
+  <string name="rol_paciente">Paciente</string>
+  <string name="rol_medico">Médico</string>
+  <string name="cerrar_sesion">Cerrar sesión</string>
+  <string name="cerrar_sesion_mensaje">Tendrás que volver a ingresar tu correo y contraseña.</string>
+
+  <!-- Unidades -->
+  <string name="unidad_mmhg">mmHg</string>
+  <string name="unidad_lpm">lpm</string>
+  <string name="unidad_mgdl">mg/dL</string>
+  <string name="unidad_kg">kg</string>
+  <string name="unidad_cm">cm</string>
+  <string name="unidad_celsius">°C</string>
+
+  <!-- Pestañas -->
+  <string name="tab_inicio">Inicio</string>
+  <string name="tab_citas">Citas</string>
+  <string name="tab_historial">Historial</string>
+  <string name="tab_chat">Mensajes</string>
+  <string name="tab_perfil">Perfil</string>
+  <string name="tab_pacientes">Pacientes</string>
+  <string name="tab_agenda">Agenda</string>
+
+  <!-- Campos de formulario -->
+  <string name="campo_email">Correo electrónico</string>
+  <string name="campo_email_placeholder">nombre@correo.com</string>
+  <string name="campo_password">Contraseña</string>
+  <string name="campo_nombre">Nombre</string>
+  <string name="campo_apellidos">Apellidos</string>
+  <string name="campo_telefono">Teléfono</string>
+  <string name="campo_telefono_placeholder">+52 618 123 4567</string>
+  <string name="campo_fecha_nacimiento">Fecha de nacimiento</string>
+  <string name="campo_curp">CURP</string>
+  <string name="campo_nss">NSS</string>
+  <string name="campo_opcional">Opcional</string>
+  <string name="campo_cedula_profesional">Cédula profesional</string>
+  <string name="campo_cedula_especialidad">Cédula de especialidad</string>
+  <string name="campo_especialidad">Especialidad</string>
+  <string name="campo_universidad">Universidad</string>
+  <string name="campo_clinica">Clínica u hospital</string>
+  <string name="campo_direccion">Dirección</string>
+  <string name="campo_telefono_recepcion">Teléfono de recepción</string>
+
+  <!-- Login -->
+  <string name="login_subtitulo">Tu salud, tus citas y tus medicamentos en un solo lugar</string>
+  <string name="login_boton">Iniciar sesión</string>
+  <string name="login_crear_cuenta">Crear una cuenta</string>
+  <string name="login_cuentas_demo">Cuentas de prueba</string>
+
+  <!-- Registro -->
+  <string name="registro_titulo">Crear cuenta</string>
+  <string name="registro_tipo_cuenta">Tipo de cuenta</string>
+  <string name="registro_seccion_cuenta">Cuenta</string>
+  <string name="registro_seccion_personal">Datos personales</string>
+  <string name="registro_password_ayuda">Mínimo 8 caracteres</string>
+  <string name="registro_nota_medico">Tu cédula profesional se valida antes de que puedas consultar expedientes.</string>
+  <string name="registro_boton">Crear cuenta</string>
+  <string name="registro_exito">Tu cuenta está lista</string>
+
+  <!-- Inicio del paciente -->
+  <string name="inicio_titulo">Inicio</string>
+  <string name="inicio_saludo">Hola, {nombre}</string>
+  <string name="inicio_proxima_cita">Próxima cita</string>
+  <string name="inicio_agendar">Agendar</string>
+  <string name="inicio_sin_citas">No tienes citas próximas. Agenda una.</string>
+  <string name="inicio_escribir_medico">Escribir a {nombre}</string>
+  <string name="inicio_medicamentos">Medicamentos</string>
+  <string name="inicio_progreso">{hechas} de {total} tomas registradas</string>
+  <string name="inicio_progreso_accesible">Avance del día: {porcentaje} por ciento</string>
+  <string name="inicio_sin_medicamentos">No tienes medicamentos programados para este día.</string>
+  <string name="inicio_quedan">Quedan {cantidad}. Surte tu receta pronto.</string>
+  <string name="inicio_marcar_tomado">Marcar como tomado</string>
+  <string name="inicio_marcar_tomado_de">Marcar {medicamento} de las {hora} como tomado</string>
+  <string name="inicio_marcar_omitido">Marcar como omitido</string>
+  <string name="inicio_registrar_sintomas">Registrar síntomas</string>
+  <string name="inicio_sintomas_titulo">Síntomas</string>
+  <string name="inicio_sintomas_mensaje">Describe cómo te sentiste con esta dosis. Tu médico podrá verlo.</string>
+  <string name="inicio_toma_registrada">Toma registrada</string>
+  <string name="inicio_toma_omitida">Toma marcada como omitida</string>
+  <string name="inicio_aviso_inventario">Te quedan {cantidad} de {medicamento}. Surte tu receta.</string>
+  <string name="inicio_signos_vitales">Signos vitales</string>
+  <string name="inicio_registrar">Registrar</string>
+  <string name="inicio_sin_metricas">Aún no registras mediciones. Registra la de hoy.</string>
+  <string name="inicio_ultima_medicion">Última medición: {fecha}</string>
+
+  <!-- Estados de tomas -->
+  <string name="toma_estado_tomado">Tomado</string>
+  <string name="toma_estado_tomado_tarde">Tomado tarde</string>
+  <string name="toma_estado_omitido">Omitido</string>
+
+  <!-- Métricas -->
+  <string name="metrica_titulo">Registrar medición</string>
+  <string name="metrica_presion">Presión arterial</string>
+  <string name="metrica_sistolica">Sistólica</string>
+  <string name="metrica_diastolica">Diastólica</string>
+  <string name="metrica_presion_incompleta">Captura ambos valores de la presión arterial.</string>
+  <string name="metrica_otras">Otras mediciones</string>
+  <string name="metrica_frecuencia">Frecuencia cardiaca</string>
+  <string name="metrica_glucosa">Glucosa</string>
+  <string name="metrica_temperatura">Temperatura</string>
+  <string name="metrica_peso">Peso</string>
+  <string name="metrica_altura">Altura</string>
+  <string name="metrica_notas">Notas</string>
+  <string name="metrica_imc">IMC {imc}</string>
+  <string name="metrica_guardada">Medición guardada</string>
+
+  <!-- Citas -->
+  <string name="citas_filtro">Filtrar citas</string>
+  <string name="citas_pendientes">Por confirmar</string>
+  <string name="citas_proximas">Próximas</string>
+  <string name="citas_historial">Historial</string>
+  <string name="citas_vacio_pendientes">No hay solicitudes por confirmar.</string>
+  <string name="citas_vacio_proximas">No hay citas próximas.</string>
+  <string name="citas_vacio_historial">Todavía no hay citas pasadas.</string>
+  <string name="cita_estado_pendiente">Pendiente</string>
+  <string name="cita_estado_confirmada">Confirmada</string>
+  <string name="cita_estado_cancelada">Cancelada</string>
+  <string name="cita_estado_completada">Completada</string>
+  <string name="cita_nueva_titulo">Nueva cita</string>
+  <string name="cita_confirmar">Agendar</string>
+  <string name="cita_medico">Médico</string>
+  <string name="cita_paciente">Paciente</string>
+  <string name="cita_fecha">Fecha</string>
+  <string name="cita_horario">Horario</string>
+  <string name="cita_elige_medico">Elige un médico para ver sus horarios.</string>
+  <string name="cita_sin_horarios">No hay horarios disponibles ese día. Prueba otra fecha.</string>
+  <string name="cita_motivo">Motivo de la consulta</string>
+  <string name="cita_motivo_placeholder">Describe brevemente el motivo</string>
+  <string name="cita_solicitada">Cita solicitada. El médico debe confirmarla.</string>
+  <string name="cita_agendada">Cita agendada</string>
+  <string name="cita_accion_confirmar">Confirmar cita</string>
+  <string name="cita_accion_rechazar">Rechazar solicitud</string>
+  <string name="cita_accion_cancelar">Cancelar cita</string>
+  <string name="cita_accion_completar">Marcar como completada</string>
+  <string name="cita_accion_expediente">Ver expediente</string>
+  <string name="cita_accion_mensaje">Enviar mensaje</string>
+  <string name="cita_cancelar_titulo">¿Cancelar la cita?</string>
+  <string name="cita_cancelar_mensaje">El horario quedará libre para otras personas.</string>
+  <string name="cita_cancelar_si">Sí, cancelar</string>
+  <string name="cita_completar_titulo">Completar consulta</string>
+  <string name="cita_completar_mensaje">Puedes dejar notas de la consulta para el expediente.</string>
+  <string name="cita_notas_placeholder">Notas de la consulta</string>
+  <string name="cita_aviso_pendiente">Cita pendiente de confirmación</string>
+  <string name="cita_aviso_confirmada">Cita confirmada</string>
+  <string name="cita_aviso_cancelada">Cita cancelada</string>
+  <string name="cita_aviso_completada">Consulta completada</string>
+
+  <!-- Expediente -->
+  <string name="expediente_resumen">Resumen del paciente</string>
+  <string name="expediente_edad">{edad} años</string>
+  <string name="expediente_tipo_sangre">Sangre {tipo}</string>
+  <string name="expediente_donador">Donador de órganos</string>
+  <string name="expediente_solo_lectura">Solo lectura</string>
+  <string name="expediente_enviar_mensaje">Enviar mensaje al paciente</string>
+  <string name="expediente_alergias">Alergias</string>
+  <string name="expediente_sin_alergias">Sin alergias conocidas</string>
+  <string name="expediente_condiciones">Condiciones críticas</string>
+  <string name="expediente_rescate">Medicación de rescate</string>
+  <string name="expediente_tratamientos">Tratamientos activos</string>
+  <string name="expediente_sin_tratamientos">Sin tratamientos activos</string>
+  <string name="expediente_adherencia">Adherencia de los últimos 30 días</string>
+  <string name="expediente_cirugias">Cirugías</string>
+  <string name="expediente_contactos">Contactos de emergencia</string>
+  <string name="expediente_medicos_acceso">Médicos con acceso</string>
+  <string name="expediente_agregar_alergias">Nueva alergia</string>
+  <string name="expediente_agregar_condiciones">Nueva condición crítica</string>
+  <string name="expediente_agregar_medicacion-rescate">Nueva medicación de rescate</string>
+  <string name="expediente_agregar_cirugias">Nueva cirugía</string>
+  <string name="expediente_agregar_contactos">Nuevo contacto de emergencia</string>
+  <string name="expediente_eliminar_titulo">¿Eliminar registro?</string>
+  <string name="expediente_eliminar_mensaje">Se eliminará "{elemento}" del expediente.</string>
+  <string name="expediente_guardado">Expediente actualizado</string>
+  <string name="expediente_eliminado">Registro eliminado</string>
+  <string name="alergia_alergeno">Alérgeno</string>
+  <string name="alergia_severidad">Severidad (leve, moderada, alta)</string>
+  <string name="alergia_reaccion">Reacción</string>
+  <string name="condicion_descripcion">Condición</string>
+  <string name="rescate_descripcion">Medicamento o indicación</string>
+  <string name="cirugia_procedimiento">Procedimiento</string>
+  <string name="cirugia_fecha">Fecha</string>
+  <string name="cirugia_notas">Notas</string>
+  <string name="contacto_nombre">Nombre</string>
+  <string name="contacto_relacion">Parentesco o relación</string>
+  <string name="contacto_telefono">Teléfono</string>
+  <string name="adherencia_cumplimiento">Cumplimiento</string>
+  <string name="adherencia_detalle">Detalle</string>
+  <string name="adherencia_tomadas">{n} a tiempo</string>
+  <string name="adherencia_tarde">{n} tarde</string>
+  <string name="adherencia_omitidas">{n} omitidas</string>
+
+  <!-- Tratamientos -->
+  <string name="tratamiento_nuevo">Nuevo tratamiento</string>
+  <string name="tratamiento_medicamento">Medicamento</string>
+  <string name="tratamiento_dosis">Dosis</string>
+  <string name="tratamiento_dosis_placeholder">Ej. 50mg</string>
+  <string name="tratamiento_via">Vía de administración</string>
+  <string name="tratamiento_horario">Horario</string>
+  <string name="tratamiento_frecuencia">Frecuencia</string>
+  <string name="tratamiento_cada_horas">Cada {horas} horas</string>
+  <string name="tratamiento_horarios">Horarios</string>
+  <string name="tratamiento_horarios_ayuda">Separados por coma, formato 24 h. Ej. 08:00, 20:00</string>
+  <string name="tratamiento_horarios_invalidos">Revisa los horarios: usa el formato HH:MM.</string>
+  <string name="tratamiento_inicio">Inicio</string>
+  <string name="tratamiento_fin">Fin</string>
+  <string name="tratamiento_inventario">Inventario</string>
+  <string name="tratamiento_cantidad">Dosis disponibles</string>
+  <string name="tratamiento_umbral">Avisar cuando queden</string>
+  <string name="tratamiento_resumen">Cada {horas} h: {horarios}</string>
+  <string name="tratamiento_hasta">hasta {fecha}</string>
+  <string name="tratamiento_restantes">{cantidad} restantes</string>
+  <string name="tratamiento_actualizar_inventario">Actualizar inventario</string>
+  <string name="tratamiento_inventario_mensaje">¿Cuántas dosis de {medicamento} tienes disponibles?</string>
+  <string name="tratamiento_suspender">Suspender tratamiento</string>
+  <string name="tratamiento_guardado">Tratamiento registrado</string>
+  <string name="tratamiento_suspendido">Tratamiento suspendido</string>
+  <string name="tratamiento_inventario_actualizado">Inventario actualizado</string>
+  <string name="via_oral">Oral</string>
+  <string name="via_sublingual">Sublingual</string>
+  <string name="via_topica">Tópica</string>
+  <string name="via_inhalada">Inhalada</string>
+  <string name="via_inyectable">Inyectable</string>
+  <string name="via_oftalmica">Oftálmica</string>
+
+  <!-- Accesos -->
+  <string name="acceso_lectura">Solo lectura</string>
+  <string name="acceso_lectura_escritura">Lectura y escritura</string>
+  <string name="acceso_lectura_descripcion">Solo lectura: puede consultar tu expediente</string>
+  <string name="acceso_lectura_escritura_descripcion">Lectura y escritura: también puede recetar y actualizar</string>
+
+  <!-- Chat -->
+  <string name="chat_titulo">Mensajes</string>
+  <string name="chat_vacio">Cuando tengas una cita o autorices a un médico podrás escribirle aquí.</string>
+  <string name="chat_sin_mensajes">Sin mensajes</string>
+  <string name="chat_no_leidos">{n} mensajes sin leer</string>
+  <string name="chat_conversacion_con">Conversación con {nombre}</string>
+  <string name="chat_tu">Tú</string>
+  <string name="chat_ellos">{nombre}</string>
+  <string name="chat_inicia">Escribe el primer mensaje.</string>
+  <string name="chat_escribe">Escribe un mensaje</string>
+  <string name="chat_enviar">Enviar mensaje</string>
+  <string name="chat_enviando">Enviando</string>
+  <string name="chat_adjuntar">Adjuntar</string>
+  <string name="chat_adjuntar_audio">Grabar nota de voz</string>
+  <string name="chat_adjuntar_foto">Tomar foto o elegir imagen</string>
+  <string name="chat_adjuntar_documento">Enviar PDF o documento</string>
+  <string name="chat_grabando">Grabando</string>
+  <string name="chat_enviar_nota">Enviar nota de voz</string>
+  <string name="chat_nota_de_voz">Nota de voz</string>
+  <string name="chat_abrir">Abrir</string>
+  <string name="chat_abrir_adjunto">Abrir {nombre}</string>
+  <string name="chat_tipo_audio">Nota de voz</string>
+  <string name="chat_tipo_imagen">Imagen</string>
+  <string name="chat_tipo_archivo">Documento</string>
+  <string name="chat_dictar">Dictar por voz</string>
+  <string name="chat_detener_dictado">Detener dictado</string>
+  <string name="chat_escuchando">Escuchando... habla ahora</string>
+  <string name="chat_dictado_no_disponible">Este teléfono no permite el dictado desde la app: usa el micrófono de tu teclado.</string>
+  <string name="chat_dictado_error">No se pudo escuchar. Revisa el permiso del micrófono.</string>
+  <string name="chat_audio_no_disponible">Este dispositivo no permite grabar audio desde la app.</string>
+  <string name="chat_microfono_denegado">Necesitas dar permiso al micrófono para grabar notas de voz.</string>
+  <string name="chat_accion_agendar">Agendar cita</string>
+  <string name="chat_accion_recordatorio">Pedir recordatorio</string>
+  <string name="chat_accion_duda">Duda de medicamento</string>
+  <string name="chat_accion_indicaciones">Enviar indicaciones</string>
+  <string name="chat_accion_expediente">Ver expediente</string>
+  <string name="chat_plantilla_recordatorio">¿Me puedes enviar un recordatorio de mis medicamentos y de mi próxima cita?</string>
+  <string name="chat_plantilla_duda">Tengo una duda sobre mi medicamento:</string>
+  <string name="chat_plantilla_indicaciones">Indicaciones para su tratamiento:</string>
+  <string name="chat_plantilla_cita_creada">Acabo de agendar la cita, quedo pendiente.</string>
+
+  <!-- Perfil del paciente -->
+  <string name="perfil_editar_datos">Datos personales</string>
+  <string name="perfil_guardado">Perfil actualizado</string>
+  <string name="perfil_datos_medicos">Datos médicos</string>
+  <string name="perfil_tipo_sangre">Tipo de sangre</string>
+  <string name="perfil_donador">Donador de órganos</string>
+  <string name="perfil_identificaciones">Identificaciones</string>
+  <string name="perfil_mis_medicos">Médicos autorizados</string>
+  <string name="perfil_autorizar">Autorizar</string>
+  <string name="perfil_sin_medicos">Ningún médico tiene acceso a tu expediente.</string>
+  <string name="perfil_sin_medicos_disponibles">Todos los médicos disponibles ya tienen acceso.</string>
+  <string name="perfil_accesos_explicacion">Solo los médicos que autorices pueden ver tu historial. Puedes revocar el acceso cuando quieras.</string>
+  <string name="perfil_elegir_medico">Elige un médico</string>
+  <string name="perfil_elegir_nivel">Nivel de acceso</string>
+  <string name="perfil_acceso_otorgado">Acceso otorgado</string>
+  <string name="perfil_acceso_revocado">Acceso revocado</string>
+  <string name="perfil_revocar">Revocar</string>
+  <string name="perfil_revocar_a">Revocar acceso a {nombre}</string>
+  <string name="perfil_revocar_titulo">¿Revocar acceso?</string>
+  <string name="perfil_revocar_mensaje">El médico dejará de ver tu expediente de inmediato.</string>
+  <string name="perfil_tarjetas">Tarjetas RFID de emergencia</string>
+  <string name="perfil_sin_tarjetas">No tienes tarjetas asignadas.</string>
+  <string name="perfil_asignar_tarjeta">Asignar tarjeta</string>
+  <string name="perfil_id_tarjeta">Identificador (déjalo vacío para generarlo)</string>
+  <string name="perfil_asignada">Asignada el {fecha}</string>
+  <string name="perfil_revocada">Dada de baja el {fecha}</string>
+  <string name="perfil_reportar">Reportar extraviada</string>
+  <string name="perfil_extraviada_titulo">¿Reportar tarjeta extraviada?</string>
+  <string name="perfil_extraviada_mensaje">La tarjeta dejará de mostrar tu perfil de emergencia. Esta acción no se puede deshacer.</string>
+  <string name="perfil_tarjeta_asignada">Tarjeta asignada</string>
+  <string name="perfil_tarjeta_revocada">Tarjeta dada de baja</string>
+  <string name="tarjeta_activa">Activa</string>
+  <string name="tarjeta_extraviada">Extraviada</string>
+  <string name="tarjeta_inactiva">Inactiva</string>
+
+  <!-- Médico -->
+  <string name="pacientes_buscar">Buscar paciente</string>
+  <string name="pacientes_semaforo">Semáforo de riesgo</string>
+  <string name="pacientes_adherencia">{porcentaje}% de adherencia</string>
+  <string name="pacientes_vacio">Aún no tienes pacientes. Aparecerán cuando te autoricen.</string>
+  <string name="pacientes_sin_resultados">Ningún paciente coincide con la búsqueda.</string>
+  <string name="pacientes_no_verificado">Tu cédula está en revisión. Podrás ver expedientes cuando sea aprobada.</string>
+  <string name="riesgo_alto">Riesgo alto</string>
+  <string name="riesgo_medio">Riesgo medio</string>
+  <string name="riesgo_bajo">Riesgo bajo</string>
+  <string name="medico_titulo_nombre">Dr(a). {nombre}</string>
+  <string name="medico_cedula">Cédula {cedula}</string>
+  <string name="medico_verificacion">Verificación de cédula</string>
+  <string name="verificacion_pendiente">En revisión</string>
+  <string name="verificacion_aprobado">Aprobada</string>
+  <string name="verificacion_rechazado">Rechazada</string>
+  <string name="perfil_credenciales">Credenciales</string>
+  <string name="perfil_lugar_trabajo">Lugar de trabajo</string>
+  <string name="medico_configuracion">Panel web</string>
+  <string name="medico_alertas_adherencia">Alertas de adherencia baja</string>
+  <string name="medico_notificaciones_urgencia">Notificaciones de urgencia</string>
+  <string name="medico_tema_dashboard">Tema del panel</string>
+  <string name="medico_miembro_desde">Miembro desde {fecha}</string>
+  <string name="tema_sistema">Automático</string>
+  <string name="tema_claro">Claro</string>
+  <string name="tema_oscuro">Oscuro</string>
+
+  <!-- Errores de la API: error_<codigo> -->
+  <string name="error_generico">Algo salió mal. Intenta de nuevo.</string>
+  <string name="error_sin_conexion">No hay conexión con el servidor. Revisa tu red.</string>
+  <string name="error_no_autenticado">Tu sesión expiró. Inicia sesión de nuevo.</string>
+  <string name="error_credenciales_invalidas">Correo o contraseña incorrectos.</string>
+  <string name="error_email_registrado">Ya existe una cuenta con ese correo.</string>
+  <string name="error_email_invalido">El correo electrónico no es válido.</string>
+  <string name="error_password_corta">La contraseña debe tener al menos 8 caracteres.</string>
+  <string name="error_curp_invalida">La CURP no tiene un formato válido.</string>
+  <string name="error_curp_registrada">Ya existe un paciente con esa CURP.</string>
+  <string name="error_campo_requerido">Completa los campos obligatorios.</string>
+  <string name="error_campo_invalido">Revisa los datos capturados.</string>
+  <string name="error_campo_muy_largo">Uno de los textos es demasiado largo.</string>
+  <string name="error_fuera_de_rango">Uno de los valores está fuera del rango permitido.</string>
+  <string name="error_opcion_invalida">Opción no válida.</string>
+  <string name="error_fecha_invalida">La fecha no es válida.</string>
+  <string name="error_fecha_hora_invalida">La fecha y hora no son válidas.</string>
+  <string name="error_hora_invalida">Las horas deben tener formato HH:MM.</string>
+  <string name="error_fecha_pasada">Elige una fecha futura.</string>
+  <string name="error_fecha_futura">La fecha no puede ser futura.</string>
+  <string name="error_rango_fechas_invalido">La fecha de fin no puede ser anterior al inicio.</string>
+  <string name="error_json_invalido">La solicitud no es válida.</string>
+  <string name="error_acceso_denegado">No tienes acceso a este expediente.</string>
+  <string name="error_acceso_solo_lectura">Tu acceso a este expediente es de solo lectura.</string>
+  <string name="error_acceso_no_encontrado">Ese médico no tiene acceso vigente.</string>
+  <string name="error_medico_no_verificado">Tu cédula profesional aún no ha sido verificada.</string>
+  <string name="error_medico_no_encontrado">El médico no existe o no está verificado.</string>
+  <string name="error_paciente_no_encontrado">El paciente no existe.</string>
+  <string name="error_cuenta_no_encontrada">La cuenta no existe.</string>
+  <string name="error_rol_no_permitido">Tu tipo de cuenta no puede realizar esta acción.</string>
+  <string name="error_elemento_no_encontrado">El registro ya no existe.</string>
+  <string name="error_tarjeta_no_encontrada">La tarjeta no está registrada.</string>
+  <string name="error_tarjeta_registrada">Esa tarjeta ya está asignada.</string>
+  <string name="error_tarjeta_revocada">La tarjeta fue dada de baja.</string>
+  <string name="error_tratamiento_no_encontrado">El tratamiento no existe o ya no está activo.</string>
+  <string name="error_horarios_invalidos">Envía entre 1 y 24 horarios con formato HH:MM.</string>
+  <string name="error_solo_inventario">Solo puedes actualizar el inventario de un tratamiento recetado.</string>
+  <string name="error_suspension_requiere_medico">Solo tu médico puede suspender un tratamiento recetado.</string>
+  <string name="error_toma_futura">Aún es muy pronto para registrar esa toma.</string>
+  <string name="error_presion_invalida">La presión debe ser sistólica/diastólica, por ejemplo 120/80.</string>
+  <string name="error_sin_mediciones">Registra al menos una medición.</string>
+  <string name="error_horario_ocupado">Ese horario ya fue tomado. Elige otro.</string>
+  <string name="error_paciente_con_cita">Ya tienes otra cita en ese horario.</string>
+  <string name="error_cita_no_encontrada">La cita no existe.</string>
+  <string name="error_cita_cerrada">Solo se pueden reprogramar citas pendientes o confirmadas.</string>
+  <string name="error_transicion_invalida">No se puede cambiar la cita a ese estado.</string>
+  <string name="error_sin_cambios">No hay cambios por guardar.</string>
+  <string name="error_archivo_requerido">Adjunta un archivo.</string>
+  <string name="error_archivo_muy_grande">El archivo pesa demasiado (máximo 8 MB).</string>
+  <string name="error_tipo_no_permitido">Ese tipo de archivo no se puede enviar por el chat.</string>
+  <string name="error_subida_fallida">No se pudo enviar el archivo. Intenta de nuevo.</string>
+  <string name="error_adjunto_no_encontrado">El adjunto ya no está disponible.</string>
+  <string name="error_chat_no_permitido">Solo puedes escribir a médicos o pacientes con los que tienes una cita o vinculación.</string>
+  <string name="error_ruta_no_encontrada">El servicio no está disponible.</string>
+  <string name="error_metodo_no_permitido">El servicio no está disponible.</string>
+  <string name="error_base_de_datos_no_disponible">El servidor no puede conectarse a la base de datos.</string>
+  <string name="error_base_de_datos_no_instalada">La base de datos aún no está instalada.</string>
+  <string name="error_error_interno">Ocurrió un error en el servidor.</string>
+</resources>

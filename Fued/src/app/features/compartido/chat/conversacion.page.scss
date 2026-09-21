@@ -1,0 +1,159 @@
+.mensajes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.mensaje {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 80%;
+
+  &.propio {
+    align-self: flex-end;
+    align-items: flex-end;
+
+    .burbuja {
+      background: var(--app-burbuja-propia);
+      color: var(--app-burbuja-propia-texto);
+      border-bottom-right-radius: 0.25rem;
+      border-bottom-left-radius: 1.125rem;
+    }
+  }
+}
+
+.burbuja {
+  background: var(--app-burbuja-ajena);
+  padding: 0.625rem 0.875rem;
+  border-radius: 1.125rem;
+  border-bottom-left-radius: 0.25rem;
+  line-height: 1.35;
+
+  &.con-adjunto {
+    padding: 0.5rem;
+  }
+
+  .texto {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  &.con-adjunto .texto {
+    margin: 0.375rem 0.375rem 0.125rem;
+  }
+}
+
+.adjunto-audio {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  audio {
+    height: 2.25rem;
+    max-width: 12rem;
+  }
+
+  .duracion {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.adjunto-imagen,
+.adjunto-archivo {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: start;
+}
+
+.adjunto-imagen img {
+  display: block;
+  max-width: 100%;
+  max-height: 15rem;
+  border-radius: 0.75rem;
+}
+
+.adjunto-archivo {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.25rem;
+
+  ion-icon {
+    font-size: 1.75rem;
+    flex-shrink: 0;
+  }
+
+  .datos {
+    display: flex;
+    flex-direction: column;
+
+    small {
+      opacity: 0.75;
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.hora {
+  font-size: 0.6875rem;
+  color: var(--app-texto-secundario);
+  margin: 0.125rem 0.5rem 0;
+}
+
+.acciones-rapidas {
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  padding: 0.375rem 0.5rem 0;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  ion-chip {
+    flex-shrink: 0;
+  }
+}
+
+.entrada {
+  margin: 0.25rem 0;
+  --background: var(--app-burbuja-ajena);
+  --border-radius: 1.25rem;
+  --padding-start: 0.875rem;
+  --padding-end: 0.875rem;
+}
+
+.barra-grabacion .estado-grabacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+
+  strong {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.punto {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: var(--ion-color-danger);
+  animation: latido 1.2s ease-in-out infinite;
+}
+
+@keyframes latido {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}

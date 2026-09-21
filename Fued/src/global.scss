@@ -1,0 +1,214 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import "@ionic/angular/css/palettes/dark.system.css";
+
+/*
+ * Tokens semánticos de Fued
+ * -----------------------------------------------------
+ * Se apoyan en la paleta de Ionic, así que cambian solos entre modo claro y oscuro.
+ * Las unidades en rem respetan el tamaño de letra que el usuario elige en su teléfono.
+ */
+:root {
+  --app-fondo-agrupado: var(--ion-background-color-step-50, #f2f2f7);
+  --app-superficie: var(--ion-item-background, var(--ion-background-color, #fff));
+  --app-texto-secundario: var(--ion-color-medium);
+  --app-separador: var(--ion-background-color-step-150, #d9d9de);
+  --app-radio: 14px;
+  --app-riesgo-alto: var(--ion-color-danger);
+  --app-riesgo-medio: var(--ion-color-warning);
+  --app-riesgo-bajo: var(--ion-color-success);
+  --app-burbuja-propia: var(--ion-color-primary);
+  --app-burbuja-propia-texto: var(--ion-color-primary-contrast);
+  --app-burbuja-ajena: var(--ion-background-color-step-100, #e9e9ee);
+}
+
+/* Fondo agrupado estilo iOS para pantallas con listas insertadas */
+ion-content.agrupado {
+  --background: var(--app-fondo-agrupado);
+}
+
+.titulo-seccion {
+  margin: 1.5rem 1.25rem 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--app-texto-secundario);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  ion-button {
+    text-transform: none;
+    letter-spacing: 0;
+    margin: 0;
+  }
+}
+
+.texto-secundario {
+  color: var(--app-texto-secundario);
+}
+
+.estado-vacio {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  color: var(--app-texto-secundario);
+
+  ion-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin: 0 auto 0.5rem;
+  }
+}
+
+.tarjeta-resumen {
+  margin: 0.75rem 1rem;
+  border-radius: var(--app-radio);
+  box-shadow: none;
+}
+
+.metricas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  padding: 0 1rem;
+
+  .metrica {
+    background: var(--app-superficie);
+    border-radius: var(--app-radio);
+    padding: 0.875rem 1rem;
+
+    .etiqueta {
+      font-size: 0.75rem;
+      color: var(--app-texto-secundario);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .valor {
+      font-size: 1.375rem;
+      font-weight: 600;
+      margin-top: 0.25rem;
+    }
+
+    .unidad {
+      font-size: 0.8125rem;
+      font-weight: 400;
+      color: var(--app-texto-secundario);
+    }
+  }
+}
+
+.indicador-riesgo {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &.alto { background: var(--app-riesgo-alto); }
+  &.medio { background: var(--app-riesgo-medio); }
+  &.bajo { background: var(--app-riesgo-bajo); }
+}
+
+.horarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr));
+  gap: 0.5rem;
+  padding: 0.5rem 1rem 1rem;
+
+  ion-button {
+    margin: 0;
+  }
+}
+
+.acciones-formulario {
+  padding: 1.5rem 1rem 2rem;
+}
+
+/* Texto sólo para lectores de pantalla */
+.visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.avatar-iniciales {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-weight: 600;
+  color: var(--ion-color-primary);
+  background: rgba(var(--ion-color-primary-rgb), 0.15);
+}
+
+.avatar-grande {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0.5rem 1rem 0.5rem 0;
+  font-size: 1.25rem;
+}
+
+.nota {
+  font-size: 0.8125rem;
+  margin-top: 0.5rem;
+}
+
+.ultima-lista {
+  margin-bottom: 2rem;
+}
+
+ion-item .meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.pantalla-centrada {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+}

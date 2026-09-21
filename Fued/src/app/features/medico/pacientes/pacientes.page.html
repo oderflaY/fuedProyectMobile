@@ -1,0 +1,71 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ 'tab_pacientes' | t }}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      [placeholder]="'pacientes_buscar' | t"
+      [value]="vm.busqueda()"
+      (ionInput)="vm.busqueda.set($event.detail.value ?? '')"
+    ></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="agrupado">
+  <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (vm.cargando()) {
+    <div class="ion-text-center ion-padding"><ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner></div>
+  } @else if (vm.error(); as error) {
+    <div class="estado-vacio" role="alert">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p>{{ error }}</p>
+      <ion-button fill="outline" (click)="vm.cargar()">{{ 'reintentar' | t }}</ion-button>
+    </div>
+  } @else {
+    @if (!vm.verificado()) {
+      <div class="aviso-verificacion" role="alert">
+        <ion-icon name="information-circle" aria-hidden="true"></ion-icon>
+        <span>{{ 'pacientes_no_verificado' | t }}</span>
+      </div>
+    }
+
+    <div class="semaforo" role="group" [attr.aria-label]="'pacientes_semaforo' | t">
+      @for (nivel of niveles; track nivel) {
+        <div class="nivel">
+          <span class="indicador-riesgo" [class]="nivel" aria-hidden="true"></span>
+          <strong>{{ vm.conteo()[nivel] }}</strong>
+          <span class="texto-secundario">{{ 'riesgo_' + nivel | t }}</span>
+        </div>
+      }
+    </div>
+
+    <ion-list [inset]="true" lines="full">
+      @for (paciente of vm.pacientes(); track paciente.idPaciente) {
+        <ion-item [button]="true" (click)="abrir(paciente.idPaciente)">
+          <ion-avatar slot="start" aria-hidden="true">
+            <div class="avatar-iniciales">{{ paciente.nombreCompleto | iniciales }}</div>
+          </ion-avatar>
+          <ion-label>
+            <h3>{{ paciente.nombreCompleto }}</h3>
+            <p>
+              <span class="indicador-riesgo" [class]="paciente.estadoRiesgo" aria-hidden="true"></span>
+              {{ 'riesgo_' + paciente.estadoRiesgo | t }}
+              @if (paciente.porcentajeAdherencia !== null) {
+                - {{ 'pacientes_adherencia' | t: { porcentaje: paciente.porcentajeAdherencia } }}
+              }
+            </p>
+          </ion-label>
+          <ion-note slot="end">{{ 'acceso_' + paciente.nivelAcceso | t }}</ion-note>
+        </ion-item>
+      } @empty {
+        <div class="estado-vacio">
+          <ion-icon name="people-outline" aria-hidden="true"></ion-icon>
+          <p>{{ (vm.busqueda() ? 'pacientes_sin_resultados' : 'pacientes_vacio') | t }}</p>
+        </div>
+      }
+    </ion-list>
+  }
+</ion-content>

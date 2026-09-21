@@ -1,0 +1,153 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="vm.rutaLista()" [text]="'volver' | t"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ vm.nombre() || ('chat_titulo' | t) }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (vm.cargando()) {
+    <div class="ion-text-center ion-padding"><ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner></div>
+  } @else if (vm.error(); as error) {
+    <div class="estado-vacio" role="alert">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p>{{ error }}</p>
+    </div>
+  } @else {
+    <div class="mensajes" role="log" aria-live="polite" [attr.aria-label]="'chat_conversacion_con' | t: { nombre: vm.nombre() }">
+      @for (mensaje of vm.mensajes(); track mensaje.idMensaje) {
+        <div class="mensaje" [class.propio]="mensaje.propio">
+          <div class="burbuja" [class.con-adjunto]="mensaje.tipo !== 'texto'">
+            <span class="visualmente-oculto">{{ (mensaje.propio ? 'chat_tu' : 'chat_ellos') | t: { nombre: vm.nombre() } }}:</span>
+
+            @switch (mensaje.tipo) {
+              @case ('audio') {
+                <div class="adjunto-audio">
+                  <ion-icon name="mic-outline" aria-hidden="true"></ion-icon>
+                  @if (adjuntos.url(mensaje.idMensaje); as fuente) {
+                    <audio controls preload="metadata" [src]="fuente" [attr.aria-label]="'chat_nota_de_voz' | t"></audio>
+                  } @else {
+                    <ion-spinner name="dots" [attr.aria-label]="'cargando' | t"></ion-spinner>
+                  }
+                  <span class="duracion">{{ duracion(mensaje.adjunto?.duracionSeg ?? null) }}</span>
+                </div>
+              }
+              @case ('imagen') {
+                <button type="button" class="adjunto-imagen" (click)="abrirAdjunto(mensaje)"
+                  [attr.aria-label]="'chat_abrir_adjunto' | t: { nombre: mensaje.adjunto?.nombre }">
+                  @if (adjuntos.url(mensaje.idMensaje); as fuente) {
+                    <img [src]="fuente" [alt]="mensaje.adjunto?.nombre" />
+                  } @else {
+                    <ion-spinner name="dots" [attr.aria-label]="'cargando' | t"></ion-spinner>
+                  }
+                </button>
+              }
+              @case ('archivo') {
+                <button type="button" class="adjunto-archivo" (click)="abrirAdjunto(mensaje)"
+                  [attr.aria-label]="'chat_abrir_adjunto' | t: { nombre: mensaje.adjunto?.nombre }">
+                  <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+                  <span class="datos">
+                    <strong>{{ mensaje.adjunto?.nombre }}</strong>
+                    <small>{{ tamano(mensaje.adjunto?.bytes ?? 0) }} - {{ 'chat_abrir' | t }}</small>
+                  </span>
+                </button>
+              }
+            }
+
+            @if (mensaje.tipo === 'texto' || mensaje.contenido !== mensaje.adjunto?.nombre) {
+              <p class="texto">{{ mensaje.contenido }}</p>
+            }
+          </div>
+          <span class="hora">{{ mensaje.fechaEnvio | fecha: 'fechaHora' }}</span>
+        </div>
+      } @empty {
+        <div class="estado-vacio">
+          <ion-icon name="chatbubbles-outline" aria-hidden="true"></ion-icon>
+          <p>{{ 'chat_inicia' | t }}</p>
+        </div>
+      }
+    </div>
+  }
+</ion-content>
+
+<ion-footer>
+  @if (grabadora.grabando()) {
+    <ion-toolbar class="barra-grabacion">
+      <ion-buttons slot="start">
+        <ion-button color="medium" (click)="cancelarGrabacion()" [attr.aria-label]="'cancelar' | t">
+          <ion-icon slot="icon-only" name="trash-outline" aria-hidden="true"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <div class="estado-grabacion" role="status">
+        <span class="punto" aria-hidden="true"></span>
+        <span>{{ 'chat_grabando' | t }}</span>
+        <strong>{{ duracion(grabadora.segundos()) }}</strong>
+      </div>
+      <ion-buttons slot="end">
+        <ion-button [strong]="true" color="primary" (click)="detenerYEnviarVoz()" [attr.aria-label]="'chat_enviar_nota' | t">
+          <ion-icon slot="icon-only" name="arrow-up-circle" aria-hidden="true"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  } @else {
+    <div class="acciones-rapidas">
+      @for (accion of acciones(); track accion.clave) {
+        <ion-chip [outline]="true" (click)="ejecutar(accion)">
+          <ion-icon [name]="accion.icono" aria-hidden="true"></ion-icon>
+          <ion-label>{{ accion.clave | t }}</ion-label>
+        </ion-chip>
+      }
+    </div>
+
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button [disabled]="vm.ocupado()" (click)="opcionesAdjunto()" [attr.aria-label]="'chat_adjuntar' | t">
+          <ion-icon slot="icon-only" name="attach-outline" aria-hidden="true"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+
+      <ion-textarea
+        class="entrada"
+        [attr.aria-label]="'chat_escribe' | t"
+        [placeholder]="(dictado.escuchando() ? 'chat_escuchando' : 'chat_escribe') | t"
+        [autoGrow]="true"
+        [rows]="1"
+        [maxlength]="2000"
+        [value]="vm.borrador()"
+        (ionInput)="vm.borrador.set($event.detail.value ?? '')"
+        (keydown)="alPresionarTecla($event)"
+      ></ion-textarea>
+
+      <ion-buttons slot="end">
+        <ion-button
+          [color]="dictado.escuchando() ? 'danger' : 'medium'"
+          (click)="alternarDictado()"
+          [attr.aria-pressed]="dictado.escuchando()"
+          [attr.aria-label]="(dictado.escuchando() ? 'chat_detener_dictado' : 'chat_dictar') | t"
+        >
+          <ion-icon slot="icon-only" [name]="dictado.escuchando() ? 'radio-button-on-outline' : 'mic-outline'" aria-hidden="true"></ion-icon>
+        </ion-button>
+
+        @if (vm.ocupado()) {
+          <ion-spinner name="crescent" class="ion-margin-end" [attr.aria-label]="'chat_enviando' | t"></ion-spinner>
+        } @else {
+          <ion-button [disabled]="!vm.puedeEnviar()" (click)="vm.enviar()" [attr.aria-label]="'chat_enviar' | t">
+            <ion-icon slot="icon-only" name="arrow-up-circle" color="primary" aria-hidden="true"></ion-icon>
+          </ion-button>
+        }
+      </ion-buttons>
+    </ion-toolbar>
+  }
+</ion-footer>
+
+<input
+  #selectorArchivo
+  type="file"
+  class="visualmente-oculto"
+  tabindex="-1"
+  [attr.aria-hidden]="true"
+  [accept]="aceptaArchivos()"
+  (change)="archivoSeleccionado($event)"
+/>

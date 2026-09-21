@@ -1,0 +1,2 @@
+# Los adjuntos sólo se sirven a través de la API (GET /chat/adjuntos/{idMensaje}).
+Require all denied
