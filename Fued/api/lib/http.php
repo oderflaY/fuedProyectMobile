@@ -55,10 +55,13 @@ function parametro(string $nombre, ?string $defecto = null): ?string
     return is_string($valor) && trim($valor) !== '' ? trim($valor) : $defecto;
 }
 
-function aplicarCors(array $origenes): void
+function aplicarCors(array $origenes, string $patron = ''): void
 {
     $origen = $_SERVER['HTTP_ORIGIN'] ?? '';
-    if ($origen !== '' && (in_array('*', $origenes, true) || in_array($origen, $origenes, true))) {
+    $permitido = in_array('*', $origenes, true)
+        || in_array($origen, $origenes, true)
+        || ($patron !== '' && preg_match($patron, $origen) === 1);
+    if ($origen !== '' && $permitido) {
         header('Access-Control-Allow-Origin: ' . $origen);
         header('Vary: Origin');
         header('Access-Control-Allow-Headers: Authorization, Content-Type');

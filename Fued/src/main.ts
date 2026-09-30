@@ -9,7 +9,7 @@ import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { authInterceptor } from './app/core/auth/auth.interceptor';
 import { I18nService } from './app/core/i18n/i18n.service';
-import { registrarIconos } from './app/core/ui/iconos';
+import { registrarIconos } from './app/core/ui/iconos.constants';
 
 // Call the element loader before the bootstrapApplication call
 defineCustomElements(window);

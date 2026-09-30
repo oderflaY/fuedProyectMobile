@@ -1,14 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { ApiService } from '../api/api.service';
-import type { Cita, Disponibilidad, EstadoCita } from '../models';
-import { zonaHorariaLocal } from '../util/fechas';
+import type { CambioCita, Cita, Disponibilidad, EstadoCita, SolicitudCita } from '../models';
+import { zonaHorariaLocal } from '../util/fechas.util';
 
-export interface SolicitudCita {
-  fechaHora: string;
-  motivo: string;
-  idMedico?: string;
-  idPaciente?: string;
-}
 
 @Injectable({ providedIn: 'root' })
 export class CitasRepository {
@@ -30,10 +24,12 @@ export class CitasRepository {
   }
 
   cambiarEstado(idCita: string, estado: EstadoCita, notasMedico?: string | null): Promise<Cita> {
-    return this.api.put<Cita>(`/citas/${idCita}`, notasMedico !== undefined ? { estado, notasMedico } : { estado });
+    const cambios: CambioCita = notasMedico !== undefined ? { estado, notasMedico } : { estado };
+    return this.api.put<Cita>(`/citas/${idCita}`, cambios);
   }
 
   reprogramar(idCita: string, fechaHora: string): Promise<Cita> {
-    return this.api.put<Cita>(`/citas/${idCita}`, { fechaHora });
+    const cambios: CambioCita = { fechaHora };
+    return this.api.put<Cita>(`/citas/${idCita}`, cambios);
   }
 }

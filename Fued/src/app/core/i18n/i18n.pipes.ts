@@ -2,8 +2,8 @@ import { Pipe, inject } from '@angular/core';
 import type { PipeTransform } from '@angular/core';
 import type { ParametrosTexto } from './i18n.service';
 import { I18nService } from './i18n.service';
-import type { FormatoFecha } from '../util/fechas';
-import { formatearFecha } from '../util/fechas';
+import type { FormatoFecha } from '../util/fechas.util';
+import { formatearFecha } from '../util/fechas.util';
 
 /** `{{ 'clave' | t }}` o `{{ 'clave' | t: { nombre: 'Ana' } }}` */
 @Pipe({ name: 't' })

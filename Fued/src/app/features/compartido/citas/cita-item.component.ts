@@ -1,8 +1,8 @@
 import { Component, computed, input } from '@angular/core';
 import { IonBadge, IonIcon, IonItem, IonLabel } from '@ionic/angular';
-import { FechaPipe, TPipe } from '../../../core/i18n/pipes';
+import { FechaPipe, TPipe } from '../../../core/i18n/i18n.pipes';
 import type { Cita, Rol } from '../../../core/models';
-import { COLOR_ESTADO_CITA } from '../../../core/ui/colores';
+import { COLOR_ESTADO_CITA } from '../../../core/ui/colores.constants';
 
 /** Fila de una cita; muestra al médico o al paciente según quién la mira. */
 @Component({

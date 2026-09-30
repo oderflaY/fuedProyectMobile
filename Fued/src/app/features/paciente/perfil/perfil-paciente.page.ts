@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import type { OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   IonBadge,
   IonButton,
@@ -16,7 +17,7 @@ import {
   IonToggle,
   IonToolbar,
 } from '@ionic/angular';
-import { FechaPipe, InicialesPipe, TPipe } from '../../../core/i18n/pipes';
+import { FechaPipe, InicialesPipe, TPipe } from '../../../core/i18n/i18n.pipes';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import type { MedicoAutorizado, NivelAcceso } from '../../../core/models';
 import { TIPOS_SANGRE } from '../../../core/models';
@@ -28,6 +29,7 @@ import { PerfilPacienteViewModel } from './perfil-paciente.viewmodel';
   templateUrl: 'perfil-paciente.page.html',
   providers: [PerfilPacienteViewModel],
   imports: [
+    RouterLink,
     IonHeader,
     IonToolbar,
     IonTitle,

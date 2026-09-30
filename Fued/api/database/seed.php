@@ -178,4 +178,41 @@ function sembrarDatosDemo(): void
             'leido_en' => $remitente === 'paciente' ? $local($dia, '10:00') : null,
         ]);
     }
+    // Perfiles crónicos y su segmentación
+    $hipertension = PerfilCronico::crear([
+        'id_paciente' => 'pac_01H8X9A', 'condicion' => 'hipertension', 'estado' => 'activo',
+        'segmento' => 'seguimiento', 'datos_basales' => ['meta_sistolica' => 140, 'meta_diastolica' => 90],
+        'fecha_alta' => $local('-40 days', '09:00'), 'fecha_evaluacion' => $local('-1 day', '08:10'),
+    ]);
+    EvaluacionCronica::crear([
+        'id_perfil' => $hipertension->id_perfil, 'id_paciente' => 'pac_01H8X9A', 'condicion' => 'hipertension',
+        'respuestas' => [
+            'ctx_reposo' => true, 'ctx_estimulante' => false, 'ctx_malestar' => false,
+            'presion_1' => '138/88', 'presion_2' => '134/86', 'frecuencia_cardiaca' => 74,
+            'sintomas' => ['ninguno'], 'olvido_dosis' => 1,
+        ],
+        'segmento' => 'seguimiento', 'severidad' => 'informativa',
+        'banderas' => [['codigo' => 'presion_limitrofe', 'roja' => false, 'datos' => ['sistolica' => 136, 'diastolica' => 87]]],
+        'confiable' => true, 'fecha' => $local('-1 day', '08:10'),
+    ]);
+
+    $diabetes = PerfilCronico::crear([
+        'id_paciente' => 'pac_02J9Y8B', 'condicion' => 'diabetes', 'estado' => 'activo',
+        'segmento' => 'controlado', 'datos_basales' => ['tipo_diabetes' => 'tipo_2', 'meta_ayuno' => 130],
+        'fecha_alta' => $local('-60 days', '10:00'), 'fecha_evaluacion' => $local('-2 days', '07:30'),
+    ]);
+    EvaluacionCronica::crear([
+        'id_perfil' => $diabetes->id_perfil, 'id_paciente' => 'pac_02J9Y8B', 'condicion' => 'diabetes',
+        'respuestas' => [
+            'ctx_reposo' => true, 'ctx_estimulante' => false, 'ctx_malestar' => false,
+            'momento' => 'ayuno', 'glucosa' => 108, 'sintomas_hipo' => ['ninguno'],
+            'sintomas_hiper' => ['ninguno'], 'herida_sin_cerrar' => false,
+        ],
+        'segmento' => 'controlado', 'severidad' => 'informativa', 'banderas' => [],
+        'confiable' => true, 'fecha' => $local('-2 days', '07:30'),
+    ]);
+
+    // Privacidad: Juan comparte todo con su médico salvo el historial quirúrgico.
+    PreferenciaPrivacidad::fijar('pac_01H8X9A', 'medico', 'cirugias', false);
+    PreferenciaPrivacidad::fijar('pac_01H8X9A', 'exportacion', 'identificaciones', false);
 }

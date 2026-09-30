@@ -4,7 +4,7 @@ import type { AgendaTomas, Cita, Metrica, NuevaMetrica, TomaDelDia } from '../..
 import { CitasRepository } from '../../../core/repositories/citas.repository';
 import { PacientesRepository } from '../../../core/repositories/pacientes.repository';
 import { AvisosService } from '../../../core/ui/avisos.service';
-import { fechaLocalIso, sumarDias } from '../../../core/util/fechas';
+import { fechaLocalIso, sumarDias } from '../../../core/util/fechas.util';
 
 export function claveToma(toma: TomaDelDia): string {
   return `${toma.idTratamiento}|${toma.fechaHoraProgramada}`;

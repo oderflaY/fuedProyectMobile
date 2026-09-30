@@ -24,10 +24,10 @@ import {
   ModalController,
 } from '@ionic/angular';
 import type { RefresherCustomEvent } from '@ionic/angular';
-import { FechaPipe, TPipe } from '../../../core/i18n/pipes';
+import { FechaPipe, TPipe } from '../../../core/i18n/i18n.pipes';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import type { NuevaMetrica, TomaDelDia } from '../../../core/models';
-import { COLOR_ESTADO_TOMA } from '../../../core/ui/colores';
+import { COLOR_ESTADO_TOMA } from '../../../core/ui/colores.constants';
 import { CitaItemComponent } from '../../compartido/citas/cita-item.component';
 import { NuevaCitaModal } from '../../compartido/citas/nueva-cita.modal';
 import { RegistrarMetricaModal } from '../../compartido/metricas/registrar-metrica.modal';

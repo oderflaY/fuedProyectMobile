@@ -1,0 +1,195 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button [text]="'volver' | t"></ion-back-button></ion-buttons>
+    <ion-title>{{ (vm.cuestionario()?.etiqueta ?? 'cronicas_titulo') | t }}</ion-title>
+  </ion-toolbar>
+  @if (!vm.resultado() && vm.total() > 0) {
+    <ion-toolbar>
+      <ion-progress-bar
+        [value]="vm.progreso()"
+        [attr.aria-label]="'cuestionario_progreso' | t: { paso: vm.paso() + 1, total: vm.total() }"
+      ></ion-progress-bar>
+    </ion-toolbar>
+  }
+</ion-header>
+
+<ion-content [fullscreen]="true" class="agrupado">
+  @if (vm.cargando()) {
+    <div class="ion-text-center ion-padding">
+      <ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner>
+    </div>
+  } @else if (vm.error(); as error) {
+    <div class="estado-vacio" role="alert">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p>{{ error }}</p>
+    </div>
+  } @else if (vm.resultado(); as resultado) {
+    <!-- Resultado: primero qué hacer, luego por qué. -->
+    <div class="titulo-seccion">{{ 'cuestionario_resultado' | t }}</div>
+    <ion-list [inset]="true" lines="full">
+      <ion-item>
+        <ion-icon
+          slot="start"
+          [name]="resultado.evaluacion.severidad === 'urgente' ? 'alert-circle' : 'pulse-outline'"
+          [color]="colorSeveridad[resultado.evaluacion.severidad]"
+          aria-hidden="true"
+        ></ion-icon>
+        <ion-label class="ion-text-wrap">
+          <h2>{{ 'segmento_' + resultado.evaluacion.segmento | t }}</h2>
+          <p>{{ 'severidad_' + resultado.evaluacion.severidad | t }}</p>
+        </ion-label>
+      </ion-item>
+      @for (recomendacion of resultado.recomendaciones; track recomendacion) {
+        <ion-item>
+          <ion-icon slot="start" name="arrow-forward-circle-outline" color="primary" aria-hidden="true"></ion-icon>
+          <ion-label class="ion-text-wrap">{{ recomendacion | t }}</ion-label>
+        </ion-item>
+      }
+    </ion-list>
+
+    @if (resultado.evaluacion.banderas.length > 0) {
+      <div class="titulo-seccion">{{ 'cuestionario_hallazgos' | t }}</div>
+      <ion-list [inset]="true" lines="full">
+        @for (bandera of resultado.evaluacion.banderas; track bandera.codigo) {
+          <ion-item>
+            <ion-icon
+              slot="start"
+              [name]="bandera.roja ? 'warning-outline' : 'information-circle-outline'"
+              [color]="bandera.roja ? 'danger' : 'medium'"
+              aria-hidden="true"
+            ></ion-icon>
+            <ion-label class="ion-text-wrap">{{ 'bandera_' + bandera.codigo | t: bandera.datos }}</ion-label>
+          </ion-item>
+        }
+      </ion-list>
+    }
+
+    @if (!resultado.evaluacion.confiable) {
+      <ion-note class="ion-padding-horizontal ion-text-wrap" color="medium">
+        {{ 'cuestionario_no_confiable' | t }}
+      </ion-note>
+    }
+    @if (resultado.alertasEnviadas > 0) {
+      <ion-note class="ion-padding-horizontal ion-text-wrap" color="medium">
+        {{ 'cuestionario_alertas_enviadas' | t: { total: resultado.alertasEnviadas } }}
+      </ion-note>
+    }
+  } @else if (vm.actual(); as pregunta) {
+    <div class="titulo-seccion">{{ 'cuestionario_paso' | t: { paso: vm.paso() + 1, total: vm.total() } }}</div>
+    <ion-list [inset]="true" lines="full">
+      <ion-item lines="none">
+        <ion-label class="ion-text-wrap">
+          <h2>{{ pregunta.etiqueta | t }}</h2>
+          @if (pregunta.ayuda) {
+            <p>{{ pregunta.ayuda | t }}</p>
+          }
+        </ion-label>
+      </ion-item>
+
+      @switch (pregunta.tipo) {
+        @case ('booleano') {
+          <ion-item>
+            <ion-toggle
+              [checked]="valor(pregunta.id) === true"
+              (ionChange)="responder(pregunta.id, $event.detail.checked)"
+            >
+              {{ (valor(pregunta.id) === true ? 'si' : 'no') | t }}
+            </ion-toggle>
+          </ion-item>
+        }
+        @case ('numero') {
+          <ion-item>
+            <ion-input
+              type="number"
+              inputmode="decimal"
+              [label]="pregunta.unidad ?? ('cuestionario_valor' | t)"
+              labelPlacement="stacked"
+              [min]="pregunta.min"
+              [max]="pregunta.max"
+              [value]="valor(pregunta.id)"
+              (ionInput)="responderNumero(pregunta.id, $event.detail.value)"
+            ></ion-input>
+          </ion-item>
+        }
+        @case ('presion') {
+          <ion-item>
+            <ion-input
+              inputmode="numeric"
+              [label]="'cuestionario_presion_formato' | t"
+              labelPlacement="stacked"
+              placeholder="120/80"
+              [value]="valor(pregunta.id)"
+              (ionInput)="responder(pregunta.id, $event.detail.value ?? '')"
+            ></ion-input>
+          </ion-item>
+        }
+        @case ('opcion') {
+          <ion-radio-group
+            [value]="valor(pregunta.id)"
+            (ionChange)="responder(pregunta.id, $event.detail.value)"
+          >
+            @for (opcion of pregunta.opciones ?? []; track opcion) {
+              <ion-item>
+                <ion-radio [value]="opcion">{{ 'opcion_' + pregunta.id + '_' + opcion | t }}</ion-radio>
+              </ion-item>
+            }
+          </ion-radio-group>
+        }
+        @case ('opcion_multiple') {
+          @for (opcion of pregunta.opciones ?? []; track opcion) {
+            <ion-item>
+              <ion-checkbox
+                [checked]="vm.seleccionada(pregunta.id, opcion)"
+                (ionChange)="vm.alternarOpcion(pregunta.id, opcion)"
+              >
+                {{ 'opcion_' + pregunta.id + '_' + opcion | t }}
+              </ion-checkbox>
+            </ion-item>
+          }
+        }
+        @default {
+          <ion-item>
+            <ion-input
+              [label]="'cuestionario_valor' | t"
+              labelPlacement="stacked"
+              [value]="valor(pregunta.id)"
+              (ionInput)="responder(pregunta.id, $event.detail.value ?? '')"
+            ></ion-input>
+          </ion-item>
+        }
+      }
+    </ion-list>
+
+    @if (!vm.puedeAvanzar()) {
+      <ion-note class="ion-padding-horizontal ion-text-wrap" color="danger" role="alert">
+        {{ 'cuestionario_respuesta_requerida' | t }}
+      </ion-note>
+    }
+  }
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    @if (vm.resultado()) {
+      <ion-buttons slot="start">
+        <ion-button (click)="vm.reiniciar()">{{ 'cuestionario_repetir' | t }}</ion-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-button [strong]="true" (click)="terminar()">{{ 'cuestionario_terminar' | t }}</ion-button>
+      </ion-buttons>
+    } @else if (!vm.cargando() && !vm.error()) {
+      <ion-buttons slot="start">
+        <ion-button [disabled]="vm.paso() === 0" (click)="vm.retroceder()">{{ 'volver' | t }}</ion-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-button [strong]="true" [disabled]="!vm.puedeAvanzar() || vm.enviando()" (click)="siguiente()">
+          @if (vm.enviando()) {
+            <ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner>
+          } @else {
+            {{ (vm.esUltima() ? 'cuestionario_enviar' : 'cuestionario_siguiente') | t }}
+          }
+        </ion-button>
+      </ion-buttons>
+    }
+  </ion-toolbar>
+</ion-footer>

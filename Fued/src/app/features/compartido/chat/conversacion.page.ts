@@ -1,7 +1,8 @@
-import { Component, Input, computed, effect, inject, signal, viewChild } from '@angular/core';
 import type { ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import type { ViewDidEnter, ViewWillLeave } from '@ionic/angular';
 import {
   ActionSheetController,
   IonBackButton,
@@ -19,9 +20,8 @@ import {
   IonToolbar,
   ModalController,
 } from '@ionic/angular';
-import type { ViewDidEnter, ViewWillLeave } from '@ionic/angular';
 import { I18nService } from '../../../core/i18n/i18n.service';
-import { FechaPipe, TPipe } from '../../../core/i18n/pipes';
+import { FechaPipe, TPipe } from '../../../core/i18n/i18n.pipes';
 import type { Mensaje } from '../../../core/models';
 import { AvisosService } from '../../../core/ui/avisos.service';
 import { AdjuntosService } from '../../../core/voz/adjuntos.service';

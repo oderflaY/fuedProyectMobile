@@ -22,12 +22,12 @@ set_exception_handler(static function (Throwable $e): void {
     responderError(new HttpError(500, 'error_interno', 'Ocurrió un error inesperado.'));
 });
 
-aplicarCors((array) config('origenes_permitidos'));
+aplicarCors((array) config('origenes_permitidos'), (string) config('origenes_patron'));
 
 $router = new Router();
 $router->get('/', fn () => responder(['nombre' => 'Fued API', 'version' => '1.0.0', 'estado' => 'ok']));
 
-foreach (['auth', 'pacientes', 'medicos', 'tratamientos', 'adherencia', 'metricas', 'citas', 'chat', 'emergencia'] as $modulo) {
+foreach (['auth', 'pacientes', 'privacidad', 'segmentacion', 'alertas', 'medicos', 'tratamientos', 'adherencia', 'metricas', 'citas', 'chat', 'emergencia'] as $modulo) {
     (require __DIR__ . "/routes/$modulo.php")($router);
 }
 

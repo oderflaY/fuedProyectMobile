@@ -161,6 +161,64 @@ final class Paciente extends Modelo
         ];
     }
 
+    /** El paciente ve su historial completo: la privacidad filtra a terceros, no a él. */
+    public function expedientePropio(): array
+    {
+        $expediente = $this->expediente();
+        $expediente['segmentacion'] = $this->segmentacionDto();
+        $expediente['privacidad'] = ['audiencia' => 'propio', 'seccionesOmitidas' => []];
+        return $expediente;
+    }
+
+    // ------------------------------------------------------------ privacidad
+
+    /** Preferencias guardadas del paciente para esa audiencia. */
+    public function preferenciasPrivacidad(string $audiencia): array
+    {
+        return PreferenciaPrivacidad::deAudiencia((string) $this->id_paciente, $audiencia);
+    }
+
+    /**
+     * Expediente ya filtrado por lo que el paciente decidió mostrar.
+     * `medico` y `exportacion` parten del expediente completo; el paciente que
+     * consulta su propio historial no pasa por aquí y lo ve entero.
+     */
+    public function expedientePara(string $audiencia): array
+    {
+        $expediente = $this->expediente();
+        $expediente['segmentacion'] = $this->segmentacionDto();
+        return filtrarExpediente($expediente, $audiencia, $this->preferenciasPrivacidad($audiencia));
+    }
+
+    /**
+     * Lo que ve quien escanea la tarjeta RFID. El bloque reducido es obligatorio
+     * por norma de seguridad; el resto sólo viaja si el paciente lo activó.
+     */
+    public function perfilEmergenciaPara(): array
+    {
+        $payload = [
+            'perfilEmergenciaReducido' => $this->perfilEmergencia(),
+            'contactosEmergencia' => array_map(fn (ContactoEmergencia $c) => $c->aDto(), $this->contactos()),
+            'tratamientosActivos' => array_map(fn (Tratamiento $t) => $t->aDto(), $this->tratamientos()),
+            'metricasVitalesActuales' => $this->metricasActuales(),
+            'historialClinico' => ['cirugias' => array_map(fn (Cirugia $c) => $c->aDto(), $this->cirugias())],
+            'segmentacion' => $this->segmentacionDto(),
+        ];
+        return podarOmitidas(filtrarExpediente($payload, 'emergencia', $this->preferenciasPrivacidad('emergencia')));
+    }
+
+    // ------------------------------------------------------------ segmentación
+
+    /** @return array<int, PerfilCronico> */
+    public function perfilesCronicos(): array
+    {
+        return PerfilCronico::activosDe((string) $this->id_paciente);
+    }
+
+    public function segmentacionDto(): array
+    {
+        return array_map(fn (PerfilCronico $p) => $p->aDto(), $this->perfilesCronicos());
+    }
     /**
      * Semáforo de riesgo: combina cumplimiento de tomas de los últimos 7 días,
      * última presión arterial y condiciones críticas registradas.

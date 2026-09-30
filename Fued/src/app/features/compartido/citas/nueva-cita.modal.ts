@@ -17,7 +17,7 @@ import {
   IonToolbar,
   ModalController,
 } from '@ionic/angular';
-import { FechaPipe, TPipe } from '../../../core/i18n/pipes';
+import { FechaPipe, TPipe } from '../../../core/i18n/i18n.pipes';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import { NuevaCitaViewModel } from './nueva-cita.viewmodel';
 

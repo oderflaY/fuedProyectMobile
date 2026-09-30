@@ -1,0 +1,73 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ 'alertas_titulo' | t }}</ion-title>
+    @if (vm.pendientes() > 0) {
+      <ion-buttons slot="end">
+        <ion-badge color="danger" [attr.aria-label]="'alertas_pendientes' | t: { total: vm.pendientes() }">
+          {{ vm.pendientes() }}
+        </ion-badge>
+      </ion-buttons>
+    }
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [value]="vm.filtro()" (ionChange)="cambiarFiltro($event.detail.value)">
+      @for (filtro of filtros; track filtro) {
+        <ion-segment-button [value]="filtro">
+          <ion-label>{{ 'alertas_filtro_' + filtro | t }}</ion-label>
+        </ion-segment-button>
+      }
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="agrupado">
+  <ion-refresher slot="fixed" (ionRefresh)="refrescar($any($event))">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (vm.cargando()) {
+    <div class="ion-text-center ion-padding">
+      <ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner>
+    </div>
+  } @else if (vm.error(); as error) {
+    <div class="estado-vacio" role="alert">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p>{{ error }}</p>
+      <ion-button fill="outline" (click)="vm.cargar()">{{ 'reintentar' | t }}</ion-button>
+    </div>
+  } @else if (vm.ordenadas().length === 0) {
+    <div class="estado-vacio">
+      <ion-icon name="notifications-off-outline" aria-hidden="true"></ion-icon>
+      <p>{{ 'alertas_vacio' | t }}</p>
+    </div>
+  } @else {
+    <ion-list [inset]="true" lines="full">
+      @for (alerta of vm.ordenadas(); track alerta.idAlerta) {
+        <ion-item [button]="true" (click)="opciones(alerta)">
+          <ion-icon
+            slot="start"
+            [name]="alerta.severidad === 'urgente' ? 'alert-circle' : 'warning-outline'"
+            [color]="colorSeveridad[alerta.severidad]"
+            aria-hidden="true"
+          ></ion-icon>
+          <ion-label class="ion-text-wrap">
+            <h2>{{ alerta.nombrePaciente }}</h2>
+            <p>{{ alerta.claveTitulo | t }}</p>
+            <p>{{ alerta.claveDetalle | t: parametros(alerta) }}</p>
+            @for (hallazgo of hallazgos(alerta); track hallazgo) {
+              <p>{{ hallazgo }}</p>
+            }
+            @if (alerta.datos['confiable'] === false) {
+              <p>{{ 'alertas_medicion_no_confiable' | t }}</p>
+            }
+            <p>{{ alerta.fechaCreacion | fecha: 'fechaHora' }}</p>
+            @if (alerta.notasMedico) {
+              <p>{{ alerta.notasMedico }}</p>
+            }
+          </ion-label>
+          <ion-badge slot="end" [color]="colorEstado[alerta.estado]">{{ 'alertas_estado_' + alerta.estado | t }}</ion-badge>
+        </ion-item>
+      }
+    </ion-list>
+  }
+</ion-content>

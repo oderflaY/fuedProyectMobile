@@ -24,9 +24,9 @@ import {
   ModalController,
 } from '@ionic/angular';
 import type { ActionSheetButton, AlertInput, RefresherCustomEvent } from '@ionic/angular';
-import { FechaPipe, TPipe } from '../../../core/i18n/pipes';
+import { FechaPipe, TPipe } from '../../../core/i18n/i18n.pipes';
 import { I18nService } from '../../../core/i18n/i18n.service';
-import { COLOR_ESTADO_TOMA } from '../../../core/ui/colores';
+import { COLOR_ESTADO_TOMA, COLOR_SEGMENTO } from '../../../core/ui/colores.constants';
 import type { Coleccion, NuevaMetrica, NuevoTratamiento, Tratamiento } from '../../../core/models';
 import { NuevaCitaModal } from '../citas/nueva-cita.modal';
 import { RegistrarMetricaModal } from '../metricas/registrar-metrica.modal';
@@ -99,6 +99,7 @@ export class ExpedientePage implements OnInit {
   private readonly router = inject(Router);
 
   readonly colorToma = COLOR_ESTADO_TOMA;
+  readonly colorSegmento = COLOR_SEGMENTO;
 
   ngOnInit(): void {
     void this.vm.iniciar(this.idPaciente);

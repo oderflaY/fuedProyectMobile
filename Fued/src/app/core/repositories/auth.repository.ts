@@ -1,13 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { ApiService } from '../api/api.service';
-import type { DatosRegistro, Sesion, Usuario } from '../models';
+import type { Credenciales, DatosRegistro, Sesion, Usuario } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthRepository {
   private readonly api = inject(ApiService);
 
   login(email: string, password: string): Promise<Sesion> {
-    return this.api.post<Sesion>('/auth/login', { email, password });
+    const credenciales: Credenciales = { email, password };
+    return this.api.post<Sesion>('/auth/login', credenciales);
   }
 
   registrar(datos: DatosRegistro): Promise<Sesion> {

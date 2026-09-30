@@ -13,7 +13,7 @@ import {
   IonRouterLink,
   IonSpinner,
 } from '@ionic/angular';
-import { TPipe } from '../../../core/i18n/pipes';
+import { TPipe } from '../../../core/i18n/i18n.pipes';
 import { LoginViewModel } from './login.viewmodel';
 
 @Component({

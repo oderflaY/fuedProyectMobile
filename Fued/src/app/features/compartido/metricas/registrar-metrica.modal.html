@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>{{ 'metrica_titulo' | t }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button [strong]="true" [disabled]="!puedeGuardar()" (click)="guardar()">{{ 'guardar' | t }}</ion-button>
+      <ion-button [strong]="true" [disabled]="!vm.puedeGuardar()" (click)="guardar()">{{ 'guardar' | t }}</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -15,14 +15,14 @@
   <ion-list [inset]="true" lines="full">
     <ion-item>
       <ion-input type="number" inputmode="numeric" labelPlacement="fixed" [label]="'metrica_sistolica' | t" placeholder="120"
-        [value]="sistolica()" (ionInput)="sistolica.set($event.detail.value ?? '')"></ion-input>
+        [value]="vm.sistolica()" (ionInput)="vm.sistolica.set($event.detail.value ?? '')"></ion-input>
     </ion-item>
     <ion-item>
       <ion-input type="number" inputmode="numeric" labelPlacement="fixed" [label]="'metrica_diastolica' | t" placeholder="80"
-        [value]="diastolica()" (ionInput)="diastolica.set($event.detail.value ?? '')"></ion-input>
+        [value]="vm.diastolica()" (ionInput)="vm.diastolica.set($event.detail.value ?? '')"></ion-input>
     </ion-item>
   </ion-list>
-  @if (presionIncompleta()) {
+  @if (vm.presionIncompleta()) {
     <ion-note color="warning" class="ion-padding-horizontal" role="alert">{{ 'metrica_presion_incompleta' | t }}</ion-note>
   }
 
@@ -30,30 +30,30 @@
   <ion-list [inset]="true" lines="full">
     <ion-item>
       <ion-input type="number" inputmode="numeric" labelPlacement="fixed" [label]="'metrica_frecuencia' | t" [placeholder]="'unidad_lpm' | t"
-        [value]="numeros().frecuenciaCardiaca" (ionInput)="actualizar('frecuenciaCardiaca', $event.detail.value)"></ion-input>
+        [value]="vm.numeros().frecuenciaCardiaca" (ionInput)="vm.actualizar('frecuenciaCardiaca', $event.detail.value)"></ion-input>
     </ion-item>
     <ion-item>
       <ion-input type="number" inputmode="decimal" labelPlacement="fixed" [label]="'metrica_glucosa' | t" [placeholder]="'unidad_mgdl' | t"
-        [value]="numeros().glucosaMgDl" (ionInput)="actualizar('glucosaMgDl', $event.detail.value)"></ion-input>
+        [value]="vm.numeros().glucosaMgDl" (ionInput)="vm.actualizar('glucosaMgDl', $event.detail.value)"></ion-input>
     </ion-item>
     <ion-item>
       <ion-input type="number" inputmode="decimal" labelPlacement="fixed" [label]="'metrica_temperatura' | t" [placeholder]="'unidad_celsius' | t"
-        [value]="numeros().temperaturaC" (ionInput)="actualizar('temperaturaC', $event.detail.value)"></ion-input>
+        [value]="vm.numeros().temperaturaC" (ionInput)="vm.actualizar('temperaturaC', $event.detail.value)"></ion-input>
     </ion-item>
     <ion-item>
       <ion-input type="number" inputmode="decimal" labelPlacement="fixed" [label]="'metrica_peso' | t" [placeholder]="'unidad_kg' | t"
-        [value]="numeros().pesoKg" (ionInput)="actualizar('pesoKg', $event.detail.value)"></ion-input>
+        [value]="vm.numeros().pesoKg" (ionInput)="vm.actualizar('pesoKg', $event.detail.value)"></ion-input>
     </ion-item>
     <ion-item>
       <ion-input type="number" inputmode="decimal" labelPlacement="fixed" [label]="'metrica_altura' | t" [placeholder]="'unidad_cm' | t"
-        [value]="numeros().alturaCm" (ionInput)="actualizar('alturaCm', $event.detail.value)"></ion-input>
+        [value]="vm.numeros().alturaCm" (ionInput)="vm.actualizar('alturaCm', $event.detail.value)"></ion-input>
     </ion-item>
   </ion-list>
 
   <ion-list [inset]="true">
     <ion-item>
       <ion-textarea labelPlacement="stacked" [label]="'metrica_notas' | t" [autoGrow]="true" [maxlength]="500"
-        [value]="notas()" (ionInput)="notas.set($event.detail.value ?? '')"></ion-textarea>
+        [value]="vm.notas()" (ionInput)="vm.notas.set($event.detail.value ?? '')"></ion-textarea>
     </ion-item>
   </ion-list>
 </ion-content>

@@ -1,0 +1,65 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button [text]="'volver' | t"></ion-back-button></ion-buttons>
+    <ion-title>{{ 'cronicas_titulo' | t }}</ion-title>
+    <ion-buttons slot="end">
+      @if (vm.disponibles().length > 0) {
+        <ion-button (click)="agregar()" [attr.aria-label]="'cronicas_agregar' | t">
+          <ion-icon slot="icon-only" name="add" aria-hidden="true"></ion-icon>
+        </ion-button>
+      }
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="agrupado">
+  @if (vm.cargando()) {
+    <div class="ion-text-center ion-padding">
+      <ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner>
+    </div>
+  } @else if (vm.error(); as error) {
+    <div class="estado-vacio" role="alert">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p>{{ error }}</p>
+      <ion-button fill="outline" (click)="vm.cargar()">{{ 'reintentar' | t }}</ion-button>
+    </div>
+  } @else if (vm.perfiles().length === 0) {
+    <div class="estado-vacio">
+      <ion-icon name="clipboard-outline" aria-hidden="true"></ion-icon>
+      <p>{{ 'cronicas_vacio' | t }}</p>
+      <ion-button fill="outline" (click)="agregar()">{{ 'cronicas_agregar' | t }}</ion-button>
+    </div>
+  } @else {
+    <p class="ion-padding-horizontal texto-secundario">{{ 'cronicas_explicacion' | t }}</p>
+    <ion-list [inset]="true" lines="full">
+      @for (perfil of vm.perfiles(); track perfil.idPerfil) {
+        <ion-item [button]="true" (click)="responder(perfil)">
+          <ion-label class="ion-text-wrap">
+            <h2>{{ perfil.etiqueta | t }}</h2>
+            <p>
+              @if (perfil.fechaEvaluacion) {
+                {{ 'cronicas_ultima' | t: { fecha: '' } }} {{ perfil.fechaEvaluacion | fecha: 'fechaHora' }}
+              } @else {
+                {{ 'cronicas_sin_evaluar' | t }}
+              }
+            </p>
+            @if (perfil.ultimaEvaluacion && !perfil.ultimaEvaluacion.confiable) {
+              <p>{{ 'cronicas_ultima_no_confiable' | t }}</p>
+            }
+          </ion-label>
+          <ion-badge slot="end" [color]="colorSegmento[perfil.segmento]">
+            {{ 'segmento_' + perfil.segmento | t }}
+          </ion-badge>
+          <ion-button
+            slot="end"
+            fill="clear"
+            (click)="opciones(perfil); $event.stopPropagation()"
+            [attr.aria-label]="'cronicas_opciones' | t: { condicion: perfil.etiqueta | t }"
+          >
+            <ion-icon slot="icon-only" name="ellipsis-horizontal" aria-hidden="true"></ion-icon>
+          </ion-button>
+        </ion-item>
+      }
+    </ion-list>
+  }
+</ion-content>

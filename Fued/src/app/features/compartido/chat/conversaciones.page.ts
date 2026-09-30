@@ -1,4 +1,4 @@
-import { Component, Injectable, computed, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   IonAvatar,
@@ -18,35 +18,11 @@ import {
   IonToolbar,
 } from '@ionic/angular';
 import type { RefresherCustomEvent, ViewWillEnter } from '@ionic/angular';
-import { SessionService } from '../../../core/auth/session.service';
-import { FechaPipe, InicialesPipe, TPipe } from '../../../core/i18n/pipes';
+import { FechaPipe, InicialesPipe, TPipe } from '../../../core/i18n/i18n.pipes';
 import type { Conversacion } from '../../../core/models';
-import { ChatRepository } from '../../../core/repositories/chat.repository';
-import { AvisosService } from '../../../core/ui/avisos.service';
+import { ConversacionesViewModel } from './conversaciones.viewmodel';
 
-@Injectable()
-export class ConversacionesViewModel {
-  private readonly chat = inject(ChatRepository);
-  private readonly sesion = inject(SessionService);
-  private readonly avisos = inject(AvisosService);
-
-  readonly conversaciones = signal<Conversacion[]>([]);
-  readonly cargando = signal(true);
-  readonly error = signal<string | null>(null);
-  readonly rutaBase = computed(() => (this.sesion.rol() === 'medico' ? '/medico/chat' : '/paciente/chat'));
-
-  async cargar(): Promise<void> {
-    this.error.set(null);
-    try {
-      this.conversaciones.set(await this.chat.conversaciones());
-    } catch (error) {
-      this.error.set(this.avisos.mensajeDeError(error));
-    } finally {
-      this.cargando.set(false);
-    }
-  }
-}
-
+/** Vista de la bandeja de chats: lista las conversaciones y abre la elegida. */
 @Component({
   selector: 'app-conversaciones',
   templateUrl: 'conversaciones.page.html',

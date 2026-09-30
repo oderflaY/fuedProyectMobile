@@ -17,7 +17,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular';
-import { TPipe } from '../../../core/i18n/pipes';
+import { TPipe } from '../../../core/i18n/i18n.pipes';
 import { RegistroViewModel } from './registro.viewmodel';
 
 @Component({

@@ -31,6 +31,13 @@
       <ion-button fill="outline" (click)="vm.cargar()">{{ 'reintentar' | t }}</ion-button>
     </div>
   } @else if (vm.expediente(); as exp) {
+    <!-- El médico debe saber que hay datos retenidos, para no leerlos como inexistentes. -->
+    @if (exp.privacidad.seccionesOmitidas.length > 0) {
+      <ion-note class="ion-padding-horizontal ion-text-wrap" color="medium" role="note">
+        {{ 'expediente_datos_omitidos' | t: { total: exp.privacidad.seccionesOmitidas.length } }}
+      </ion-note>
+    }
+
     <!-- Resumen -->
     <section class="resumen" [attr.aria-label]="'expediente_resumen' | t">
       <h2>{{ vm.nombreCompleto() }}</h2>
@@ -133,6 +140,29 @@
         <ion-item><ion-label class="texto-secundario">{{ 'sin_registros' | t }}</ion-label></ion-item>
       }
     </ion-list>
+
+    <!-- Seguimiento de enfermedades crónicas -->
+    @if (exp.segmentacion.length > 0) {
+      <div class="titulo-seccion">{{ 'cronicas_titulo' | t }}</div>
+      <ion-list [inset]="true" lines="full">
+        @for (perfil of exp.segmentacion; track perfil.idPerfil) {
+          <ion-item>
+            <ion-label class="ion-text-wrap">
+              <h3>{{ perfil.etiqueta | t }}</h3>
+              @if (perfil.fechaEvaluacion) {
+                <p>{{ perfil.fechaEvaluacion | fecha: 'fechaHora' }}</p>
+              } @else {
+                <p>{{ 'cronicas_sin_evaluar' | t }}</p>
+              }
+              @if (perfil.ultimaEvaluacion && !perfil.ultimaEvaluacion.confiable) {
+                <p>{{ 'cronicas_ultima_no_confiable' | t }}</p>
+              }
+            </ion-label>
+            <ion-badge slot="end" [color]="colorSegmento[perfil.segmento]">{{ 'segmento_' + perfil.segmento | t }}</ion-badge>
+          </ion-item>
+        }
+      </ion-list>
+    }
 
     <!-- Tratamientos -->
     <div class="titulo-seccion">

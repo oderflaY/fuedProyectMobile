@@ -25,6 +25,13 @@ return [
         'ionic://localhost',
     ],
 
+    // Además de la lista anterior, cualquier origen que coincida con este patrón.
+    // Por defecto: la app servida desde una IP de red local (192.168.x.x, 10.x.x.x,
+    // 172.16-31.x.x) para probar desde el teléfono. Déjalo en '' en producción.
+    'origenes_patron' => getenv('FUED_ORIGENES_PATRON') !== false
+        ? (string) getenv('FUED_ORIGENES_PATRON')
+        : '#^https?://(192\\.168|10|172\\.(1[6-9]|2\\d|3[01]))(\\.\\d{1,3}){2,3}(:\\d+)?$#',
+
     // Zona horaria por defecto cuando el cliente no envía `tz`.
     'zona_horaria' => 'America/Mexico_City',
 

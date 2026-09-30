@@ -292,5 +292,142 @@ afirmar($estado === 204 && $estado2 === 403, 'revocar el acceso lo corta de inme
 [$estado, $r] = http('POST', '/auth/registro', ['rol' => 'medico', 'email' => 'dra.nueva@hospital.com', 'password' => 'Segura123', 'nombre' => 'Laura', 'apellidos' => 'Díaz', 'cedulaProfesional' => '99887766', 'especialidad' => 'Pediatría'], null);
 afirmar($estado === 201 && $r['usuario']['rol'] === 'medico', 'registra un médico nuevo', $r);
 
+echo "Privacidad selectiva del expediente\n";
+[$estado, $r] = http('GET', '/pacientes/pac_01H8X9A/privacidad', null, $juan);
+$secciones = array_column($r['secciones'] ?? [], null, 'seccion');
+afirmar(
+    $estado === 200 && $secciones['alergias']['audiencias']['emergencia']['regla'] === 'siempre',
+    'las alergias no son ocultables en una urgencia',
+    $r
+);
+afirmar(
+    !isset($secciones['adherencia']['audiencias']['emergencia']),
+    'la adherencia nunca viaja en el escaneo RFID'
+);
+[$estado] = http('GET', '/pacientes/pac_01H8X9A/privacidad', null, $elena);
+afirmar($estado === 403, 'el médico no puede leer las preferencias de privacidad del paciente');
+
+[$estado, $r] = http('PUT', '/pacientes/pac_01H8X9A/privacidad', ['audiencia' => 'emergencia', 'secciones' => ['alergias' => false]], $juan);
+afirmar($estado === 422 && $r['error']['codigo'] === 'seccion_no_configurable', 'y nadie puede ocultar las alergias al paramédico', $r);
+
+[$estado] = http('PUT', '/pacientes/pac_01H8X9A/privacidad', ['audiencia' => 'medico', 'secciones' => ['adherencia' => false]], $juan);
+[$estado2, $r] = http('GET', '/pacientes/pac_01H8X9A', null, $elena);
+afirmar(
+    $estado === 200 && $estado2 === 200 && $r['registroAdherencia'] === []
+        && in_array('adherencia', $r['privacidad']['seccionesOmitidas'], true),
+    'el paciente oculta su adherencia y el médico recibe el expediente sin ella',
+    $r['privacidad'] ?? $r
+);
+[$estado, $r] = http('GET', '/pacientes/pac_01H8X9A', null, $juan);
+afirmar($estado === 200 && $r['registroAdherencia'] !== [], 'pero el paciente sigue viendo su historial completo');
+http('PUT', '/pacientes/pac_01H8X9A/privacidad', ['audiencia' => 'medico', 'secciones' => ['adherencia' => true]], $juan);
+
+[$estado, $r] = http('GET', '/pacientes/pac_01H8X9A/exportacion', null, $juan);
+afirmar(
+    $estado === 200 && $r['expediente']['identificaciones']['curp'] === null,
+    'la copia para compartir respeta la audiencia exportacion',
+    $r['expediente']['identificaciones'] ?? $r
+);
+
+echo "Segmentación por enfermedad crónica\n";
+[$estado, $r] = http('GET', '/segmentacion/catalogo', null, $juan);
+afirmar($estado === 200 && count($r) === 5, 'el catálogo trae las cinco condiciones', $estado);
+
+[$estado, $r] = http('GET', '/pacientes/pac_01H8X9A/cronicas/hipertension/cuestionario', null, $juan);
+$ids = array_column($r['preguntas'] ?? [], 'id');
+afirmar(
+    $estado === 200 && in_array('ctx_reposo', $ids, true) && in_array('presion_2', $ids, true),
+    'el cuestionario de hipertensión pide contexto y una segunda toma',
+    $ids
+);
+
+// Dos tomas altas en buenas condiciones: riesgo confirmado y alerta al médico.
+[$estado, $r] = http('POST', '/pacientes/pac_01H8X9A/cronicas/hipertension/evaluaciones', ['respuestas' => [
+    'ctx_reposo' => true, 'ctx_estimulante' => false, 'ctx_malestar' => false,
+    'presion_1' => '156/96', 'presion_2' => '152/94', 'sintomas' => ['ninguno'], 'olvido_dosis' => 0,
+]], $juan);
+afirmar(
+    $estado === 201 && $r['evaluacion']['segmento'] === 'riesgo' && $r['evaluacion']['severidad'] === 'atencion'
+        && $r['alertasEnviadas'] >= 1,
+    'presión alta confirmada en dos tomas segmenta en riesgo y alerta al médico',
+    $r
+);
+
+// Una sola toma alta, la segunda normal: no basta para clasificar en riesgo.
+[$estado, $r] = http('POST', '/pacientes/pac_01H8X9A/cronicas/hipertension/evaluaciones', ['respuestas' => [
+    'ctx_reposo' => true, 'ctx_estimulante' => false, 'ctx_malestar' => false,
+    'presion_1' => '148/92', 'presion_2' => '124/78', 'sintomas' => ['ninguno'], 'olvido_dosis' => 0,
+]], $juan);
+afirmar(
+    $estado === 201 && $r['evaluacion']['segmento'] === 'seguimiento' && $r['alertasEnviadas'] === 0,
+    'una sola lectura alta sin confirmar no genera alerta',
+    $r['evaluacion'] ?? $r
+);
+
+// Mismo valor alto, pero medido tras café y sin reposo: se degrada y pide repetir.
+[$estado, $r] = http('POST', '/pacientes/pac_01H8X9A/cronicas/hipertension/evaluaciones', ['respuestas' => [
+    'ctx_reposo' => false, 'ctx_estimulante' => true, 'ctx_malestar' => false,
+    'presion_1' => '158/98', 'presion_2' => '155/96', 'sintomas' => ['ninguno'], 'olvido_dosis' => 0,
+]], $juan);
+afirmar(
+    $estado === 201 && $r['evaluacion']['confiable'] === false && $r['evaluacion']['segmento'] === 'seguimiento'
+        && in_array('reco_repetir_medicion', $r['recomendaciones'], true),
+    'una toma en malas condiciones no alerta: pide repetirla',
+    $r
+);
+
+// Bandera roja: alerta aunque el contexto de la medición sea malo.
+[$estado, $r] = http('POST', '/pacientes/pac_01H8X9A/cronicas/hipertension/evaluaciones', ['respuestas' => [
+    'ctx_reposo' => false, 'ctx_estimulante' => true, 'ctx_malestar' => true,
+    'presion_1' => '190/124', 'presion_2' => '188/122', 'sintomas' => ['dolor_toracico'], 'olvido_dosis' => 0,
+]], $juan);
+afirmar(
+    $estado === 201 && $r['evaluacion']['severidad'] === 'urgente'
+        && in_array('reco_urgencias', $r['recomendaciones'], true),
+    'una bandera roja alerta aunque la medición no sea confiable',
+    $r['evaluacion'] ?? $r
+);
+
+[$estado, $r] = http('POST', '/pacientes/pac_01H8X9A/cronicas/hipertension/evaluaciones', ['respuestas' => [
+    'ctx_reposo' => true, 'ctx_estimulante' => false, 'ctx_malestar' => false,
+    'presion_1' => '120/80', 'sintomas' => ['ninguno'], 'olvido_dosis' => 0,
+]], $juan);
+afirmar($estado === 422 && $r['error']['detalles']['campo'] === 'presion_2', 'exige la segunda toma', $r['error'] ?? $r);
+
+[$estado] = http('POST', '/pacientes/pac_01H8X9A/cronicas/diabetes/evaluaciones', ['respuestas' => []], $juan);
+afirmar($estado === 404, 'no se puede evaluar una condición que el paciente no tiene');
+
+[$estado, $r] = http('POST', '/pacientes/pac_02J9Y8B/cronicas/diabetes/evaluaciones', ['respuestas' => [
+    'ctx_reposo' => true, 'ctx_estimulante' => false, 'ctx_malestar' => false,
+    'momento' => 'ayuno', 'glucosa' => 48, 'sintomas_hipo' => ['temblor', 'sudor_frio'],
+    'sintomas_hiper' => ['ninguno'], 'herida_sin_cerrar' => false,
+]], $maria);
+afirmar(
+    $estado === 201 && $r['evaluacion']['severidad'] === 'urgente',
+    'una hipoglucemia severa es urgente',
+    $r['evaluacion'] ?? $r
+);
+
+echo "Alertas clínicas\n";
+[$estado, $r] = http('GET', '/alertas', null, $elena);
+afirmar($estado === 200 && $r['pendientes'] >= 1 && $r['alertas'][0]['estado'] === 'nueva', 'el médico ve su bandeja', $r);
+$idAlerta = $r['alertas'][0]['idAlerta'];
+afirmar(
+    $r['alertas'][0]['claveTitulo'] !== '' && !isset($r['alertas'][0]['titulo']),
+    'la alerta viaja como clave de strings.xml, no como texto'
+);
+[$estado] = http('GET', '/alertas', null, $juan);
+afirmar($estado === 403, 'un paciente no entra a la bandeja del médico');
+[$estado, $r] = http('PUT', "/alertas/$idAlerta", ['estado' => 'atendida', 'notasMedico' => 'Se ajusta dosis.'], $elena);
+afirmar($estado === 200 && $r['estado'] === 'atendida' && $r['fechaAtencion'] !== null, 'el médico la marca como atendida', $r);
+[$estado] = http('PUT', "/alertas/$idAlerta", ['estado' => 'vista'], $carlos);
+afirmar($estado === 403, 'otro médico no puede tocar una alerta ajena');
+[$estado, $r] = http('GET', '/pacientes/pac_01H8X9A/alertas', null, $juan);
+afirmar($estado === 200 && count($r) >= 1, 'el paciente ve qué alertas se generaron en su nombre', count($r ?? []));
+
+[$estado, $r] = http('GET', '/chat/doc_889900A/mensajes', null, $juan);
+$delSistema = array_filter($r ?? [], fn (array $m) => $m['remitente'] === 'sistema');
+afirmar($delSistema !== [] && reset($delSistema)['propio'] === false, 'el aviso también queda en el chat como mensaje del sistema');
+
 echo "\n$total pruebas, $fallos fallos\n";
 exit($fallos === 0 ? 0 : 1);

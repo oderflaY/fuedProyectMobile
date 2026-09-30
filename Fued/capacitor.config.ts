@@ -4,6 +4,10 @@ const config: CapacitorConfig = {
   appName: "Photo Gallery Cap Ng",
   npmClient: "npm",
   webDir: "www",
+  // La API de desarrollo es http:// (XAMPP en la red local) y la app carga desde https://localhost.
+  android: {
+    allowMixedContent: true,
+  },
 };
 
 export default config;

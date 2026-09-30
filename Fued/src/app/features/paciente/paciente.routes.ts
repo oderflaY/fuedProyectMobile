@@ -22,6 +22,12 @@ export const routes: Routes = [
       { path: 'chat', loadComponent: () => import('../compartido/chat/conversaciones.page').then((m) => m.ConversacionesPage) },
       { path: 'chat/:idContraparte', loadComponent: () => import('../compartido/chat/conversacion.page').then((m) => m.ConversacionPage) },
       { path: 'perfil', loadComponent: () => import('./perfil/perfil-paciente.page').then((m) => m.PerfilPacientePage) },
+      { path: 'perfil/privacidad', loadComponent: () => import('./privacidad/privacidad.page').then((m) => m.PrivacidadPage) },
+      { path: 'salud', loadComponent: () => import('./segmentacion/segmentacion.page').then((m) => m.SegmentacionPage) },
+      {
+        path: 'salud/cuestionario/:condicion',
+        loadComponent: () => import('./segmentacion/cuestionario.page').then((m) => m.CuestionarioPage),
+      },
       { path: '', pathMatch: 'full', redirectTo: 'inicio' },
     ],
   },

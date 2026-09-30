@@ -4,7 +4,7 @@ import type { Cita, Disponibilidad } from '../../../core/models';
 import { CitasRepository } from '../../../core/repositories/citas.repository';
 import { MedicosRepository } from '../../../core/repositories/medicos.repository';
 import { AvisosService } from '../../../core/ui/avisos.service';
-import { fechaLocalIso } from '../../../core/util/fechas';
+import { fechaLocalIso } from '../../../core/util/fechas.util';
 
 export interface OpcionContraparte {
   id: string;

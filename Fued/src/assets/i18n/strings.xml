@@ -417,4 +417,271 @@
   <string name="error_base_de_datos_no_disponible">El servidor no puede conectarse a la base de datos.</string>
   <string name="error_base_de_datos_no_instalada">La base de datos aún no está instalada.</string>
   <string name="error_error_interno">Ocurrió un error en el servidor.</string>
+
+  <!-- Privacidad selectiva del expediente -->
+  <string name="privacidad_titulo">Privacidad del historial</string>
+  <string name="privacidad_subtitulo">Elige qué datos ve cada quien</string>
+  <string name="perfil_seguimiento">Seguimiento y privacidad</string>
+  <string name="privacidad_audiencia_medico">Mi médico</string>
+  <string name="privacidad_audiencia_emergencia">Urgencias</string>
+  <string name="privacidad_audiencia_exportacion">Copia compartible</string>
+  <string name="privacidad_explicacion_medico">Esto es lo que ven los médicos a los que diste acceso. Ocultar una sección no la borra: sigue en tu historial y tú la sigues viendo completa.</string>
+  <string name="privacidad_explicacion_emergencia">Esto es lo que ve un paramédico al escanear tu tarjeta. Los datos que pueden salvarte la vida siempre se muestran; lo demás lo decides tú.</string>
+  <string name="privacidad_explicacion_exportacion">Esto es lo que incluye la copia de tu historial cuando la compartes fuera de la aplicación.</string>
+  <string name="privacidad_puedes_decidir">Tú decides</string>
+  <string name="privacidad_siempre_visible">Siempre visible</string>
+  <string name="privacidad_motivo_medico">Sin este dato tu médico no puede identificar tu expediente.</string>
+  <string name="privacidad_motivo_emergencia">Ocultarlo en una urgencia puede poner tu vida en riesgo.</string>
+  <string name="privacidad_motivo_exportacion">Necesario para que la copia sea válida.</string>
+  <string name="privacidad_estado_visible">Se muestra</string>
+  <string name="privacidad_estado_oculta">Oculta</string>
+  <string name="privacidad_sin_configurables">No hay nada que configurar para esta audiencia.</string>
+  <string name="privacidad_seccion_visible">Ahora se muestra</string>
+  <string name="privacidad_seccion_oculta">Ahora queda oculta</string>
+  <string name="privacidad_aviso_omitidas">Hay {total} secciones ocultas. Quien consulte tu historial verá que retuviste información, pero no cuál.</string>
+  <string name="privacidad_ver_exportacion">Ver qué incluye la copia</string>
+  <string name="privacidad_exportacion_titulo">Copia del historial</string>
+  <string name="privacidad_exportacion_completa">La copia incluye tu historial completo.</string>
+  <string name="privacidad_exportacion_omitidas">La copia omite {sesiones} secciones según tus preferencias.</string>
+
+  <string name="privacidad_seccion_identificaciones">CURP y número de seguridad social</string>
+  <string name="privacidad_seccion_datos_personales">Datos personales</string>
+  <string name="privacidad_seccion_contactos">Contactos de emergencia</string>
+  <string name="privacidad_seccion_tipo_sangre">Tipo de sangre y donación</string>
+  <string name="privacidad_seccion_alergias">Alergias</string>
+  <string name="privacidad_seccion_condiciones">Condiciones críticas</string>
+  <string name="privacidad_seccion_rescate">Medicación de rescate</string>
+  <string name="privacidad_seccion_tratamientos">Tratamientos activos</string>
+  <string name="privacidad_seccion_metricas">Signos vitales</string>
+  <string name="privacidad_seccion_cirugias">Cirugías</string>
+  <string name="privacidad_seccion_segmentacion">Seguimiento de enfermedades crónicas</string>
+  <string name="privacidad_seccion_adherencia">Registro de tomas</string>
+  <string name="privacidad_seccion_rfid">Tarjetas de emergencia</string>
+  <string name="privacidad_seccion_accesos">Médicos con acceso</string>
+
+  <!-- Enfermedades crónicas y segmentación -->
+  <string name="cronicas_titulo">Mis enfermedades crónicas</string>
+  <string name="cronicas_subtitulo">Cuestionarios de seguimiento</string>
+  <string name="cronicas_explicacion">Cada condición tiene su propio cuestionario. Responderlo con regularidad permite a tu médico detectar cambios reales y no falsas alarmas.</string>
+  <string name="cronicas_vacio">Aún no registras ninguna enfermedad crónica.</string>
+  <string name="cronicas_agregar">Agregar condición</string>
+  <string name="cronicas_responder">Responder cuestionario</string>
+  <string name="cronicas_archivar">Archivar condición</string>
+  <string name="cronicas_opciones">Opciones de {condicion}</string>
+  <string name="cronicas_ultima">Último cuestionario:</string>
+  <string name="cronicas_sin_evaluar">Sin cuestionarios respondidos</string>
+  <string name="cronicas_ultima_no_confiable">La última medición se registró en condiciones no ideales</string>
+  <string name="cronicas_condicion_agregada">Condición agregada</string>
+  <string name="cronicas_condicion_archivada">Condición archivada</string>
+  <string name="cronicas_basales_titulo">Tus valores de referencia</string>
+  <string name="cronicas_basales_mensaje">Se comparan tus mediciones contra estos valores tuyos, no contra promedios generales.</string>
+
+  <string name="cronica_hipertension">Hipertensión arterial</string>
+  <string name="cronica_diabetes">Diabetes</string>
+  <string name="cronica_asma_epoc">Asma o EPOC</string>
+  <string name="cronica_cardiopatia">Cardiopatía</string>
+  <string name="cronica_renal">Enfermedad renal</string>
+
+  <string name="segmento_sin_clasificar">Sin clasificar</string>
+  <string name="segmento_controlado">Controlado</string>
+  <string name="segmento_seguimiento">En seguimiento</string>
+  <string name="segmento_riesgo">En riesgo</string>
+  <string name="severidad_informativa">Sin señales de alarma</string>
+  <string name="severidad_atencion">Requiere atención médica</string>
+  <string name="severidad_urgente">Requiere atención inmediata</string>
+
+  <!-- Cuestionario guiado -->
+  <string name="cuestionario_progreso">Pregunta {paso} de {total}</string>
+  <string name="cuestionario_paso">Pregunta {paso} de {total}</string>
+  <string name="cuestionario_valor">Valor</string>
+  <string name="cuestionario_presion_formato">Sistólica/diastólica</string>
+  <string name="cuestionario_respuesta_requerida">Responde esta pregunta para continuar.</string>
+  <string name="cuestionario_siguiente">Siguiente</string>
+  <string name="cuestionario_enviar">Terminar</string>
+  <string name="cuestionario_repetir">Repetir</string>
+  <string name="cuestionario_terminar">Listo</string>
+  <string name="cuestionario_resultado">Resultado</string>
+  <string name="cuestionario_hallazgos">Hallazgos</string>
+  <string name="cuestionario_no_confiable">Esta medición se tomó en condiciones que pueden alterarla, así que no se envió como alerta. Repítela en reposo para confirmarla.</string>
+  <string name="cuestionario_alertas_enviadas">Se avisó a {total} de tus médicos.</string>
+
+  <!-- Preguntas de contexto: filtran los falsos positivos -->
+  <string name="pregunta_ctx_reposo">¿Descansaste sentado al menos cinco minutos antes de medir?</string>
+  <string name="pregunta_ctx_reposo_ayuda">Medir sin reposo previo eleva los valores y puede dar una falsa alarma.</string>
+  <string name="pregunta_ctx_estimulante">¿Tomaste café, fumaste o hiciste ejercicio en los últimos treinta minutos?</string>
+  <string name="pregunta_ctx_estimulante_ayuda">Estos tres alteran la medición durante un rato.</string>
+  <string name="pregunta_ctx_malestar">¿Tienes ahora dolor intenso, fiebre o estrés fuerte?</string>
+  <string name="pregunta_ctx_malestar_ayuda">El malestar agudo cambia tus valores sin que tu enfermedad haya empeorado.</string>
+
+  <!-- Hipertensión -->
+  <string name="basal_meta_sistolica">Meta de sistólica</string>
+  <string name="basal_meta_diastolica">Meta de diastólica</string>
+  <string name="pregunta_presion_1">Primera toma de presión</string>
+  <string name="pregunta_presion_1_ayuda">Escríbela como sistólica/diastólica, por ejemplo 120/80.</string>
+  <string name="pregunta_presion_2">Segunda toma de presión</string>
+  <string name="pregunta_presion_2_ayuda">Espera un minuto y vuelve a medir. Una sola lectura alta no confirma nada.</string>
+  <string name="pregunta_frecuencia_cardiaca">Frecuencia cardiaca</string>
+  <string name="pregunta_sintomas_hipertension">¿Tienes alguno de estos síntomas ahora?</string>
+  <string name="pregunta_olvido_dosis">¿Cuántas dosis olvidaste esta semana?</string>
+  <string name="opcion_sintomas_cefalea_intensa">Dolor de cabeza intenso</string>
+  <string name="opcion_sintomas_vision_borrosa">Visión borrosa</string>
+  <string name="opcion_sintomas_dolor_toracico">Dolor en el pecho</string>
+  <string name="opcion_sintomas_disnea">Falta de aire</string>
+  <string name="opcion_sintomas_debilidad_unilateral">Debilidad en un lado del cuerpo</string>
+  <string name="opcion_sintomas_ninguno">Ninguno</string>
+
+  <!-- Diabetes -->
+  <string name="basal_tipo_diabetes">Tipo de diabetes</string>
+  <string name="basal_meta_ayuno">Meta de glucosa en ayuno</string>
+  <string name="opcion_tipo_diabetes_tipo_1">Tipo 1</string>
+  <string name="opcion_tipo_diabetes_tipo_2">Tipo 2</string>
+  <string name="opcion_tipo_diabetes_gestacional">Gestacional</string>
+  <string name="pregunta_momento_glucosa">¿Cuándo mediste tu glucosa?</string>
+  <string name="opcion_momento_ayuno">En ayuno</string>
+  <string name="opcion_momento_postprandial">Dos horas después de comer</string>
+  <string name="opcion_momento_aleatorio">En otro momento</string>
+  <string name="pregunta_glucosa">Glucosa</string>
+  <string name="pregunta_sintomas_hipo">¿Sientes alguno de estos?</string>
+  <string name="opcion_sintomas_hipo_temblor">Temblor</string>
+  <string name="opcion_sintomas_hipo_sudor_frio">Sudor frío</string>
+  <string name="opcion_sintomas_hipo_confusion">Confusión</string>
+  <string name="opcion_sintomas_hipo_mareo">Mareo</string>
+  <string name="opcion_sintomas_hipo_ninguno">Ninguno</string>
+  <string name="pregunta_sintomas_hiper">¿Y alguno de estos?</string>
+  <string name="opcion_sintomas_hiper_sed_intensa">Sed intensa</string>
+  <string name="opcion_sintomas_hiper_orina_frecuente">Orinar con mucha frecuencia</string>
+  <string name="opcion_sintomas_hiper_vision_borrosa">Visión borrosa</string>
+  <string name="opcion_sintomas_hiper_nausea_vomito">Náusea o vómito</string>
+  <string name="opcion_sintomas_hiper_ninguno">Ninguno</string>
+  <string name="pregunta_herida_sin_cerrar">¿Tienes alguna herida que no cierra?</string>
+  <string name="pregunta_herida_sin_cerrar_ayuda">Revisa también las plantas de los pies.</string>
+
+  <!-- Asma y EPOC -->
+  <string name="basal_mejor_pef">Tu mejor flujo espiratorio</string>
+  <string name="basal_mejor_pef_ayuda">Es el valor más alto que has logrado estando bien. Todo se compara contra él.</string>
+  <string name="pregunta_pef">Flujo espiratorio de hoy</string>
+  <string name="pregunta_pef_ayuda">Sopla tres veces y anota el valor más alto.</string>
+  <string name="pregunta_usos_rescate">¿Cuántas veces usaste el inhalador de rescate esta semana?</string>
+  <string name="pregunta_despertares">¿Cuántas noches te despertó la tos o la falta de aire?</string>
+  <string name="pregunta_dificultad_hablar">¿Te cuesta terminar una frase completa sin pausar para respirar?</string>
+  <string name="pregunta_labios_azulados">¿Tienes los labios o las uñas de color azulado?</string>
+
+  <!-- Cardiopatía -->
+  <string name="basal_peso_seco">Tu peso seco</string>
+  <string name="basal_peso_seco_ayuda">El peso que registras cuando no retienes líquido. Subir sobre él avisa de una descompensación antes que la falta de aire.</string>
+  <string name="pregunta_dolor_toracico_reposo">¿Tienes dolor en el pecho estando en reposo?</string>
+  <string name="pregunta_disnea_nyha">¿Cuándo te falta el aire?</string>
+  <string name="pregunta_disnea_nyha_ayuda">Elige la situación que más se parezca a tu día de hoy.</string>
+  <string name="opcion_disnea_nyha_i">Nunca, ni con esfuerzo fuerte</string>
+  <string name="opcion_disnea_nyha_ii">Con esfuerzo fuerte, como subir escaleras</string>
+  <string name="opcion_disnea_nyha_iii">Con esfuerzo leve, como caminar en plano</string>
+  <string name="opcion_disnea_nyha_iv">En reposo, sin hacer nada</string>
+  <string name="pregunta_ortopnea">¿Necesitas más almohadas que de costumbre para dormir?</string>
+  <string name="pregunta_ortopnea_ayuda">Dormir más incorporado es señal de retención de líquido.</string>
+  <string name="pregunta_edema_piernas">¿Tienes hinchazón en las piernas?</string>
+  <string name="opcion_edema_piernas_ninguno">Ninguna</string>
+  <string name="opcion_edema_piernas_leve">Leve, sólo en los tobillos</string>
+  <string name="opcion_edema_piernas_moderado">Moderada, hasta media pierna</string>
+  <string name="opcion_edema_piernas_severo">Marcada, hasta el muslo</string>
+  <string name="pregunta_peso_hoy">Tu peso de hoy</string>
+
+  <!-- Enfermedad renal -->
+  <string name="basal_etapa_erc">Etapa de tu enfermedad renal</string>
+  <string name="opcion_etapa_erc_1">Etapa 1</string>
+  <string name="opcion_etapa_erc_2">Etapa 2</string>
+  <string name="opcion_etapa_erc_3">Etapa 3</string>
+  <string name="opcion_etapa_erc_4">Etapa 4</string>
+  <string name="opcion_etapa_erc_5">Etapa 5</string>
+  <string name="pregunta_volumen_orina">¿Cuánto orinaste hoy respecto a lo habitual?</string>
+  <string name="opcion_volumen_orina_normal">Lo normal</string>
+  <string name="opcion_volumen_orina_disminuido">Menos de lo normal</string>
+  <string name="opcion_volumen_orina_muy_disminuido">Mucho menos o casi nada</string>
+  <string name="pregunta_edema">¿Dónde tienes hinchazón?</string>
+  <string name="opcion_edema_ninguno">En ningún lado</string>
+  <string name="opcion_edema_piernas">En las piernas</string>
+  <string name="opcion_edema_facial">En la cara</string>
+  <string name="opcion_edema_generalizado">En todo el cuerpo</string>
+  <string name="pregunta_nausea_vomito">¿Tienes náusea o vómito que no se quita?</string>
+  <string name="pregunta_calambres">¿Tienes calambres musculares?</string>
+  <string name="pregunta_confusion">¿Te sientes confundido o muy somnoliento?</string>
+
+  <!-- Hallazgos de las reglas -->
+  <string name="bandera_medicion_no_confiable">Medición tomada en condiciones no ideales</string>
+  <string name="bandera_crisis_hipertensiva">Presión en cifras de crisis: {sistolica}/{diastolica}</string>
+  <string name="bandera_hipotension">Presión por debajo de lo normal: {sistolica}/{diastolica}</string>
+  <string name="bandera_presion_elevada_confirmada">Presión elevada confirmada en las dos tomas: {sistolica}/{diastolica}</string>
+  <string name="bandera_presion_elevada_sin_confirmar">Sólo la primera toma salió alta; la segunda fue normal</string>
+  <string name="bandera_presion_limitrofe">Presión en el límite: {sistolica}/{diastolica}</string>
+  <string name="bandera_sintomas_neurologicos">Dolor de cabeza intenso o visión borrosa</string>
+  <string name="bandera_sintoma_dolor_toracico">Dolor en el pecho</string>
+  <string name="bandera_sintoma_disnea">Falta de aire</string>
+  <string name="bandera_sintoma_debilidad_unilateral">Debilidad en un lado del cuerpo</string>
+  <string name="bandera_adherencia_baja">Olvidó {dosis} dosis esta semana</string>
+  <string name="bandera_hipoglucemia_severa">Hipoglucemia severa: {glucosa} mg/dL</string>
+  <string name="bandera_hipoglucemia">Glucosa baja: {glucosa} mg/dL</string>
+  <string name="bandera_hipoglucemia_con_confusion">Glucosa baja con confusión</string>
+  <string name="bandera_sospecha_cetoacidosis">Glucosa muy alta con náusea: {glucosa} mg/dL</string>
+  <string name="bandera_glucosa_alta">Glucosa alta: {glucosa} mg/dL</string>
+  <string name="bandera_glucosa_sobre_meta">Glucosa por encima de la meta: {glucosa} mg/dL</string>
+  <string name="bandera_herida_sin_cerrar">Herida que no cierra</string>
+  <string name="bandera_sintomas_hiperglucemia">Sed intensa y orina frecuente</string>
+  <string name="bandera_crisis_respiratoria">Dificultad para hablar o labios azulados</string>
+  <string name="bandera_sin_mejor_pef">Falta registrar el mejor flujo espiratorio personal</string>
+  <string name="bandera_pef_zona_roja">Flujo espiratorio en zona roja: {porcentaje} por ciento de su mejor marca</string>
+  <string name="bandera_pef_zona_amarilla">Flujo espiratorio en zona amarilla: {porcentaje} por ciento de su mejor marca</string>
+  <string name="bandera_rescate_frecuente">Usó el inhalador de rescate {usos} veces esta semana</string>
+  <string name="bandera_despertares_nocturnos">Se despertó {noches} noches por síntomas</string>
+  <string name="bandera_dolor_toracico_reposo">Dolor en el pecho en reposo</string>
+  <string name="bandera_disnea_reposo">Falta de aire en reposo</string>
+  <string name="bandera_disnea_esfuerzo_minimo">Falta de aire con esfuerzo mínimo</string>
+  <string name="bandera_aumento_peso">Subió {kg} kg sobre su peso seco</string>
+  <string name="bandera_aumento_peso_leve">Subió {kg} kg sobre su peso seco</string>
+  <string name="bandera_congestion">Hinchazón o necesidad de dormir incorporado</string>
+  <string name="bandera_frecuencia_anormal">Frecuencia cardiaca fuera de rango: {lpm} lpm</string>
+  <string name="bandera_oliguria">Orinó mucho menos de lo habitual</string>
+  <string name="bandera_volumen_orina_bajo">Orinó menos de lo habitual</string>
+  <string name="bandera_sospecha_uremia">Confusión junto con náusea o vómito</string>
+  <string name="bandera_edema_generalizado">Hinchazón en cara o todo el cuerpo</string>
+
+  <!-- Guía para el paciente -->
+  <string name="reco_urgencias">Acude a urgencias o llama a emergencias ahora mismo.</string>
+  <string name="reco_contactar_medico">Comunícate hoy con tu médico.</string>
+  <string name="reco_vigilar">Vuelve a medirte mañana y anota cómo te sientes.</string>
+  <string name="reco_continuar">Sigue con tu tratamiento como hasta ahora.</string>
+  <string name="reco_repetir_medicion">Descansa diez minutos y repite la medición.</string>
+
+  <!-- Bandeja de alertas del médico -->
+  <string name="tab_alertas">Alertas</string>
+  <string name="alertas_titulo">Alertas clínicas</string>
+  <string name="alertas_vacio">No hay alertas con este filtro.</string>
+  <string name="alertas_pendientes">{total} alertas sin revisar</string>
+  <string name="alertas_filtro_nueva">Nuevas</string>
+  <string name="alertas_filtro_vista">Vistas</string>
+  <string name="alertas_filtro_atendida">Atendidas</string>
+  <string name="alertas_filtro_todas">Todas</string>
+  <string name="alertas_estado_nueva">Nueva</string>
+  <string name="alertas_estado_vista">Vista</string>
+  <string name="alertas_estado_atendida">Atendida</string>
+  <string name="alertas_ver_expediente">Ver expediente</string>
+  <string name="alertas_escribir">Escribir al paciente</string>
+  <string name="alertas_marcar_vista">Marcar como vista</string>
+  <string name="alertas_marcar_atendida">Marcar como atendida</string>
+  <string name="alertas_notas_titulo">Nota de atención</string>
+  <string name="alertas_notas_mensaje">Queda registrada junto a la alerta.</string>
+  <string name="alertas_vista">Alerta marcada como vista</string>
+  <string name="alertas_atendida">Alerta marcada como atendida</string>
+  <string name="alertas_medicion_no_confiable">La medición se registró en condiciones no ideales</string>
+  <string name="alerta_titulo_urgente">Requiere atención inmediata</string>
+  <string name="alerta_titulo_atencion">Requiere atención médica</string>
+  <string name="alerta_detalle_segmentacion">Cuestionario de seguimiento con resultado en segmento {segmento}</string>
+
+  <!-- Errores nuevos de la API -->
+  <string name="error_seccion_no_configurable">Esa sección no se puede ocultar ante esa audiencia.</string>
+  <string name="error_seccion_desconocida">Esa sección no existe.</string>
+  <string name="error_condicion_ya_registrada">Esa condición ya está en tu perfil.</string>
+  <string name="error_condicion_no_encontrada">Esa enfermedad crónica no está disponible.</string>
+  <string name="error_perfil_no_encontrado">Todavía no registras esa condición.</string>
+  <string name="error_alerta_no_encontrada">La alerta ya no existe.</string>
+  <string name="error_presion_invalida">La presión debe escribirse como sistólica/diastólica, por ejemplo 120/80.</string>
+  <string name="expediente_datos_omitidos">El paciente ocultó {total} secciones de su historial. No es que no existan: decidió no compartirlas.</string>
 </resources>

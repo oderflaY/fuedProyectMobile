@@ -5,18 +5,19 @@ import type {
   Coleccion,
   DispositivoRfid,
   ElementoDescripcion,
-  EstadoToma,
   Expediente,
   HistorialAdherencia,
   MedicoAutorizado,
   Metrica,
   NivelAcceso,
   NuevaMetrica,
+  NuevaToma,
+  NuevoAcceso,
   NuevoTratamiento,
   ResultadoToma,
   Tratamiento,
 } from '../models';
-import { zonaHorariaLocal } from '../util/fechas';
+import { zonaHorariaLocal } from '../util/fechas.util';
 
 @Injectable({ providedIn: 'root' })
 export class PacientesRepository {
@@ -53,7 +54,8 @@ export class PacientesRepository {
 
   // Control de accesos
   otorgarAcceso(idPaciente: string, idMedico: string, nivelAcceso: NivelAcceso): Promise<MedicoAutorizado[]> {
-    return this.api.post<MedicoAutorizado[]>(`/pacientes/${idPaciente}/accesos`, { idMedico, nivelAcceso });
+    const acceso: NuevoAcceso = { idMedico, nivelAcceso };
+    return this.api.post<MedicoAutorizado[]>(`/pacientes/${idPaciente}/accesos`, acceso);
   }
 
   revocarAcceso(idPaciente: string, idMedico: string): Promise<void> {
@@ -82,10 +84,7 @@ export class PacientesRepository {
     return this.api.get<AgendaTomas>(`/pacientes/${idPaciente}/tomas`, { fecha, tz: zonaHorariaLocal() });
   }
 
-  registrarToma(
-    idPaciente: string,
-    toma: { idTratamiento: string; fechaHoraProgramada: string; estado: Exclude<EstadoToma, 'tomado_tarde'>; sintomasAsociados?: string | null },
-  ): Promise<ResultadoToma> {
+  registrarToma(idPaciente: string, toma: NuevaToma): Promise<ResultadoToma> {
     return this.api.post<ResultadoToma>(`/pacientes/${idPaciente}/tomas`, toma);
   }
 

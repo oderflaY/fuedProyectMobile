@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IonIcon, IonLabel, IonTabBar, IonTabButton, IonTabs } from '@ionic/angular';
-import { TPipe } from '../../../core/i18n/pipes';
+import { TPipe } from '../../../core/i18n/i18n.pipes';
 
 export interface PestanaConfig {
   tab: string;

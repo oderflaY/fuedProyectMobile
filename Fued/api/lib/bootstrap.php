@@ -14,6 +14,8 @@ require_once __DIR__ . '/jwt.php';
 require_once __DIR__ . '/orm/Modelo.php';
 require_once __DIR__ . '/orm/Consulta.php';
 require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/privacidad.php';
+require_once __DIR__ . '/segmentacion.php';
 
 // Autocarga de los modelos del ORM (api/modelos/Paciente.php => class Paciente).
 spl_autoload_register(static function (string $clase): void {

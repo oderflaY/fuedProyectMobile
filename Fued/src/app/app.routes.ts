@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import type { Routes } from '@angular/router';
-import { invitadoGuard, rolGuard } from './core/auth/guards';
+import { invitadoGuard, rolGuard } from './core/auth/auth.guards';
 import { SessionService } from './core/auth/session.service';
 
 export const routes: Routes = [

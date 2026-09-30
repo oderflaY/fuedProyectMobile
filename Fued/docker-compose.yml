@@ -1,0 +1,40 @@
+# API de Fued + MariaDB.   docker compose up -d --build
+# La API queda en http://localhost/fued-api y, en la red local, http://<ip-de-la-compu>/fued-api
+services:
+  db:
+    image: mariadb:11.8
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: fued-root
+      MARIADB_DATABASE: fued
+      MARIADB_USER: fued
+      MARIADB_PASSWORD: fued
+    volumes:
+      - db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build: ./api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      FUED_DB_HOST: db
+      FUED_DB_USER: fued
+      FUED_DB_PASS: fued
+      FUED_DB_NAME: fued
+    ports:
+      - "80:80"
+    volumes:
+      # El código se monta en vivo: los cambios en api/ se ven sin reconstruir.
+      - ./api:/var/www/html/fued-api
+      - adjuntos:/var/www/html/fued-api/almacenamiento/chat
+
+volumes:
+  db:
+  adjuntos:

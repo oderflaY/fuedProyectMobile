@@ -14,7 +14,7 @@ import type {
 import { MedicosRepository } from '../../../core/repositories/medicos.repository';
 import { PacientesRepository } from '../../../core/repositories/pacientes.repository';
 import { AvisosService } from '../../../core/ui/avisos.service';
-import { edad } from '../../../core/util/fechas';
+import { edad } from '../../../core/util/fechas.util';
 
 export type Acceso = NivelAcceso | 'propio';
 

@@ -35,8 +35,12 @@ function coleccionesExpediente(): array
 }
 
 return function (Router $r): void {
+    // Un médico recibe el expediente ya filtrado por lo que el paciente decidió
+    // mostrarle; el paciente ve el suyo completo.
     $r->get('/pacientes/{id}', function (array $p): void {
-        responder(pacienteAutorizado(sesion(), $p['id'])->expediente());
+        $s = sesion();
+        $paciente = pacienteAutorizado($s, $p['id']);
+        responder($s['rol'] === 'medico' ? $paciente->expedientePara('medico') : $paciente->expedientePropio());
     });
 
     // Sólo el propio paciente actualiza sus datos personales e identificaciones.
@@ -86,7 +90,7 @@ return function (Router $r): void {
         }
 
         $paciente->guardar();
-        responder($paciente->expediente());
+        responder($paciente->expedientePropio());
     });
 
     foreach (coleccionesExpediente() as $nombre => $def) {

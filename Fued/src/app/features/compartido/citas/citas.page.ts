@@ -22,10 +22,10 @@ import {
   ModalController,
 } from '@ionic/angular';
 import type { ActionSheetButton, RefresherCustomEvent, ViewWillEnter } from '@ionic/angular';
-import { TPipe } from '../../../core/i18n/pipes';
+import { TPipe } from '../../../core/i18n/i18n.pipes';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import type { Cita } from '../../../core/models';
-import { formatearFecha } from '../../../core/util/fechas';
+import { formatearFecha } from '../../../core/util/fechas.util';
 import { CitaItemComponent } from './cita-item.component';
 import type { FiltroCitas } from './citas.viewmodel';
 import { CitasViewModel } from './citas.viewmodel';

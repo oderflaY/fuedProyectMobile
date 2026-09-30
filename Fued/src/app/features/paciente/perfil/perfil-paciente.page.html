@@ -110,6 +110,24 @@
       }
     </ion-list>
 
+    <div class="titulo-seccion">{{ 'perfil_seguimiento' | t }}</div>
+    <ion-list [inset]="true" lines="full">
+      <ion-item [button]="true" routerLink="/paciente/salud">
+        <ion-icon slot="start" name="clipboard-outline" color="primary" aria-hidden="true"></ion-icon>
+        <ion-label class="ion-text-wrap">
+          <h3>{{ 'cronicas_titulo' | t }}</h3>
+          <p>{{ 'cronicas_subtitulo' | t }}</p>
+        </ion-label>
+      </ion-item>
+      <ion-item [button]="true" routerLink="/paciente/perfil/privacidad">
+        <ion-icon slot="start" name="eye-off-outline" color="primary" aria-hidden="true"></ion-icon>
+        <ion-label class="ion-text-wrap">
+          <h3>{{ 'privacidad_titulo' | t }}</h3>
+          <p>{{ 'privacidad_subtitulo' | t }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
     <ion-list [inset]="true" class="ultima-lista">
       <ion-item [button]="true" [detail]="false" (click)="cerrarSesion()">
         <ion-icon slot="start" name="log-out-outline" color="danger" aria-hidden="true"></ion-icon>

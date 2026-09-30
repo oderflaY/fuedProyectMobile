@@ -1,0 +1,83 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button [text]="'volver' | t"></ion-back-button></ion-buttons>
+    <ion-title>{{ 'privacidad_titulo' | t }}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [value]="vm.audiencia()" (ionChange)="cambiarAudiencia($event.detail.value)">
+      @for (audiencia of vm.tablero()?.audiencias ?? []; track audiencia) {
+        <ion-segment-button [value]="audiencia">
+          <ion-label>{{ 'privacidad_audiencia_' + audiencia | t }}</ion-label>
+        </ion-segment-button>
+      }
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="agrupado">
+  @if (vm.cargando()) {
+    <div class="ion-text-center ion-padding">
+      <ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner>
+    </div>
+  } @else if (vm.error(); as error) {
+    <div class="estado-vacio" role="alert">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p>{{ error }}</p>
+      <ion-button fill="outline" (click)="vm.cargar()">{{ 'reintentar' | t }}</ion-button>
+    </div>
+  } @else {
+    <p class="ion-padding-horizontal texto-secundario">
+      {{ 'privacidad_explicacion_' + vm.audiencia() | t }}
+    </p>
+
+    <div class="titulo-seccion">{{ 'privacidad_puedes_decidir' | t }}</div>
+    <ion-list [inset]="true" lines="full">
+      @for (seccion of vm.configurables(); track seccion.seccion) {
+        <ion-item>
+          <ion-toggle
+            [checked]="vm.visible(seccion)"
+            [disabled]="vm.guardando() === seccion.seccion"
+            (ionChange)="alternar(seccion, $event.detail.checked)"
+          >
+            <ion-label class="ion-text-wrap">
+              <h3>{{ seccion.etiqueta | t }}</h3>
+              <p>{{ (vm.visible(seccion) ? 'privacidad_estado_visible' : 'privacidad_estado_oculta') | t }}</p>
+            </ion-label>
+          </ion-toggle>
+        </ion-item>
+      } @empty {
+        <ion-item><ion-label class="texto-secundario ion-text-wrap">{{ 'privacidad_sin_configurables' | t }}</ion-label></ion-item>
+      }
+    </ion-list>
+
+    @if (vm.fijas().length > 0) {
+      <div class="titulo-seccion">{{ 'privacidad_siempre_visible' | t }}</div>
+      <ion-list [inset]="true" lines="full">
+        @for (seccion of vm.fijas(); track seccion.seccion) {
+          <ion-item>
+            <ion-icon slot="start" name="lock-closed-outline" color="medium" aria-hidden="true"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <h3>{{ seccion.etiqueta | t }}</h3>
+              <p>{{ 'privacidad_motivo_' + vm.audiencia() | t }}</p>
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+    }
+
+    @if (vm.audiencia() === 'exportacion') {
+      <ion-list [inset]="true">
+        <ion-item [button]="true" [detail]="false" (click)="previsualizarExportacion()">
+          <ion-icon slot="start" name="document-text-outline" color="primary" aria-hidden="true"></ion-icon>
+          <ion-label>{{ 'privacidad_ver_exportacion' | t }}</ion-label>
+        </ion-item>
+      </ion-list>
+    }
+
+    @if (vm.ocultas() > 0) {
+      <ion-note class="ion-padding-horizontal ion-text-wrap" color="medium">
+        {{ 'privacidad_aviso_omitidas' | t: { total: vm.ocultas() } }}
+      </ion-note>
+    }
+  }
+</ion-content>
