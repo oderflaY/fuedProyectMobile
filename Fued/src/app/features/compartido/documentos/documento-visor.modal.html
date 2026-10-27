@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ documento.titulo }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrar()">{{ 'cerrar' | t }}</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [value]="pestana()" (ionChange)="pestana.set($any($event.detail.value))">
+      <ion-segment-button value="documento">{{ 'documento_pestana_documento' | t }}</ion-segment-button>
+      <ion-segment-button value="metadatos">{{ 'documento_pestana_metadatos' | t }}</ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="agrupado">
+  @if (pestana() === 'documento') {
+    <div class="vista-previa">
+      @if (cargando()) {
+        <div class="pdf"><ion-spinner name="crescent"></ion-spinner></div>
+      } @else if (esImagen && url()) {
+        <img [src]="url()" [alt]="documento.titulo" />
+      } @else {
+        <div class="pdf">
+          <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+          <span>{{ documento.archivo.nombre }}</span>
+        </div>
+      }
+    </div>
+
+    <ion-list [inset]="true" lines="full">
+      <ion-item>
+        <ion-label>
+          <p>{{ 'documento_categoria' | t }}</p>
+          <h3>{{ 'documento_categoria_' + documento.categoria | t }}</h3>
+        </ion-label>
+      </ion-item>
+      @if (documento.fechaDocumento) {
+        <ion-item>
+          <ion-label>
+            <p>{{ 'documento_fecha' | t }}</p>
+            <h3>{{ documento.fechaDocumento | fecha: 'fecha' }}</h3>
+          </ion-label>
+        </ion-item>
+      }
+      <ion-item>
+        <ion-label>
+          <p>{{ 'documento_subido' | t }}</p>
+          <h3>{{ documento.fechaSubida | fecha: 'fechaHora' }} · {{ 'documento_por_' + documento.subidoPorRol | t }}</h3>
+          <p>{{ 'documento_origen_' + documento.origen | t }}</p>
+        </ion-label>
+      </ion-item>
+      @if (documento.notas) {
+        <ion-item>
+          <ion-label class="ion-text-wrap">
+            <p>{{ 'documento_notas' | t }}</p>
+            <h3>{{ documento.notas }}</h3>
+          </ion-label>
+        </ion-item>
+      }
+    </ion-list>
+
+    <div class="acciones">
+      <ion-button fill="outline" [disabled]="cargando()" (click)="guardarEnTelefono()">
+        <ion-icon slot="start" name="download-outline" aria-hidden="true"></ion-icon>
+        {{ 'documento_guardar_telefono' | t }}
+      </ion-button>
+      @if (puedeEliminar) {
+        <ion-button fill="outline" color="danger" (click)="eliminar()">
+          <ion-icon slot="start" name="trash-outline" aria-hidden="true"></ion-icon>
+          {{ 'eliminar' | t }}
+        </ion-button>
+      }
+    </div>
+  } @else {
+    <app-metadatos-documento [metadatos]="documento.metadatos" />
+  }
+</ion-content>

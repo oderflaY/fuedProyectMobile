@@ -42,6 +42,20 @@
       }
     </div>
 
+    @if (vm.grafica().length > 0) {
+      <section class="tarjeta-grafica" [attr.aria-label]="'grafica_pacientes_titulo' | t">
+        <ion-segment [value]="vm.vistaGrafica()" (ionChange)="cambiarVista($event.detail.value)">
+          <ion-segment-button value="riesgo">
+            <ion-label>{{ 'grafica_vista_riesgo' | t }}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="adherencia">
+            <ion-label>{{ 'grafica_vista_adherencia' | t }}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+        <app-grafica-pastel [segmentos]="vm.grafica()" [titulo]="'grafica_pacientes_titulo' | t" />
+      </section>
+    }
+
     <ion-list [inset]="true" lines="full">
       @for (paciente of vm.pacientes(); track paciente.idPaciente) {
         <ion-item [button]="true" (click)="abrir(paciente.idPaciente)">

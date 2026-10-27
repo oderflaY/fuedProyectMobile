@@ -13,6 +13,8 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonSearchbar,
+  IonSegment,
+  IonSegmentButton,
   IonSpinner,
   IonTitle,
   IonToolbar,
@@ -20,7 +22,9 @@ import {
 import type { RefresherCustomEvent, ViewWillEnter } from '@ionic/angular';
 import { InicialesPipe, TPipe } from '../../../core/i18n/i18n.pipes';
 import type { EstadoRiesgo } from '../../../core/models';
+import { GraficaPastelComponent } from '../../compartido/graficas/grafica-pastel.component';
 import { PacientesViewModel } from './pacientes.viewmodel';
+import type { VistaGrafica } from './pacientes.viewmodel';
 
 /** Vista del tablero de pacientes: lista, busca y abre el expediente. */
 @Component({
@@ -33,6 +37,8 @@ import { PacientesViewModel } from './pacientes.viewmodel';
     IonToolbar,
     IonTitle,
     IonSearchbar,
+  IonSegment,
+  IonSegmentButton,
     IonContent,
     IonRefresher,
     IonRefresherContent,
@@ -44,6 +50,9 @@ import { PacientesViewModel } from './pacientes.viewmodel';
     IonIcon,
     IonButton,
     IonSpinner,
+    IonSegment,
+    IonSegmentButton,
+    GraficaPastelComponent,
     TPipe,
     InicialesPipe,
   ],
@@ -60,6 +69,10 @@ export class PacientesPage implements ViewWillEnter {
   async refrescar(evento: RefresherCustomEvent): Promise<void> {
     await this.vm.cargar();
     await evento.target.complete();
+  }
+
+  cambiarVista(valor: string | number | undefined): void {
+    this.vm.vistaGrafica.set((valor ?? 'riesgo') as VistaGrafica);
   }
 
   abrir(idPaciente: string): void {

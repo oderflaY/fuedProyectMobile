@@ -34,7 +34,9 @@ services:
       # El código se monta en vivo: los cambios en api/ se ven sin reconstruir.
       - ./api:/var/www/html/fued-api
       - adjuntos:/var/www/html/fued-api/almacenamiento/chat
+      - documentos:/var/www/html/fued-api/almacenamiento/documentos
 
 volumes:
   db:
   adjuntos:
+  documentos:

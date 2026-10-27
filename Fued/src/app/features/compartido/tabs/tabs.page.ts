@@ -14,7 +14,7 @@ export interface PestanaConfig {
   selector: 'app-tabs',
   template: `
     <ion-tabs>
-      <ion-tab-bar slot="bottom">
+      <ion-tab-bar slot="bottom" [class.compacta]="pestanas.length > 5">
         @for (pestana of pestanas; track pestana.tab) {
           <ion-tab-button [tab]="pestana.tab" [attr.aria-label]="pestana.etiqueta | t">
             <ion-icon aria-hidden="true" [name]="pestana.icono"></ion-icon>

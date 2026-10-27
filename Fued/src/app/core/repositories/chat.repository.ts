@@ -10,8 +10,9 @@ export class ChatRepository {
     return this.api.get<Conversacion[]>('/chat/conversaciones');
   }
 
+  /** Con `despuesDe` es el sondeo de mensajes nuevos: va en silencio, sin pantalla de carga. */
   mensajes(idContraparte: string, despuesDe?: string): Promise<Mensaje[]> {
-    return this.api.get<Mensaje[]>(`/chat/${idContraparte}/mensajes`, { despuesDe });
+    return this.api.get<Mensaje[]>(`/chat/${idContraparte}/mensajes`, { despuesDe }, { silenciosa: !!despuesDe });
   }
 
   enviar(idContraparte: string, contenido: string): Promise<Mensaje> {

@@ -5,6 +5,7 @@ import type { Expediente, MedicoPublico, NivelAcceso } from '../../../core/model
 import { MedicosRepository } from '../../../core/repositories/medicos.repository';
 import { PacientesRepository } from '../../../core/repositories/pacientes.repository';
 import { AvisosService } from '../../../core/ui/avisos.service';
+import { SonidosService } from '../../../core/ui/sonidos.service';
 
 @Injectable()
 export class PerfilPacienteViewModel {
@@ -12,6 +13,7 @@ export class PerfilPacienteViewModel {
   private readonly medicos = inject(MedicosRepository);
   private readonly sesion = inject(SessionService);
   private readonly avisos = inject(AvisosService);
+  private readonly sonidos = inject(SonidosService);
   private readonly router = inject(Router);
 
   readonly usuario = this.sesion.usuario;
@@ -93,6 +95,7 @@ export class PerfilPacienteViewModel {
   }
 
   async cerrarSesion(): Promise<void> {
+    this.sonidos.silbatazo();
     this.sesion.cerrar();
     await this.router.navigateByUrl('/login', { replaceUrl: true });
   }

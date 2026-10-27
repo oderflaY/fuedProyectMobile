@@ -1,0 +1,42 @@
+.vista-previa {
+  margin: 1rem;
+  border-radius: var(--app-radio);
+  overflow: hidden;
+  background: var(--app-superficie);
+  border: 1px solid var(--app-separador);
+  display: flex;
+  justify-content: center;
+
+  img {
+    display: block;
+    max-width: 100%;
+    max-height: 45vh;
+    object-fit: contain;
+  }
+}
+
+.pdf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem 1rem;
+  text-align: center;
+  word-break: break-all;
+
+  ion-icon {
+    font-size: 3.5rem;
+    color: var(--ion-color-primary);
+  }
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0 1rem 2rem;
+
+  ion-button {
+    flex: 1 1 10rem;
+  }
+}

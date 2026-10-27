@@ -4,6 +4,7 @@ import type {
   AgendaTomas,
   Coleccion,
   DispositivoRfid,
+  DocumentoMedico,
   ElementoDescripcion,
   Expediente,
   HistorialAdherencia,
@@ -13,6 +14,7 @@ import type {
   NuevaMetrica,
   NuevaToma,
   NuevoAcceso,
+  NuevoDocumento,
   NuevoTratamiento,
   ResultadoToma,
   Tratamiento,
@@ -41,6 +43,37 @@ export class PacientesRepository {
 
   eliminarDeColeccion(idPaciente: string, coleccion: Coleccion, idElemento: string): Promise<void> {
     return this.api.delete(`/pacientes/${idPaciente}/${coleccion}/${idElemento}`);
+  }
+
+  // Documentos (fotos, escaneos y PDF)
+  documentos(idPaciente: string): Promise<DocumentoMedico[]> {
+    return this.api.get<DocumentoMedico[]>(`/pacientes/${idPaciente}/documentos`);
+  }
+
+  subirDocumento(idPaciente: string, archivo: File, datos: NuevoDocumento): Promise<DocumentoMedico> {
+    const cuerpo = new FormData();
+    cuerpo.append('archivo', archivo, archivo.name);
+    cuerpo.append('titulo', datos.titulo);
+    cuerpo.append('categoria', datos.categoria);
+    cuerpo.append('origen', datos.origen);
+    if (datos.fechaDocumento) {
+      cuerpo.append('fechaDocumento', datos.fechaDocumento);
+    }
+    if (datos.notas) {
+      cuerpo.append('notas', datos.notas);
+    }
+    if (datos.metadatos) {
+      cuerpo.append('metadatos', JSON.stringify(datos.metadatos));
+    }
+    return this.api.post<DocumentoMedico>(`/pacientes/${idPaciente}/documentos`, cuerpo);
+  }
+
+  descargarDocumento(documento: DocumentoMedico): Promise<Blob> {
+    return this.api.getBlob(documento.archivo.url);
+  }
+
+  eliminarDocumento(idPaciente: string, idDocumento: string): Promise<void> {
+    return this.api.delete(`/pacientes/${idPaciente}/documentos/${idDocumento}`);
   }
 
   // Tarjetas RFID

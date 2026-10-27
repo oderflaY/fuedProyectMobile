@@ -14,11 +14,11 @@ function coleccionesExpediente(): array
             'requeridos' => ['alergeno', 'severidad'],
         ],
         'condiciones' => [
-            'modelo' => CondicionCritica::class, 'orden' => 'descripcion',
+            'modelo' => CondicionCritica::class, 'orden' => 'descripcion', 'seccion' => 'condicionesCriticas',
             'campos' => ['descripcion' => 255], 'requeridos' => ['descripcion'],
         ],
         'medicacion-rescate' => [
-            'modelo' => MedicacionRescate::class, 'orden' => 'descripcion',
+            'modelo' => MedicacionRescate::class, 'orden' => 'descripcion', 'seccion' => 'medicacionRescate',
             'campos' => ['descripcion' => 255], 'requeridos' => ['descripcion'],
         ],
         'cirugias' => [
@@ -27,9 +27,19 @@ function coleccionesExpediente(): array
             'requeridos' => ['procedimiento', 'fecha'], 'fechas' => ['fecha'],
         ],
         'contactos' => [
-            'modelo' => ContactoEmergencia::class, 'orden' => 'prioridad',
+            'modelo' => ContactoEmergencia::class, 'orden' => 'prioridad', 'seccion' => 'contactosEmergencia',
             'campos' => ['nombre' => 120, 'relacion' => 60, 'telefono' => 20, 'prioridad' => 2],
             'requeridos' => ['nombre', 'relacion', 'telefono'], 'enteros' => ['prioridad'],
+        ],
+        'vacunas' => [
+            'modelo' => Vacuna::class, 'orden' => 'fecha', 'direccion' => 'DESC',
+            'campos' => ['vacuna' => 120, 'fecha' => 10, 'dosis' => 40, 'lote' => 40],
+            'requeridos' => ['vacuna', 'fecha'], 'fechas' => ['fecha'],
+        ],
+        'antecedentes' => [
+            'modelo' => AntecedenteFamiliar::class, 'orden' => 'parentesco', 'seccion' => 'antecedentesFamiliares',
+            'campos' => ['parentesco' => 60, 'padecimiento' => 160, 'notas' => 255],
+            'requeridos' => ['parentesco', 'padecimiento'],
         ],
     ];
 }
@@ -89,13 +99,40 @@ return function (Router $r): void {
             $paciente->donador_organos = (bool) booleano($emergencia, 'donadorOrganos');
         }
 
+        $complementarios = is_array($d['datosComplementarios'] ?? null) ? $d['datosComplementarios'] : [];
+        $textos = [
+            'seguroMedico' => ['seguro_medico', 40], 'numeroPoliza' => ['numero_poliza', 40],
+            'medicoCabecera' => ['medico_cabecera', 120], 'discapacidad' => ['discapacidad', 255],
+            'notasMedicas' => ['notas_medicas', 1000],
+        ];
+        foreach ($textos as $campo => [$columna, $max]) {
+            if (array_key_exists($campo, $complementarios)) {
+                $paciente->$columna = texto($complementarios, $campo, false, $max);
+            }
+        }
+        $opciones = [
+            'tabaquismo' => ['tabaquismo', ['nunca', 'exfumador', 'actual']],
+            'alcohol' => ['alcohol', ['no', 'ocasional', 'frecuente']],
+            'actividadFisica' => ['actividad_fisica', ['sedentaria', 'moderada', 'activa']],
+        ];
+        foreach ($opciones as $campo => [$columna, $valores]) {
+            if (array_key_exists($campo, $complementarios)) {
+                $paciente->$columna = opcion($complementarios, $campo, $valores, false);
+            }
+        }
+
         $paciente->guardar();
         responder($paciente->expedientePropio());
     });
 
     foreach (coleccionesExpediente() as $nombre => $def) {
-        $r->get("/pacientes/{id}/$nombre", function (array $p) use ($def): void {
-            autorizarPaciente(sesion(), $p['id']);
+        $r->get("/pacientes/{id}/$nombre", function (array $p) use ($def, $nombre): void {
+            $s = sesion();
+            autorizarPaciente($s, $p['id']);
+            // Lo que el paciente le ocultó al médico tampoco sale por la ruta de la colección.
+            if (!seccionVisibleParaSesion($s, $p['id'], $def['seccion'] ?? $nombre)) {
+                responder([]);
+            }
             $modelo = $def['modelo'];
             $elementos = $modelo::donde('id_paciente', $p['id'])
                 ->ordenar($def['orden'], $def['direccion'] ?? 'ASC')

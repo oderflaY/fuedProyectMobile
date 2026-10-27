@@ -1,0 +1,14 @@
+# App web (Ionic/Angular): las rutas del cliente (/medico/pacientes, /login...) caen en index.html.
+# La API vive en /fued-api/ con su propio .htaccess.
+Options -Indexes
+FallbackResource /index.html
+
+<IfModule mod_headers.c>
+    # index.html y los textos cambian en cada versión; los .js/.css llevan hash y se pueden guardar.
+    <FilesMatch "(index\.html|strings\.xml)$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+    <FilesMatch "\.(js|css|woff2?)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>

@@ -1,0 +1,507 @@
+/*
+ * Tema "Hora Pico": colores de barda y letras de rótulo, en versión limpia.
+ * -----------------------------------------------------
+ * Fondo de asfalto con los fosforescentes como acento: Bangers sólo en títulos y botones,
+ * el texto corrido en la letra del sistema. Sin filtros ni animaciones en bucle,
+ * para que se lea bien y no le cueste al teléfono.
+ * Los colores clínicos siguen siendo semánticos (danger/warning/success) y siempre van con texto.
+ * Va en angular.json después de global.scss para reinterpretar sus tokens y estilos base.
+ */
+
+@use "@fontsource/bangers/400" as bangers;
+
+:root {
+  /* Paleta de alto voltaje */
+  --barrio-amarillo: #ffd700;
+  --barrio-rosa: #e4007c;
+  --barrio-limon: #32cd32;
+  --barrio-azul: #00ffff;
+  --barrio-naranja: #ff4500;
+  --barrio-morado: #9d00ff;
+  --barrio-asfalto: #0b0a14;
+  --barrio-noche: #15122b;
+  --barrio-cartulina: #fff4d6;
+
+  /* Degradado de barda pintada a brocha */
+  --barrio-barda: linear-gradient(180deg, var(--barrio-amarillo) 0%, #ff9a00 50%, var(--barrio-naranja) 100%);
+  --barrio-barda-rosa: linear-gradient(180deg, #ff5fb8 0%, var(--barrio-rosa) 55%, #8a0050 100%);
+
+  --barrio-titulo: "Bangers", "Impact", "Arial Black", system-ui, sans-serif;
+
+  /* Paleta de Ionic */
+  --ion-color-primary: #e4007c;
+  --ion-color-primary-rgb: 228, 0, 124;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #c9006d;
+  --ion-color-primary-tint: #e71a89;
+  --ion-color-secondary: #00ffff;
+  --ion-color-secondary-rgb: 0, 255, 255;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0, 0, 0;
+  --ion-color-secondary-shade: #00e0e0;
+  --ion-color-secondary-tint: #1affff;
+  --ion-color-tertiary: #9d00ff;
+  --ion-color-tertiary-rgb: 157, 0, 255;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #8a00e0;
+  --ion-color-tertiary-tint: #a71aff;
+  --ion-color-success: #32cd32;
+  --ion-color-success-rgb: 50, 205, 50;
+  --ion-color-success-contrast: #000000;
+  --ion-color-success-contrast-rgb: 0, 0, 0;
+  --ion-color-success-shade: #2cb42c;
+  --ion-color-success-tint: #46d246;
+  --ion-color-warning: #ffd700;
+  --ion-color-warning-rgb: 255, 215, 0;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #e0bd00;
+  --ion-color-warning-tint: #ffdb1a;
+  --ion-color-danger: #ff4500;
+  --ion-color-danger-rgb: 255, 69, 0;
+  --ion-color-danger-contrast: #000000;
+  --ion-color-danger-contrast-rgb: 0, 0, 0;
+  --ion-color-danger-shade: #e03d00;
+  --ion-color-danger-tint: #ff581a;
+  --ion-color-medium: #a7a3c9;
+  --ion-color-medium-rgb: 167, 163, 201;
+  --ion-color-medium-contrast: #000000;
+  --ion-color-medium-contrast-rgb: 0, 0, 0;
+  --ion-color-medium-shade: #938fb1;
+  --ion-color-medium-tint: #b0acce;
+  --ion-color-light: #fff4d6;
+  --ion-color-light-rgb: 255, 244, 214;
+  --ion-color-light-contrast: #000000;
+  --ion-color-light-contrast-rgb: 0, 0, 0;
+  --ion-color-light-shade: #e0d7bc;
+  --ion-color-light-tint: #fff5da;
+  --ion-color-dark: #0b0a14;
+  --ion-color-dark-rgb: 11, 10, 20;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #0a0912;
+  --ion-color-dark-tint: #23222c;
+
+  --ion-background-color: var(--barrio-asfalto);
+  --ion-background-color-rgb: 11, 10, 20;
+  --ion-text-color: #fffaf0;
+  --ion-text-color-rgb: 255, 250, 240;
+  --ion-item-background: var(--barrio-noche);
+  --ion-card-background: var(--barrio-noche);
+  --ion-toolbar-background: #000;
+  --ion-tab-bar-background: #000;
+  --ion-font-family: system-ui, -apple-system, "Roboto", sans-serif;
+
+  /* Tokens de la app reinterpretados */
+  --app-fondo-agrupado: var(--barrio-asfalto);
+  --app-superficie: var(--barrio-noche);
+  --app-texto-secundario: #c8c3ef;
+  --app-separador: #2e2950;
+  --app-radio: 14px;
+  --app-burbuja-propia: var(--barrio-rosa);
+  --app-burbuja-propia-texto: #fff;
+  --app-burbuja-ajena: #262148;
+}
+
+ion-content,
+ion-content.agrupado {
+  --background: linear-gradient(180deg, #120f24 0%, var(--barrio-asfalto) 40%);
+}
+
+/* ---------- Encabezado ---------- */
+ion-toolbar {
+  --background: #000;
+  --color: #fff;
+  --border-width: 0 0 2px 0;
+  --border-color: var(--barrio-rosa);
+}
+
+ion-header ion-toolbar + ion-toolbar {
+  --border-width: 0;
+}
+
+ion-title {
+  font-family: var(--barrio-titulo);
+  font-weight: 400;
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  color: var(--barrio-amarillo);
+}
+
+ion-title.title-large {
+  font-size: 2.2rem;
+}
+
+ion-back-button,
+ion-buttons ion-button {
+  --color: var(--barrio-amarillo);
+}
+
+/* ---------- Botones ---------- */
+ion-button:not([fill="clear"]):not([fill="outline"]) {
+  --background: var(--barrio-barda);
+  --background-activated: var(--barrio-barda-rosa);
+  --background-hover: var(--barrio-barda);
+  --color: #1a0010;
+  --border-radius: 999px;
+  --box-shadow: 0 3px 0 #000;
+  font-family: var(--barrio-titulo);
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+ion-button:not([fill="clear"]):not([fill="outline"]):active {
+  --box-shadow: 0 1px 0 #000;
+  transform: translateY(2px);
+}
+
+/* Los de la barra superior son íconos: sin relleno */
+ion-buttons ion-button:not([fill="solid"]) {
+  --background: transparent;
+  --background-activated: transparent;
+  --box-shadow: none;
+  --color: var(--barrio-amarillo);
+  font-size: 1.05rem;
+}
+
+ion-buttons ion-button:not([fill="solid"]):active {
+  transform: none;
+}
+
+ion-button[color="danger"]:not([fill="clear"]):not([fill="outline"]) {
+  --background: linear-gradient(180deg, #ff8a3d 0%, var(--barrio-naranja) 60%, #c41a00 100%);
+  --color: #fff;
+}
+
+ion-button[fill="outline"] {
+  --border-width: 2px;
+  --border-color: var(--barrio-azul);
+  --color: var(--barrio-azul);
+  --border-radius: 999px;
+  font-family: var(--barrio-titulo);
+  letter-spacing: 0.06em;
+  font-size: 1.05rem;
+}
+
+ion-button[fill="clear"] {
+  --color: var(--barrio-azul);
+  font-weight: 600;
+}
+
+ion-fab-button {
+  --background: var(--barrio-barda);
+  --color: #000;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- Listas ---------- */
+ion-list.list-inset {
+  background: var(--barrio-noche);
+  padding-top: 0;
+  padding-bottom: 0;
+  border: 1px solid var(--app-separador);
+  border-radius: var(--app-radio);
+  margin-bottom: 1.25rem;
+}
+
+ion-item {
+  --background: var(--barrio-noche);
+  --border-color: var(--app-separador);
+  --color: #fffaf0;
+}
+
+ion-item h2,
+ion-item h3 {
+  font-weight: 700;
+}
+
+ion-list-header {
+  font-family: var(--barrio-titulo);
+  font-size: 1.3rem;
+  letter-spacing: 0.05em;
+  color: var(--barrio-amarillo);
+}
+
+.titulo-seccion {
+  font-family: var(--barrio-titulo);
+  font-size: 1.15rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--barrio-amarillo);
+}
+
+ion-badge {
+  --padding-start: 0.5rem;
+  --padding-end: 0.5rem;
+  --padding-top: 0.25rem;
+  --padding-bottom: 0.25rem;
+  font-weight: 700;
+  font-size: 0.75rem;
+  border-radius: 6px;
+}
+
+ion-note {
+  color: var(--app-texto-secundario);
+}
+
+/* ---------- Segmento ---------- */
+ion-segment {
+  --background: #000;
+  border: 1px solid var(--app-separador);
+  border-radius: 999px;
+}
+
+ion-toolbar ion-segment {
+  margin: 6px 10px;
+  width: calc(100% - 20px);
+}
+
+ion-segment-button {
+  --color: #c8c3ef;
+  --color-checked: #000;
+  --indicator-color: var(--barrio-amarillo);
+  --indicator-height: 100%;
+  --border-radius: 999px;
+  font-family: var(--barrio-titulo);
+  letter-spacing: 0.05em;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+ion-segment-button::part(indicator) {
+  height: 100%;
+  padding: 3px;
+}
+
+ion-segment-button::part(indicator-background) {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--barrio-barda);
+}
+
+ion-segment-button::part(native) {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Barra de pestañas ---------- */
+ion-tab-bar {
+  --background: #000;
+  --border: 0;
+  border-top: 1px solid var(--app-separador);
+}
+
+ion-tab-button {
+  --color: #8f89c2;
+  --color-selected: var(--barrio-amarillo);
+  font-family: var(--barrio-titulo);
+  letter-spacing: 0.05em;
+
+  ion-label {
+    font-size: 0.8rem;
+  }
+}
+
+/* Con seis pestañas (médico) no caben las etiquetas a tamaño normal en un teléfono. */
+ion-tab-bar.compacta ion-tab-button {
+  --padding-start: 0;
+  --padding-end: 0;
+  letter-spacing: 0.02em;
+  min-width: 0;
+
+  ion-label {
+    font-size: 0.66rem;
+    white-space: nowrap;
+  }
+}
+
+/* ---------- Toast: letrero de ruta ---------- */
+ion-toast.toast-parabrisas {
+  --background: #000;
+  --color: var(--barrio-amarillo);
+  --border-radius: 12px;
+  --box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  --max-width: 22rem;
+  font-family: var(--barrio-titulo);
+  letter-spacing: 0.05em;
+}
+
+ion-toast.toast-parabrisas::part(container) {
+  border: 2px solid currentColor;
+  border-radius: 12px;
+}
+
+ion-toast.toast-parabrisas::part(message) {
+  font-size: 1.1rem;
+  text-transform: uppercase;
+}
+
+ion-toast.toast-parabrisas.toast-exito {
+  --color: var(--barrio-limon);
+}
+
+ion-toast.toast-parabrisas.toast-error {
+  --color: var(--barrio-naranja);
+}
+
+/* ---------- Ventanas ---------- */
+ion-alert {
+  --background: #1c1834;
+}
+
+ion-alert .alert-wrapper {
+  border: 1px solid var(--app-separador);
+  border-radius: 18px;
+}
+
+ion-modal::part(content) {
+  background: #1c1834;
+}
+
+ion-alert .alert-head .alert-title {
+  font-family: var(--barrio-titulo);
+  font-weight: 400;
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  color: var(--barrio-amarillo);
+}
+
+ion-alert .alert-sub-title {
+  color: var(--barrio-azul);
+}
+
+ion-alert .alert-message {
+  color: #fffaf0;
+}
+
+ion-alert .alert-button {
+  font-family: var(--barrio-titulo);
+  letter-spacing: 0.05em;
+  font-size: 1.1rem;
+  color: var(--barrio-amarillo);
+}
+
+ion-alert .alert-button.alert-button-role-destructive {
+  color: var(--barrio-naranja);
+}
+
+ion-alert .alert-input {
+  background: #0b0a14;
+  color: #fffaf0;
+  border: 1px solid var(--app-separador);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+}
+
+ion-action-sheet .action-sheet-group {
+  background: #1c1834;
+}
+
+ion-action-sheet .action-sheet-title {
+  font-family: var(--barrio-titulo);
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+  color: var(--barrio-amarillo);
+}
+
+ion-action-sheet .action-sheet-button {
+  color: #fffaf0;
+  font-weight: 600;
+}
+
+ion-action-sheet .action-sheet-button ion-icon,
+ion-action-sheet .action-sheet-icon {
+  color: var(--barrio-azul);
+}
+
+/* ---------- Varios ---------- */
+ion-progress-bar {
+  --background: #241d3d;
+  --progress-background: var(--barrio-barda);
+  height: 6px;
+  border-radius: 999px;
+}
+
+ion-searchbar.md,
+ion-searchbar.ios {
+  --background: var(--barrio-noche);
+  --color: #fffaf0;
+  --placeholder-color: #8f89c2;
+  --icon-color: #8f89c2;
+  --border-radius: 12px;
+}
+
+ion-spinner {
+  color: var(--barrio-amarillo);
+}
+
+ion-toggle {
+  --track-background-checked: var(--barrio-limon);
+  --handle-background-checked: #fff;
+}
+
+.avatar-iniciales {
+  font-family: var(--barrio-titulo);
+  font-size: 1.2em;
+  letter-spacing: 0.03em;
+  color: #000;
+  background: var(--barrio-barda);
+}
+
+.estado-vacio p {
+  font-size: 1.05rem;
+  color: var(--app-texto-secundario);
+}
+
+.estado-vacio ion-icon {
+  color: var(--barrio-rosa);
+}
+
+.metricas-grid .metrica,
+.semaforo .nivel {
+  border: 1px solid var(--app-separador);
+}
+
+.metricas-grid .metrica .valor,
+.semaforo .nivel strong {
+  font-family: var(--barrio-titulo);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--barrio-amarillo);
+}
+
+.tarjeta-grafica {
+  border: 1px solid var(--app-separador);
+  background: var(--barrio-noche);
+}
+
+/* Marca del login: el único rótulo de barda completo */
+.marca h1 {
+  font-family: var(--barrio-titulo);
+  font-weight: 400;
+  /* "Sistema de Salud" es largo: se ajusta al ancho del teléfono y cabe en dos renglones. */
+  font-size: clamp(2.4rem, 11vw, 3.6rem);
+  line-height: 1.05;
+  letter-spacing: 0.04em;
+  transform: skewX(-10deg) rotate(-3deg);
+  background: var(--barrio-barda);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+}
+
+.marca p {
+  font-size: 1.05rem;
+  color: var(--barrio-azul) !important;
+}
+
+/* Las unidades clínicas conservan mayúsculas y minúsculas (mmHg, mg/dL): Bangers sólo tiene mayúsculas. */
+.metricas-grid .metrica .unidad {
+  font-family: var(--ion-font-family);
+  letter-spacing: 0;
+  color: var(--app-texto-secundario);
+}

@@ -27,7 +27,22 @@ import type { ActionSheetButton, AlertInput, RefresherCustomEvent } from '@ionic
 import { FechaPipe, TPipe } from '../../../core/i18n/i18n.pipes';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import { COLOR_ESTADO_TOMA, COLOR_SEGMENTO } from '../../../core/ui/colores.constants';
-import type { Coleccion, NuevaMetrica, NuevoTratamiento, Tratamiento } from '../../../core/models';
+import type { ArchivoCapturado } from '../../../core/documentos/captura.service';
+import { CapturaCancelada, CapturaService } from '../../../core/documentos/captura.service';
+import type {
+  CategoriaDocumento,
+  Coleccion,
+  DatosComplementarios,
+  DocumentoMedico,
+  NuevaMetrica,
+  NuevoDocumento,
+  NuevoTratamiento,
+  Tratamiento,
+} from '../../../core/models';
+import { AvisosService } from '../../../core/ui/avisos.service';
+import { DocumentoVisorModal } from '../documentos/documento-visor.modal';
+import { NuevoDocumentoModal } from '../documentos/nuevo-documento.modal';
+import { DatosComplementariosModal } from './datos-complementarios.modal';
 import { NuevaCitaModal } from '../citas/nueva-cita.modal';
 import { RegistrarMetricaModal } from '../metricas/registrar-metrica.modal';
 import { ExpedienteViewModel } from './expediente.viewmodel';
@@ -58,6 +73,28 @@ const CAMPOS_COLECCION: Record<Coleccion, CampoDialogo[]> = {
     { nombre: 'relacion', etiqueta: 'contacto_relacion', requerido: true },
     { nombre: 'telefono', etiqueta: 'contacto_telefono', tipo: 'tel', requerido: true },
   ],
+  vacunas: [
+    { nombre: 'vacuna', etiqueta: 'vacuna_nombre', requerido: true },
+    { nombre: 'fecha', etiqueta: 'vacuna_fecha', tipo: 'date', requerido: true },
+    { nombre: 'dosis', etiqueta: 'vacuna_dosis' },
+    { nombre: 'lote', etiqueta: 'vacuna_lote' },
+  ],
+  antecedentes: [
+    { nombre: 'parentesco', etiqueta: 'antecedente_parentesco', requerido: true },
+    { nombre: 'padecimiento', etiqueta: 'antecedente_padecimiento', requerido: true },
+    { nombre: 'notas', etiqueta: 'antecedente_notas' },
+  ],
+};
+
+/** Ícono de cada categoría en la lista de documentos. */
+const ICONO_CATEGORIA: Record<CategoriaDocumento, string> = {
+  receta: 'medkit-outline',
+  laboratorio: 'flask-outline',
+  imagenologia: 'scan-outline',
+  nota_medica: 'clipboard-outline',
+  identificacion: 'card-outline',
+  seguro: 'shield-checkmark-outline',
+  otro: 'document-text-outline',
 };
 
 @Component({
@@ -97,7 +134,10 @@ export class ExpedientePage implements OnInit {
   private readonly hojas = inject(ActionSheetController);
   private readonly modales = inject(ModalController);
   private readonly router = inject(Router);
+  private readonly captura = inject(CapturaService);
+  private readonly avisos = inject(AvisosService);
 
+  readonly iconoCategoria = ICONO_CATEGORIA;
   readonly colorToma = COLOR_ESTADO_TOMA;
   readonly colorSegmento = COLOR_SEGMENTO;
 
@@ -222,6 +262,71 @@ export class ExpedientePage implements OnInit {
   async agendarCita(): Promise<void> {
     const modal = await this.modales.create({ component: NuevaCitaModal, componentProps: { preseleccion: this.vm.idPaciente() } });
     await modal.present();
+  }
+
+  // --- Documentos -------------------------------------------------------
+
+  async agregarDocumento(): Promise<void> {
+    const t = (clave: string) => this.i18n.t(clave);
+    const botones: ActionSheetButton[] = [
+      { text: t('documento_tomar_foto'), icon: 'camera-outline', handler: () => void this.capturar(() => this.captura.tomarFoto()) },
+    ];
+    if (this.captura.escanerDisponible) {
+      botones.push({ text: t('documento_escanear'), icon: 'scan-outline', handler: () => void this.capturar(() => this.captura.escanear(this.vm.idPaciente())) });
+    }
+    botones.push(
+      { text: t('documento_galeria'), icon: 'images-outline', handler: () => void this.capturar(() => this.captura.elegirDeGaleria()) },
+      { text: t('documento_archivo'), icon: 'document-attach-outline', handler: () => void this.capturar(() => this.captura.elegirArchivo()) },
+      { text: t('cancelar'), role: 'cancel' },
+    );
+    const hoja = await this.hojas.create({ header: t('documento_agregar'), buttons: botones });
+    await hoja.present();
+  }
+
+  private async capturar(obtener: () => Promise<ArchivoCapturado>): Promise<void> {
+    let capturado: ArchivoCapturado;
+    try {
+      capturado = await obtener();
+    } catch (error) {
+      if (!(error instanceof CapturaCancelada)) {
+        await this.avisos.error(error);
+      }
+      return;
+    }
+    const modal = await this.modales.create({ component: NuevoDocumentoModal, componentProps: { capturado } });
+    await modal.present();
+    const { data, role } = await modal.onWillDismiss<NuevoDocumento>();
+    if (role === 'guardar' && data) {
+      await this.vm.subirDocumento(capturado.archivo, data);
+    }
+  }
+
+  async abrirDocumento(documento: DocumentoMedico): Promise<void> {
+    const modal = await this.modales.create({
+      component: DocumentoVisorModal,
+      componentProps: { documento, puedeEliminar: this.vm.puedeEscribir() },
+    });
+    await modal.present();
+    const { role } = await modal.onWillDismiss();
+    if (role === 'eliminar') {
+      await this.vm.eliminarDocumento(documento);
+    }
+  }
+
+  tamano(bytes: number): string {
+    return bytes >= 1024 * 1024 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;
+  }
+
+  async editarComplementarios(): Promise<void> {
+    const modal = await this.modales.create({
+      component: DatosComplementariosModal,
+      componentProps: { datos: this.vm.expediente()?.datosComplementarios ?? null },
+    });
+    await modal.present();
+    const { data, role } = await modal.onWillDismiss<DatosComplementarios>();
+    if (role === 'guardar' && data) {
+      await this.vm.guardarComplementarios(data);
+    }
   }
 
   abrirChat(): void {

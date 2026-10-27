@@ -2,12 +2,15 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { SessionService } from '../../../core/auth/session.service';
 import type {
   Coleccion,
+  DatosComplementarios,
+  DocumentoMedico,
   ElementoDescripcion,
   Expediente,
   HistorialAdherencia,
   Metrica,
   NivelAcceso,
   NuevaMetrica,
+  NuevoDocumento,
   NuevoTratamiento,
   Tratamiento,
 } from '../../../core/models';
@@ -32,11 +35,15 @@ export class ExpedienteViewModel {
   readonly medicacionRescate = signal<ElementoDescripcion[]>([]);
   readonly metricas = signal<Metrica[]>([]);
   readonly adherencia = signal<HistorialAdherencia | null>(null);
+  readonly documentos = signal<DocumentoMedico[]>([]);
+  readonly subiendo = signal(false);
   readonly cargando = signal(true);
   readonly error = signal<string | null>(null);
 
   readonly esMedico = computed(() => this.sesion.rol() === 'medico');
   readonly puedeEscribir = computed(() => this.acceso() === 'propio' || this.acceso() === 'lectura_escritura');
+  /** Los datos generales (seguro, hábitos) sólo los cambia el propio paciente. */
+  readonly esPropio = computed(() => this.acceso() === 'propio');
   readonly nombreCompleto = computed(() => {
     const datos = this.expediente()?.datosPersonales;
     return datos ? `${datos.nombre} ${datos.apellidos}` : '';
@@ -63,13 +70,16 @@ export class ExpedienteViewModel {
     const id = this.idPaciente();
     this.error.set(null);
     try {
-      const [expediente, condiciones, rescate, metricas, adherencia] = await Promise.all([
+      const [expediente, condiciones, rescate, metricas, adherencia, documentos] = await Promise.all([
         this.repo.expediente(id),
         this.repo.listarColeccion(id, 'condiciones'),
         this.repo.listarColeccion(id, 'medicacion-rescate'),
         this.repo.metricas(id, 10),
         this.repo.adherencia(id),
+        // Si el servidor aún no tiene documentos, el resto del expediente se muestra igual.
+        this.repo.documentos(id).catch(() => [] as DocumentoMedico[]),
       ]);
+      this.documentos.set(documentos);
       this.expediente.set(expediente);
       this.condiciones.set(condiciones);
       this.medicacionRescate.set(rescate);
@@ -120,6 +130,23 @@ export class ExpedienteViewModel {
 
   registrarMetrica(metrica: NuevaMetrica): Promise<boolean> {
     return this.cambiar(() => this.repo.registrarMetrica(this.idPaciente(), metrica), 'metrica_guardada');
+  }
+
+  async subirDocumento(archivo: File, datos: NuevoDocumento): Promise<boolean> {
+    this.subiendo.set(true);
+    try {
+      return await this.cambiar(() => this.repo.subirDocumento(this.idPaciente(), archivo, datos), 'documento_guardado');
+    } finally {
+      this.subiendo.set(false);
+    }
+  }
+
+  eliminarDocumento(documento: DocumentoMedico): Promise<boolean> {
+    return this.cambiar(() => this.repo.eliminarDocumento(this.idPaciente(), documento.id), 'expediente_eliminado');
+  }
+
+  guardarComplementarios(datos: DatosComplementarios): Promise<boolean> {
+    return this.cambiar(() => this.repo.actualizar(this.idPaciente(), { datosComplementarios: datos }), 'expediente_guardado');
   }
 
   /** El paciente sólo suspende o edita a fondo lo que él mismo registró. */

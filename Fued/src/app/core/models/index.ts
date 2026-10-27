@@ -52,3 +52,5 @@ export * from './segmentacion/segmentacion.request';
 export * from './alerta/alerta.types';
 export * from './alerta/alerta.model';
 export * from './alerta/alerta.request';
+
+export * from './estadisticas/estadisticas.model';

@@ -77,6 +77,23 @@ function seccionesPrivacidad(): array
             'audiencias' => ['medico' => 'configurable', 'emergencia' => 'configurable', 'exportacion' => 'configurable'],
             'defecto' => ['emergencia' => false],
         ],
+        'vacunas' => [
+            'etiqueta' => 'privacidad_seccion_vacunas',
+            'audiencias' => ['medico' => 'configurable', 'emergencia' => 'nunca', 'exportacion' => 'configurable'],
+        ],
+        'antecedentesFamiliares' => [
+            'etiqueta' => 'privacidad_seccion_antecedentes',
+            'audiencias' => ['medico' => 'configurable', 'emergencia' => 'nunca', 'exportacion' => 'configurable'],
+        ],
+        'datosComplementarios' => [
+            'etiqueta' => 'privacidad_seccion_complementarios',
+            'audiencias' => ['medico' => 'configurable', 'emergencia' => 'nunca', 'exportacion' => 'configurable'],
+        ],
+        // Los documentos no viajan dentro del expediente: se piden aparte y la ruta revisa esta regla.
+        'documentos' => [
+            'etiqueta' => 'privacidad_seccion_documentos',
+            'audiencias' => ['medico' => 'configurable', 'emergencia' => 'nunca', 'exportacion' => 'nunca'],
+        ],
         'segmentacion' => [
             'etiqueta' => 'privacidad_seccion_segmentacion',
             'audiencias' => ['medico' => 'configurable', 'emergencia' => 'configurable', 'exportacion' => 'configurable'],
@@ -185,6 +202,18 @@ function vaciadoresExpediente(): array
             $e['historialClinico']['cirugias'] = [];
             return $e;
         },
+        'vacunas' => function (array $e): array {
+            $e['historialClinico']['vacunas'] = [];
+            return $e;
+        },
+        'antecedentesFamiliares' => function (array $e): array {
+            $e['historialClinico']['antecedentesFamiliares'] = [];
+            return $e;
+        },
+        'datosComplementarios' => function (array $e): array {
+            $e['datosComplementarios'] = null;
+            return $e;
+        },
         'tratamientos' => function (array $e): array {
             $e['tratamientosActivos'] = [];
             return $e;
@@ -208,22 +237,29 @@ function vaciadoresExpediente(): array
     ];
 }
 
-/**
- * Aplica las preferencias del paciente sobre un expediente ya armado.
- *
- * @param array<string, bool> $preferencias
- */
-/** Rutas del DTO que ocupa cada sección; sirve para saber si viaja en ese payload. */
+/** Ruta dentro del DTO que ocupa cada sección; sirve para saber si viaja en ese payload. */
 function rutaDeSeccion(string $seccion): array
 {
     return match ($seccion) {
-        'tipoSangre', 'alergias', 'condicionesCriticas', 'medicacionRescate' => ['perfilEmergenciaReducido'],
+        'tipoSangre' => ['perfilEmergenciaReducido', 'tipoSangre'],
+        'alergias', 'condicionesCriticas', 'medicacionRescate' => ['perfilEmergenciaReducido', $seccion],
         'metricasVitales' => ['metricasVitalesActuales'],
-        'cirugias' => ['historialClinico'],
+        'cirugias', 'vacunas', 'antecedentesFamiliares' => ['historialClinico', $seccion],
         'tratamientos' => ['tratamientosActivos'],
         'adherencia' => ['registroAdherencia'],
         default => [$seccion],
     };
+}
+
+function existeRuta(array $datos, array $ruta): bool
+{
+    foreach ($ruta as $clave) {
+        if (!is_array($datos) || !array_key_exists($clave, $datos)) {
+            return false;
+        }
+        $datos = $datos[$clave];
+    }
+    return true;
 }
 
 /**
@@ -237,8 +273,7 @@ function filtrarExpediente(array $expediente, string $audiencia, array $preferen
 {
     $omitidas = [];
     foreach (vaciadoresExpediente() as $seccion => $vaciar) {
-        [$raiz] = rutaDeSeccion($seccion);
-        if (!array_key_exists($raiz, $expediente)) {
+        if (!existeRuta($expediente, rutaDeSeccion($seccion))) {
             continue;
         }
         if (!seccionVisible($seccion, $audiencia, $preferencias)) {
@@ -250,6 +285,15 @@ function filtrarExpediente(array $expediente, string $audiencia, array $preferen
     return $expediente;
 }
 
+/** Para recursos que se piden aparte del expediente (colecciones, documentos). */
+function seccionVisibleParaSesion(array $sesion, string $idPaciente, string $seccion): bool
+{
+    if ($sesion['rol'] === 'paciente') {
+        return true;
+    }
+    return seccionVisible($seccion, 'medico', PreferenciaPrivacidad::deAudiencia($idPaciente, 'medico'));
+}
+
 /**
  * Quita del payload las secciones omitidas en vez de dejarlas vacías, y retira
  * el nodo `privacidad`. Se usa en el escaneo RFID: quien lee la tarjeta no puede
@@ -259,9 +303,17 @@ function filtrarExpediente(array $expediente, string $audiencia, array $preferen
 function podarOmitidas(array $payload): array
 {
     foreach ($payload['privacidad']['seccionesOmitidas'] ?? [] as $seccion) {
-        [$raiz] = rutaDeSeccion((string) $seccion);
-        if ($raiz !== 'perfilEmergenciaReducido') {
-            unset($payload[$raiz]);
+        $ruta = rutaDeSeccion((string) $seccion);
+        if ($ruta[0] === 'perfilEmergenciaReducido') {
+            continue;
+        }
+        if (count($ruta) === 1) {
+            unset($payload[$ruta[0]]);
+            continue;
+        }
+        unset($payload[$ruta[0]][$ruta[1]]);
+        if ($payload[$ruta[0]] === []) {
+            unset($payload[$ruta[0]]);
         }
     }
     unset($payload['privacidad']);

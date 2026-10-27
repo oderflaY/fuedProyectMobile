@@ -1,0 +1,71 @@
+# Fued en producción, en el VPS 2.25.68.28 junto a Salud+ y RutaCree.   docker compose up -d --build
+#
+# No publica puertos: el Caddy compartido (proxy de Salud+, red rutacree_edge) le da HTTPS en
+# https://2.25.68.28:7443 y https://fued.2-25-68-28.sslip.io y le pasa el tráfico a `fued-app`.
+# Los secretos salen de .env (ver .env.example; instalar.sh los genera).
+name: fued
+
+services:
+  db:
+    image: mariadb:11.8
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${FUED_DB_ROOT_PASS:?falta en .env}
+      MARIADB_DATABASE: fued
+      MARIADB_USER: fued
+      MARIADB_PASSWORD: ${FUED_DB_PASS:?falta en .env}
+    # El VPS se comparte con otros proyectos; el buffer alcanza para las estadísticas sobre ~1 M de filas.
+    command: ["--innodb-buffer-pool-size=192M", "--max-connections=40", "--performance-schema=OFF"]
+    volumes:
+      - db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    mem_limit: 448m
+    networks: [interna]
+    logging: &logging
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  app:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: fued-app:latest
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      FUED_DB_HOST: db
+      FUED_DB_NAME: fued
+      FUED_DB_USER: fued
+      FUED_DB_PASS: ${FUED_DB_PASS}
+      FUED_JWT_SECRET: ${FUED_JWT_SECRET:?falta en .env}
+      # Sin orígenes de red local: la app web es del mismo dominio y la nativa usa https://localhost.
+      FUED_ORIGENES_PATRON: ""
+      # No hay panel para validar cédulas: los médicos nuevos quedan verificados al registrarse.
+      FUED_AUTO_VERIFICAR: ${FUED_AUTO_VERIFICAR:-1}
+    volumes:
+      - adjuntos:/var/www/html/fued-api/almacenamiento/chat
+      - documentos:/var/www/html/fued-api/almacenamiento/documentos
+    mem_limit: 256m
+    networks:
+      interna:
+      rutacree_edge:
+        # IP fija fuera de las ya usadas (.2 traccar, .3 api de RutaCree, .10 caddy, .30 LowkeySaints).
+        ipv4_address: 172.30.0.20
+        aliases: [fued-app]
+    logging: *logging
+
+volumes:
+  db:
+  adjuntos:
+  documentos:
+
+networks:
+  interna:
+  rutacree_edge:
+    external: true

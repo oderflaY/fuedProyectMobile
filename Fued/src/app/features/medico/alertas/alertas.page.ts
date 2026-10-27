@@ -27,12 +27,14 @@ import { I18nService } from '../../../core/i18n/i18n.service';
 import { FechaPipe, TPipe } from '../../../core/i18n/i18n.pipes';
 import type { Alerta } from '../../../core/models';
 import { COLOR_ESTADO_ALERTA, COLOR_SEVERIDAD } from '../../../core/ui/colores.constants';
+import { GraficaPastelComponent } from '../../compartido/graficas/grafica-pastel.component';
 import { AlertasViewModel } from './alertas.viewmodel';
-import type { FiltroAlertas } from './alertas.viewmodel';
+import type { FiltroAlertas, VistaGraficaAlertas } from './alertas.viewmodel';
 
 @Component({
   selector: 'app-alertas',
   templateUrl: 'alertas.page.html',
+  styleUrls: ['alertas.page.scss'],
   providers: [AlertasViewModel],
   imports: [
     IonHeader,
@@ -51,6 +53,7 @@ import type { FiltroAlertas } from './alertas.viewmodel';
     IonIcon,
     IonBadge,
     IonSpinner,
+    GraficaPastelComponent,
     TPipe,
     FechaPipe,
   ],
@@ -72,6 +75,10 @@ export class AlertasPage implements OnInit {
 
   cambiarFiltro(valor: string | number | undefined): void {
     void this.vm.cambiarFiltro((valor ?? 'nueva') as FiltroAlertas);
+  }
+
+  cambiarVistaGrafica(valor: string | number | undefined): void {
+    this.vm.vistaGrafica.set((valor ?? 'severidad') as VistaGraficaAlertas);
   }
 
   async refrescar(evento: RefresherCustomEvent): Promise<void> {

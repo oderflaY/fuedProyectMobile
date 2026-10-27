@@ -28,6 +28,14 @@ CREATE TABLE pacientes (
     telefono          VARCHAR(20)  NULL,
     tipo_sangre       ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-') NULL,
     donador_organos   TINYINT(1)   NOT NULL DEFAULT 0,
+    seguro_medico     VARCHAR(40)  NULL,
+    numero_poliza     VARCHAR(40)  NULL,
+    medico_cabecera   VARCHAR(120) NULL,
+    tabaquismo        ENUM('nunca', 'exfumador', 'actual') NULL,
+    alcohol           ENUM('no', 'ocasional', 'frecuente') NULL,
+    actividad_fisica  ENUM('sedentaria', 'moderada', 'activa') NULL,
+    discapacidad      VARCHAR(255) NULL,
+    notas_medicas     VARCHAR(1000) NULL,
     PRIMARY KEY (id_paciente),
     UNIQUE KEY uq_pacientes_curp (curp),
     CONSTRAINT fk_pacientes_cuenta FOREIGN KEY (id_paciente) REFERENCES cuentas (id) ON DELETE CASCADE
@@ -119,6 +127,50 @@ CREATE TABLE cirugias (
     PRIMARY KEY (id),
     KEY idx_cirugias_paciente (id_paciente),
     CONSTRAINT fk_cirugias_paciente FOREIGN KEY (id_paciente) REFERENCES pacientes (id_paciente) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE vacunas (
+    id           VARCHAR(32)  NOT NULL,
+    id_paciente  VARCHAR(32)  NOT NULL,
+    vacuna       VARCHAR(120) NOT NULL,
+    fecha        DATE         NOT NULL,
+    dosis        VARCHAR(40)  NULL,
+    lote         VARCHAR(40)  NULL,
+    PRIMARY KEY (id),
+    KEY idx_vacunas_paciente (id_paciente),
+    CONSTRAINT fk_vacunas_paciente FOREIGN KEY (id_paciente) REFERENCES pacientes (id_paciente) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE antecedentes_familiares (
+    id            VARCHAR(32)  NOT NULL,
+    id_paciente   VARCHAR(32)  NOT NULL,
+    parentesco    VARCHAR(60)  NOT NULL,
+    padecimiento  VARCHAR(160) NOT NULL,
+    notas         VARCHAR(255) NULL,
+    PRIMARY KEY (id),
+    KEY idx_antecedentes_paciente (id_paciente),
+    CONSTRAINT fk_antecedentes_paciente FOREIGN KEY (id_paciente) REFERENCES pacientes (id_paciente) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE documentos_medicos (
+    id               VARCHAR(32)  NOT NULL,
+    id_paciente      VARCHAR(32)  NOT NULL,
+    categoria        ENUM('receta', 'laboratorio', 'imagenologia', 'nota_medica', 'identificacion', 'seguro', 'otro') NOT NULL DEFAULT 'otro',
+    titulo           VARCHAR(160) NOT NULL,
+    fecha_documento  DATE         NULL,
+    notas            VARCHAR(500) NULL,
+    origen           ENUM('camara', 'escaner', 'galeria', 'archivo') NOT NULL DEFAULT 'archivo',
+    archivo_ruta     VARCHAR(255) NOT NULL,
+    archivo_nombre   VARCHAR(255) NOT NULL,
+    archivo_mime     VARCHAR(120) NOT NULL,
+    archivo_bytes    INT UNSIGNED NOT NULL,
+    metadatos        LONGTEXT     NULL,
+    subido_por       VARCHAR(32)  NOT NULL,
+    subido_por_rol   ENUM('paciente', 'medico') NOT NULL,
+    fecha_subida     DATETIME     NOT NULL,
+    PRIMARY KEY (id),
+    KEY idx_documentos_paciente (id_paciente, fecha_subida),
+    CONSTRAINT fk_documentos_paciente FOREIGN KEY (id_paciente) REFERENCES pacientes (id_paciente) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE metricas_vitales (

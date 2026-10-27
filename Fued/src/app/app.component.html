@@ -1,3 +1,11 @@
 <ion-app>
   <ion-router-outlet></ion-router-outlet>
 </ion-app>
+
+@if (carga.ocupado()) {
+  <div class="barra-carga" role="progressbar" aria-busy="true"></div>
+}
+
+@if (pantallaCarga()) {
+  <app-pantalla-carga [activa]="carga.visible()" (terminada)="pantallaCarga.set(false)" />
+}

@@ -1,0 +1,124 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancelar()">{{ 'cancelar' | t }}</ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'escaner_titulo' | t }}</ion-title>
+    <ion-buttons slot="end">
+      @if (fase() === 'revision') {
+        <ion-button [strong]="true" (click)="terminar()">{{ 'escaner_listo' | t }}</ion-button>
+      }
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [scrollY]="false" class="escaner">
+  @switch (fase()) {
+    @case ('camara') {
+      @if (sinCamara()) {
+        <div class="mensaje">
+          <ion-icon name="camera-outline" aria-hidden="true"></ion-icon>
+          <p>{{ 'escaner_sin_camara' | t }}</p>
+        </div>
+      } @else {
+        <div class="visor">
+          <video #video autoplay playsinline muted></video>
+          <svg class="contorno" [attr.viewBox]="'0 0 ' + medidasVideo().ancho + ' ' + medidasVideo().alto"
+            preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            @if (contornoVivo(); as c) {
+              <polygon [attr.points]="puntos(c)" />
+            }
+          </svg>
+          <p class="pista">{{ (contornoVivo() ? 'escaner_hoja_detectada' : 'escaner_pista') | t }}</p>
+        </div>
+        <div class="controles">
+          <button class="miniatura" type="button" [disabled]="paginas().length === 0" (click)="verRevision()"
+            [attr.aria-label]="'escaner_ver_paginas' | t">
+            @if (paginas().length > 0) {
+              <img [src]="paginas()[paginas().length - 1].vista" alt="" />
+              <span class="contador">{{ paginas().length }}</span>
+            }
+          </button>
+          <button class="obturador" type="button" (click)="capturar()" [attr.aria-label]="'escaner_capturar' | t"></button>
+          <button class="linterna" type="button" [class.activa]="linterna()" [disabled]="!linternaDisponible()"
+            (click)="alternarLinterna()" [attr.aria-label]="'escaner_linterna' | t">
+            <ion-icon [name]="linterna() ? 'flash' : 'flash-outline'" aria-hidden="true"></ion-icon>
+          </button>
+        </div>
+      }
+    }
+
+    @case ('ajuste') {
+      @if (foto(); as f) {
+        <div class="ajuste">
+          <svg #ajusteSvg [attr.viewBox]="'0 0 ' + f.ancho + ' ' + f.alto" preserveAspectRatio="xMidYMid meet"
+            (pointermove)="moverEsquina($event)" (pointerup)="soltarEsquina()" (pointercancel)="soltarEsquina()">
+            <image [attr.href]="f.url" [attr.width]="f.ancho" [attr.height]="f.alto" />
+            <polygon class="area" [attr.points]="puntos(esquinas())" />
+            @for (p of esquinas(); track $index) {
+              <circle class="esquina" [attr.cx]="p.x" [attr.cy]="p.y" [attr.r]="radioEsquina()"
+                (pointerdown)="tomarEsquina($index, $event)" />
+            }
+          </svg>
+          <p class="pista">{{ 'escaner_ajusta_esquinas' | t }}</p>
+        </div>
+        <div class="acciones-escaner">
+          <ion-button fill="outline" (click)="retomar()">
+            <ion-icon slot="start" name="camera-reverse-outline" aria-hidden="true"></ion-icon>{{ 'escaner_retomar' | t }}
+          </ion-button>
+          <ion-button fill="outline" (click)="usarHojaCompleta()">
+            <ion-icon slot="start" name="expand-outline" aria-hidden="true"></ion-icon>{{ 'escaner_foto_completa' | t }}
+          </ion-button>
+          <ion-button (click)="aceptarAjuste()">
+            <ion-icon slot="start" name="checkmark" aria-hidden="true"></ion-icon>{{ 'escaner_usar' | t }}
+          </ion-button>
+        </div>
+      }
+    }
+
+    @case ('procesando') {
+      <div class="mensaje">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>{{ 'escaner_procesando' | t }}</p>
+      </div>
+    }
+
+    @case ('revision') {
+      @if (paginas()[actual()]; as pagina) {
+        <div class="revision">
+          <img class="pagina" [src]="pagina.vista" [alt]="'escaner_pagina' | t: { n: actual() + 1 }" />
+        </div>
+        <ion-segment [value]="pagina.filtro" (ionChange)="cambiarFiltro($any($event.detail.value))">
+          @for (f of filtros; track f) {
+            <ion-segment-button [value]="f">{{ 'escaner_filtro_' + f | t }}</ion-segment-button>
+          }
+        </ion-segment>
+        <button type="button" class="ubicacion" [class.activa]="guardarUbicacion()" (click)="alternarUbicacion()"
+          [attr.aria-pressed]="guardarUbicacion()">
+          <ion-icon [name]="guardarUbicacion() ? 'location' : 'location-outline'" aria-hidden="true"></ion-icon>
+          {{ (guardarUbicacion() ? 'escaner_ubicacion_si' : 'escaner_ubicacion_no') | t }}
+        </button>
+        <div class="tira">
+          @for (p of paginas(); track p.vista; let i = $index) {
+            <button type="button" [class.activa]="i === actual()" (click)="actual.set(i)"
+              [attr.aria-label]="'escaner_pagina' | t: { n: i + 1 }">
+              <img [src]="p.vista" alt="" />
+              <span>{{ i + 1 }}</span>
+            </button>
+          }
+        </div>
+        <div class="acciones-escaner">
+          <ion-button fill="outline" (click)="girar()">
+            <ion-icon slot="start" name="refresh-outline" aria-hidden="true"></ion-icon>{{ 'escaner_girar' | t }}
+          </ion-button>
+          <ion-button fill="outline" color="danger" (click)="borrarActual()">
+            <ion-icon slot="start" name="trash-outline" aria-hidden="true"></ion-icon>{{ 'eliminar' | t }}
+          </ion-button>
+          <ion-button fill="outline" [disabled]="paginas().length >= maxPaginas" (click)="agregarPagina()">
+            <ion-icon slot="start" name="add-outline" aria-hidden="true"></ion-icon>{{ 'escaner_otra_pagina' | t }}
+          </ion-button>
+        </div>
+      }
+    }
+  }
+</ion-content>

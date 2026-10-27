@@ -1,0 +1,186 @@
+// Estilos comunes de las gráficas de barras y líneas: trazos delgados, rejilla discreta
+// y el texto siempre en tinta de texto (el color de la serie sólo va en la marca).
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.lienzo {
+  position: relative;
+}
+
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  touch-action: pan-y;
+}
+
+.rejilla {
+  stroke: var(--app-separador);
+  stroke-width: 1;
+}
+
+.eje {
+  fill: var(--app-texto-secundario);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+g {
+  transition: opacity 150ms ease;
+}
+
+g.atenuada {
+  opacity: 0.4;
+}
+
+.zona {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.linea {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.area {
+  opacity: 0.18;
+}
+
+.guia {
+  stroke: var(--app-texto-secundario);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.marcador {
+  stroke: var(--app-superficie);
+  stroke-width: 2;
+}
+
+.leyenda {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.875rem;
+  font-size: 0.8rem;
+  color: var(--app-texto-secundario);
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+}
+
+.muestra {
+  display: inline-block;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 3px;
+  flex-shrink: 0;
+
+  &.linea {
+    height: 3px;
+    width: 0.875rem;
+    border-radius: 2px;
+  }
+}
+
+.detalle {
+  position: absolute;
+  top: 0;
+  min-width: 9rem;
+  max-width: 13rem;
+  padding: 0.5rem 0.625rem;
+  border-radius: 10px;
+  background: var(--ion-background-color, #000);
+  border: 1px solid var(--app-separador);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.78rem;
+  pointer-events: none;
+  z-index: 2;
+
+  strong {
+    font-size: 0.85rem;
+  }
+
+  > span {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  b {
+    margin-inline-start: auto;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .total {
+    border-top: 1px solid var(--app-separador);
+    padding-top: 0.2rem;
+    color: var(--app-texto-secundario);
+  }
+}
+
+.ranking {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  li {
+    display: grid;
+    grid-template-columns: minmax(6.5rem, 40%) 1fr auto;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: 0.82rem;
+  }
+
+  .nombre {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    small {
+      color: var(--app-texto-secundario);
+      font-size: 0.72rem;
+    }
+  }
+
+  .pista {
+    height: 0.75rem;
+    border-radius: 4px;
+    background: var(--app-separador);
+    overflow: hidden;
+  }
+
+  .barra {
+    display: block;
+    height: 100%;
+    border-radius: 0 4px 4px 0;
+    transition: width 600ms ease;
+  }
+
+  b {
+    min-width: 2.5rem;
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+}

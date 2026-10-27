@@ -1,0 +1,275 @@
+ion-content.escaner {
+  --background: #000;
+}
+
+.visor {
+  position: absolute;
+  inset: 0 0 7.5rem 0;
+  overflow: hidden;
+
+  video,
+  .contorno {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  video {
+    object-fit: cover;
+  }
+
+  polygon {
+    fill: rgba(255, 215, 0, 0.18);
+    stroke: var(--barrio-amarillo, #ffd700);
+    stroke-width: 6;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+}
+
+.pista {
+  position: absolute;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  max-width: calc(100% - 2rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.controles {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 7.5rem;
+  padding-bottom: env(safe-area-inset-bottom);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: #000;
+
+  button {
+    border: 0;
+    padding: 0;
+    background: none;
+    color: #fff;
+  }
+}
+
+.obturador {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  background: #fff !important;
+  box-shadow: 0 0 0 4px #000, 0 0 0 7px #fff;
+
+  &:active {
+    transform: scale(0.92);
+  }
+}
+
+.miniatura {
+  position: relative;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.6) !important;
+  overflow: visible;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+
+  .contador {
+    position: absolute;
+    top: -0.5rem;
+    right: -0.5rem;
+    min-width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 999px;
+    background: var(--ion-color-primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.4rem;
+  }
+}
+
+.linterna {
+  width: 3.25rem;
+  height: 3.25rem;
+  font-size: 1.6rem;
+
+  &.activa {
+    color: var(--barrio-amarillo, #ffd700) !important;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+  }
+}
+
+.ajuste {
+  position: absolute;
+  inset: 0 0 5.5rem 0;
+  padding: 1rem;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+  }
+
+  .area {
+    fill: rgba(255, 215, 0, 0.15);
+    stroke: var(--barrio-amarillo, #ffd700);
+    stroke-width: 4;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .esquina {
+    fill: rgba(255, 215, 0, 0.35);
+    stroke: #fff;
+    stroke-width: 3;
+    vector-effect: non-scaling-stroke;
+    cursor: grab;
+  }
+
+  .pista {
+    bottom: 0.25rem;
+  }
+}
+
+.acciones-escaner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem calc(0.75rem + env(safe-area-inset-bottom));
+  background: #000;
+
+  ion-button {
+    flex: 1 1 0;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+.revision {
+  position: absolute;
+  inset: 0 0 13rem 0;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .pagina {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    background: #fff;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
+  }
+}
+
+ion-segment {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 9.5rem;
+  width: auto;
+}
+
+.tira {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4.5rem;
+  height: 4.5rem;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.25rem 1rem;
+  overflow-x: auto;
+
+  button {
+    position: relative;
+    flex: 0 0 3rem;
+    height: 4rem;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    background: #222;
+    overflow: hidden;
+
+    &.activa {
+      border-color: var(--barrio-amarillo, #ffd700);
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    span {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      padding: 0 0.3rem;
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      font-size: 0.7rem;
+    }
+  }
+}
+
+.mensaje {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+  color: #fff;
+
+  ion-icon {
+    font-size: 3rem;
+  }
+}
+
+.ubicacion {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #c8c3ef;
+  font-size: 0.8rem;
+
+  &.activa {
+    color: var(--barrio-amarillo, #ffd700);
+    border-color: currentColor;
+  }
+}

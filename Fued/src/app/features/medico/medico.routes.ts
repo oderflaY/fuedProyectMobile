@@ -5,6 +5,7 @@ import { TabsPage } from '../compartido/tabs/tabs.page';
 const pestanas: PestanaConfig[] = [
   { tab: 'pacientes', icono: 'people-outline', etiqueta: 'tab_pacientes' },
   { tab: 'alertas', icono: 'notifications-outline', etiqueta: 'tab_alertas' },
+  { tab: 'estadisticas', icono: 'stats-chart-outline', etiqueta: 'tab_estadisticas' },
   { tab: 'agenda', icono: 'calendar-outline', etiqueta: 'tab_agenda' },
   { tab: 'chat', icono: 'chatbubbles-outline', etiqueta: 'tab_chat' },
   { tab: 'perfil', icono: 'person-circle-outline', etiqueta: 'tab_perfil' },
@@ -22,6 +23,7 @@ export const routes: Routes = [
         loadComponent: () => import('../compartido/expediente/expediente.page').then((m) => m.ExpedientePage),
       },
       { path: 'alertas', loadComponent: () => import('./alertas/alertas.page').then((m) => m.AlertasPage) },
+      { path: 'estadisticas', loadComponent: () => import('./estadisticas/estadisticas.page').then((m) => m.EstadisticasPage) },
       { path: 'agenda', loadComponent: () => import('../compartido/citas/citas.page').then((m) => m.CitasPage) },
       { path: 'chat', loadComponent: () => import('../compartido/chat/conversaciones.page').then((m) => m.ConversacionesPage) },
       { path: 'chat/:idContraparte', loadComponent: () => import('../compartido/chat/conversacion.page').then((m) => m.ConversacionPage) },

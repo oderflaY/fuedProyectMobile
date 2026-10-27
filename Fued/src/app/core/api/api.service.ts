@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpContextToken, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import type { Observable } from 'rxjs';
 import { firstValueFrom } from 'rxjs';
@@ -29,6 +29,9 @@ export function aApiError(error: unknown): ApiError {
   return new ApiError(-1, 'generico', String(error));
 }
 
+/** Para lecturas de fondo (p. ej. el sondeo del chat) que no deben mostrar la pantalla de carga. */
+export const SIN_PANTALLA_CARGA = new HttpContextToken<boolean>(() => false);
+
 type Parametros = Record<string, string | number | boolean | null | undefined>;
 
 @Injectable({ providedIn: 'root' })
@@ -36,8 +39,10 @@ export class ApiService {
   private readonly http = inject(HttpClient);
   readonly base = environment.apiUrl.replace(/\/$/, '');
 
-  get<T>(ruta: string, parametros?: Parametros): Promise<T> {
-    return this.enviar(this.http.get<T>(this.url(ruta), { params: this.params(parametros) }));
+  /** `silenciosa`: lectura de fondo que no muestra la pantalla de carga. */
+  get<T>(ruta: string, parametros?: Parametros, opciones: { silenciosa?: boolean } = {}): Promise<T> {
+    const context = new HttpContext().set(SIN_PANTALLA_CARGA, !!opciones.silenciosa);
+    return this.enviar(this.http.get<T>(this.url(ruta), { params: this.params(parametros), context }));
   }
 
   post<T>(ruta: string, cuerpo: unknown = {}, parametros?: Parametros): Promise<T> {

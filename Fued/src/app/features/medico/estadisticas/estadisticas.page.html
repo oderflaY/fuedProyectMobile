@@ -1,0 +1,142 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ 'tab_estadisticas' | t }}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [value]="vm.meses()" (ionChange)="cambiarMeses($event.detail.value)" [attr.aria-label]="'est_rango' | t">
+      @for (rango of rangos; track rango) {
+        <ion-segment-button [value]="rango">
+          <ion-label>{{ 'est_meses' | t: { n: rango } }}</ion-label>
+        </ion-segment-button>
+      }
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="agrupado">
+  <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (vm.cargando()) {
+    <div class="ion-text-center ion-padding"><ion-spinner name="crescent" [attr.aria-label]="'cargando' | t"></ion-spinner></div>
+  } @else if (vm.error(); as error) {
+    <div class="estado-vacio" role="alert">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p>{{ error }}</p>
+      <ion-button fill="outline" (click)="vm.cargar()">{{ 'reintentar' | t }}</ion-button>
+    </div>
+  } @else if (vm.datos()) {
+    <p class="origen">{{ 'est_origen' | t: { total: (vm.totalRegistros() | number) } }}</p>
+
+    <div class="indicadores">
+      @for (kpi of vm.indicadores(); track kpi.clave) {
+        <div class="indicador">
+          <ion-icon [name]="kpi.icono" aria-hidden="true"></ion-icon>
+          <strong>{{ kpi.valor | number }}</strong>
+          <span>{{ 'est_kpi_' + kpi.clave | t }}</span>
+        </div>
+      }
+    </div>
+
+    <section class="tarjeta-grafica">
+      <h2>{{ 'est_registros_titulo' | t }}</h2>
+      <app-grafica-lineas
+        [categorias]="vm.mesesRegistros()"
+        [series]="vm.seriesRegistros()"
+        [desdeCero]="true"
+        [saltoEtiquetas]="vm.saltoMeses()"
+        [titulo]="'est_registros_titulo' | t"
+      />
+    </section>
+
+    <section class="tarjeta-grafica">
+      <h2>{{ 'est_citas_titulo' | t }}</h2>
+      <app-grafica-barras
+        [categorias]="vm.mesesCitas()"
+        [series]="vm.seriesCitas()"
+        [saltoEtiquetas]="vm.saltoMeses()"
+        [etiquetaTotal]="'est_total' | t"
+        [titulo]="'est_citas_titulo' | t"
+      />
+    </section>
+
+    <section class="tarjeta-grafica">
+      <h2>{{ 'est_adherencia_titulo' | t }}</h2>
+      @if (vm.adherenciaActual() !== null) {
+        <p class="cifra"><strong>{{ vm.adherenciaActual() }}%</strong> {{ 'est_adherencia_actual' | t }}</p>
+      }
+      <app-grafica-barras
+        [categorias]="vm.mesesAdherencia()"
+        [series]="vm.seriesAdherencia()"
+        [normalizada]="true"
+        [saltoEtiquetas]="vm.saltoMeses()"
+        [etiquetaTotal]="'est_total' | t"
+        [titulo]="'est_adherencia_titulo' | t"
+      />
+    </section>
+
+    <section class="tarjeta-grafica">
+      <h2>{{ 'est_presion_titulo' | t }}</h2>
+      <app-grafica-lineas
+        [categorias]="vm.mesesVitales()"
+        [series]="vm.seriesPresion()"
+        unidad="mmHg"
+        [saltoEtiquetas]="vm.saltoMeses()"
+        [titulo]="'est_presion_titulo' | t"
+      />
+    </section>
+
+    <section class="tarjeta-grafica">
+      <h2>{{ 'est_glucosa_titulo' | t }}</h2>
+      <app-grafica-lineas
+        [categorias]="vm.mesesVitales()"
+        [series]="vm.seriesGlucosa()"
+        unidad="mg/dL"
+        [saltoEtiquetas]="vm.saltoMeses()"
+        [titulo]="'est_glucosa_titulo' | t"
+      />
+    </section>
+
+    <section class="tarjeta-grafica">
+      <h2>{{ 'est_segmentos_titulo' | t }}</h2>
+      <app-grafica-barras
+        [categorias]="vm.condiciones()"
+        [series]="vm.seriesSegmentos()"
+        [normalizada]="true"
+        [etiquetaTotal]="'est_total' | t"
+        [titulo]="'est_segmentos_titulo' | t"
+      />
+    </section>
+
+    <section class="tarjeta-grafica">
+      <h2>{{ 'est_alertas_titulo' | t }}</h2>
+      <app-grafica-pastel [segmentos]="vm.alertas()" [titulo]="'est_alertas_titulo' | t" />
+    </section>
+
+    <section class="tarjeta-grafica">
+      <h2>{{ 'est_edad_titulo' | t }}</h2>
+      <app-grafica-barras [categorias]="vm.rangosEdad()" [series]="vm.seriesEdad()" [titulo]="'est_edad_titulo' | t" />
+    </section>
+
+    <section class="tarjeta-grafica">
+      <h2>{{ 'est_genero_titulo' | t }}</h2>
+      <app-grafica-pastel [segmentos]="vm.genero()" [titulo]="'est_genero_titulo' | t" />
+    </section>
+
+    <section class="tarjeta-grafica">
+      <h2>{{ 'est_sangre_titulo' | t }}</h2>
+      <app-grafica-barras-h [datos]="vm.sangre()" color="#3987e5" [titulo]="'est_sangre_titulo' | t" />
+    </section>
+
+    <section class="tarjeta-grafica">
+      <h2>{{ 'est_especialidades_titulo' | t }}</h2>
+      <app-grafica-barras-h [datos]="vm.especialidades()" color="#199e70" [titulo]="'est_especialidades_titulo' | t" />
+    </section>
+
+    <section class="tarjeta-grafica ultima">
+      <h2>{{ 'est_top_titulo' | t }}</h2>
+      <app-grafica-barras-h [datos]="vm.topMedicos()" color="#d55181" [titulo]="'est_top_titulo' | t" />
+    </section>
+  }
+</ion-content>

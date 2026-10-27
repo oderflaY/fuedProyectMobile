@@ -1,0 +1,18 @@
+<canvas #lienzo class="lienzo" aria-hidden="true"></canvas>
+<div class="vineta" aria-hidden="true"></div>
+
+<div class="abajo" role="status" [attr.aria-label]="letras.map((l) => l.caracter).join('')">
+  <h1 class="palabra" aria-hidden="true">
+    @for (letra of letras; track $index) {
+      <span #letra class="letra" [style.--neon]="letra.color">{{ letra.caracter }}</span>
+    }
+    <span class="puntos"><i>.</i><i>.</i><i>.</i></span>
+  </h1>
+
+  <div class="barra"><div class="relleno"></div></div>
+  <p class="frase">{{ 'carga_frase' | t }}</p>
+
+  @if (sinSonido()) {
+    <p class="aviso">{{ 'carga_toca_para_bailar' | t }}</p>
+  }
+</div>

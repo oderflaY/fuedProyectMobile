@@ -45,3 +45,13 @@ ion-label p .indicador-riesgo {
   height: 0.5rem;
   margin-inline-end: 0.25rem;
 }
+
+.tarjeta-grafica {
+  margin: 1rem 1rem 0;
+  padding: 0.75rem 1rem 1rem;
+  border-radius: var(--app-radio);
+  background: var(--app-superficie);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}

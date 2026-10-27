@@ -1,0 +1,146 @@
+:host {
+  --pulso: 0;
+
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  overflow: hidden;
+  background: #05010d;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 500ms ease, transform 500ms ease;
+  animation: entrar 350ms ease-out;
+}
+
+:host(.saliendo) {
+  opacity: 0;
+  transform: scale(1.08);
+}
+
+.lienzo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Viñeta oscura + destello en cada golpe para que el texto se lea sobre la pista */
+.vineta {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 40%, transparent 45%, rgb(5 1 13 / 0.85) 100%),
+    linear-gradient(to top, rgb(5 1 13 / 0.95) 0%, transparent 32%);
+  box-shadow: inset 0 0 calc(40px + var(--pulso) * 80px) rgb(255 31 143 / calc(var(--pulso) * 0.45));
+}
+
+.abajo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(48px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 0 16px;
+}
+
+.palabra {
+  margin: 0;
+  display: flex;
+  align-items: flex-end;
+  font-family: 'Arial Black', 'Impact', system-ui, sans-serif;
+  font-size: clamp(2.2rem, 11vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* Letras de neón: contorno de color y resplandor que crece con el pulso */
+.letra {
+  display: inline-block;
+  will-change: transform;
+  color: #fff;
+  text-shadow:
+    0 0 4px #fff,
+    0 0 calc(8px + var(--pulso) * 14px) var(--neon),
+    0 0 calc(20px + var(--pulso) * 30px) var(--neon),
+    0 0 calc(40px + var(--pulso) * 40px) var(--neon);
+}
+
+.puntos i {
+  display: inline-block;
+  font-style: normal;
+  color: #fff;
+  text-shadow: 0 0 12px #00e5ff;
+  animation: punto calc(60s / 134) ease-in-out infinite;
+
+  &:nth-child(2) {
+    animation-delay: calc(60s / 134 / 3);
+  }
+
+  &:nth-child(3) {
+    animation-delay: calc(60s / 134 / 3 * 2);
+  }
+}
+
+/* Barra indeterminada: no sabemos cuánto falta, así que un destello va y viene */
+.barra {
+  position: relative;
+  width: min(64vw, 280px);
+  height: 6px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.12);
+  overflow: hidden;
+  box-shadow: 0 0 calc(6px + var(--pulso) * 16px) rgb(0 229 255 / 0.6);
+}
+
+.relleno {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ff1f8f, #ffe600, #00e5ff);
+  animation: barrido calc(60s / 134 * 4) ease-in-out infinite alternate;
+}
+
+.aviso {
+  margin: 0;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid rgb(255 255 255 / 0.4);
+  background: rgb(255 31 143 / 0.25);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  animation: punto calc(60s / 134 * 2) ease-in-out infinite;
+}
+
+@keyframes entrar {
+  from { opacity: 0; }
+}
+
+@keyframes barrido {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+
+@keyframes punto {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.frase {
+  margin: 0;
+  font-family: var(--barrio-marcador, inherit);
+  font-size: 1.05rem;
+  color: #ffd700;
+  text-align: center;
+  text-shadow: 2px 2px 0 #000;
+  transform: rotate(-2deg);
+}

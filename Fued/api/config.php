@@ -42,6 +42,8 @@ return [
     // Tamaño máximo de un adjunto del chat (audios, PDF, fotos).
     // El php.ini debe permitirlo: upload_max_filesize y post_max_size.
     'max_bytes_adjunto' => 8 * 1024 * 1024,
+    // Escaneos y PDF de estudios pesan más que un adjunto del chat.
+    'max_bytes_documento' => 15 * 1024 * 1024,
 
     // Minutos después de la hora programada en que una toma sigue contando como puntual.
     'minutos_tolerancia_toma' => 30,

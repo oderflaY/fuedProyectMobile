@@ -1,0 +1,70 @@
+.origen {
+  margin: 0.75rem 1rem 0;
+  font-size: 0.8rem;
+  color: var(--app-texto-secundario);
+}
+
+.indicadores {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.625rem;
+  padding: 0.75rem 1rem 0;
+
+  .indicador {
+    background: var(--app-superficie);
+    border-radius: var(--app-radio);
+    padding: 0.625rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    text-align: center;
+    min-width: 0;
+
+    ion-icon {
+      font-size: 1.1rem;
+      color: var(--app-texto-secundario);
+    }
+
+    strong {
+      font-size: 1.15rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    span {
+      font-size: 0.7rem;
+      color: var(--app-texto-secundario);
+    }
+  }
+}
+
+.tarjeta-grafica {
+  margin: 1rem 1rem 0;
+  padding: 0.875rem 1rem 1rem;
+  border-radius: var(--app-radio);
+  background: var(--app-superficie);
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+
+  &.ultima {
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+}
+
+.cifra {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--app-texto-secundario);
+
+  strong {
+    font-size: 1.6rem;
+    color: var(--ion-text-color);
+    margin-inline-end: 0.25rem;
+  }
+}

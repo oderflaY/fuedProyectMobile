@@ -41,6 +41,18 @@
       <p>{{ 'alertas_vacio' | t }}</p>
     </div>
   } @else {
+    <section class="tarjeta-grafica" [attr.aria-label]="'grafica_alertas_titulo' | t">
+      <ion-segment [value]="vm.vistaGrafica()" (ionChange)="cambiarVistaGrafica($event.detail.value)">
+        <ion-segment-button value="severidad">
+          <ion-label>{{ 'grafica_vista_severidad' | t }}</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="origen">
+          <ion-label>{{ 'grafica_vista_origen' | t }}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+      <app-grafica-pastel [segmentos]="vm.grafica()" [titulo]="'grafica_alertas_titulo' | t" />
+    </section>
+
     <ion-list [inset]="true" lines="full">
       @for (alerta of vm.ordenadas(); track alerta.idAlerta) {
         <ion-item [button]="true" (click)="opciones(alerta)">

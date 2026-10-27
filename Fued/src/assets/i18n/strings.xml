@@ -7,31 +7,33 @@
 -->
 <resources>
   <string name="locale">es-MX</string>
-  <string name="app_nombre">Fued</string>
+  <string name="app_nombre">Sistema de Salud</string>
 
   <!-- Genéricos -->
-  <string name="aceptar">Aceptar</string>
-  <string name="agregar">Agregar</string>
-  <string name="cancelar">Cancelar</string>
-  <string name="cargando">Cargando</string>
-  <string name="cerrar">Cerrar</string>
-  <string name="eliminar">Eliminar</string>
+  <string name="aceptar">¡Órale!</string>
+  <string name="agregar">Échale</string>
+  <string name="cancelar">Nel</string>
+  <string name="cargando">Aguanta</string>
+  <string name="carga_frase">Aguanta las carnitas… echándole aguas al sistema</string>
+  <string name="carga_toca_para_bailar">🎵 Pícale pa\' que suene el sonidero 🎵</string>
+  <string name="cerrar">Ya estuvo</string>
+  <string name="eliminar">Bórralo</string>
   <string name="eliminar_elemento">Eliminar {elemento}</string>
-  <string name="guardar">Guardar</string>
+  <string name="guardar">¡Sobres!</string>
   <string name="hoy">Hoy</string>
   <string name="llamar_a">Llamar a {nombre}</string>
   <string name="no">No</string>
-  <string name="reintentar">Reintentar</string>
+  <string name="reintentar">Otra vez, joven</string>
   <string name="seleccionar">Seleccionar</string>
-  <string name="sin_dato">Sin registrar</string>
-  <string name="sin_registros">Sin registros</string>
-  <string name="volver">Atrás</string>
+  <string name="sin_dato">Sin registrar, joven</string>
+  <string name="sin_registros">Aquí no hay nada, joven</string>
+  <string name="volver">Pa\' trás</string>
   <string name="dia_anterior">Día anterior</string>
   <string name="dia_siguiente">Día siguiente</string>
   <string name="rol_paciente">Paciente</string>
   <string name="rol_medico">Médico</string>
-  <string name="cerrar_sesion">Cerrar sesión</string>
-  <string name="cerrar_sesion_mensaje">Tendrás que volver a ingresar tu correo y contraseña.</string>
+  <string name="cerrar_sesion">¡Fuga! Ahí nos vidrios</string>
+  <string name="cerrar_sesion_mensaje">Pa\' volver tendrás que pasar tu credencial otra vez.</string>
 
   <!-- Unidades -->
   <string name="unidad_mmhg">mmHg</string>
@@ -42,13 +44,13 @@
   <string name="unidad_celsius">°C</string>
 
   <!-- Pestañas -->
-  <string name="tab_inicio">Inicio</string>
+  <string name="tab_inicio">El Cantón</string>
   <string name="tab_citas">Citas</string>
   <string name="tab_historial">Historial</string>
-  <string name="tab_chat">Mensajes</string>
-  <string name="tab_perfil">Perfil</string>
-  <string name="tab_pacientes">Pacientes</string>
-  <string name="tab_agenda">Agenda</string>
+  <string name="tab_chat">Chismógrafo</string>
+  <string name="tab_perfil">Mi Ficha</string>
+  <string name="tab_pacientes">La Clientela</string>
+  <string name="tab_agenda">La Agenda</string>
 
   <!-- Campos de formulario -->
   <string name="campo_email">Correo electrónico</string>
@@ -71,27 +73,27 @@
   <string name="campo_telefono_recepcion">Teléfono de recepción</string>
 
   <!-- Login -->
-  <string name="login_subtitulo">Tu salud, tus citas y tus medicamentos en un solo lugar</string>
-  <string name="login_boton">Iniciar sesión</string>
-  <string name="login_crear_cuenta">Crear una cuenta</string>
-  <string name="login_cuentas_demo">Cuentas de prueba</string>
+  <string name="login_subtitulo">¿Quién pompó? Pasa tu credencial</string>
+  <string name="login_boton">¡Vas, carnal!</string>
+  <string name="login_crear_cuenta">Soy nuevo en el barrio</string>
+  <string name="login_cuentas_demo">Cuates de prueba</string>
 
   <!-- Registro -->
-  <string name="registro_titulo">Crear cuenta</string>
+  <string name="registro_titulo">Date de alta en el barrio</string>
   <string name="registro_tipo_cuenta">Tipo de cuenta</string>
   <string name="registro_seccion_cuenta">Cuenta</string>
   <string name="registro_seccion_personal">Datos personales</string>
   <string name="registro_password_ayuda">Mínimo 8 caracteres</string>
   <string name="registro_nota_medico">Tu cédula profesional se valida antes de que puedas consultar expedientes.</string>
-  <string name="registro_boton">Crear cuenta</string>
-  <string name="registro_exito">Tu cuenta está lista</string>
+  <string name="registro_boton">¡Apúntame!</string>
+  <string name="registro_exito">¡Ya estás peinado pa\' trás! Tu cuenta quedó lista</string>
 
   <!-- Inicio del paciente -->
-  <string name="inicio_titulo">Inicio</string>
-  <string name="inicio_saludo">Hola, {nombre}</string>
+  <string name="inicio_titulo">El Cantón</string>
+  <string name="inicio_saludo">¡Quiubo, {nombre}!</string>
   <string name="inicio_proxima_cita">Próxima cita</string>
   <string name="inicio_agendar">Agendar</string>
-  <string name="inicio_sin_citas">No tienes citas próximas. Agenda una.</string>
+  <string name="inicio_sin_citas">No tienes citas próximas. ¡Échale, agenda una!</string>
   <string name="inicio_escribir_medico">Escribir a {nombre}</string>
   <string name="inicio_medicamentos">Medicamentos</string>
   <string name="inicio_progreso">{hechas} de {total} tomas registradas</string>
@@ -104,7 +106,7 @@
   <string name="inicio_registrar_sintomas">Registrar síntomas</string>
   <string name="inicio_sintomas_titulo">Síntomas</string>
   <string name="inicio_sintomas_mensaje">Describe cómo te sentiste con esta dosis. Tu médico podrá verlo.</string>
-  <string name="inicio_toma_registrada">Toma registrada</string>
+  <string name="inicio_toma_registrada">¡Ya estás peinado pa\' trás! Toma registrada</string>
   <string name="inicio_toma_omitida">Toma marcada como omitida</string>
   <string name="inicio_aviso_inventario">Te quedan {cantidad} de {medicamento}. Surte tu receta.</string>
   <string name="inicio_signos_vitales">Signos vitales</string>
@@ -131,15 +133,15 @@
   <string name="metrica_altura">Altura</string>
   <string name="metrica_notas">Notas</string>
   <string name="metrica_imc">IMC {imc}</string>
-  <string name="metrica_guardada">Medición guardada</string>
+  <string name="metrica_guardada">¡Ya estás peinado pa\' trás! Medición guardada</string>
 
   <!-- Citas -->
   <string name="citas_filtro">Filtrar citas</string>
   <string name="citas_pendientes">Por confirmar</string>
   <string name="citas_proximas">Próximas</string>
   <string name="citas_historial">Historial</string>
-  <string name="citas_vacio_pendientes">No hay solicitudes por confirmar.</string>
-  <string name="citas_vacio_proximas">No hay citas próximas.</string>
+  <string name="citas_vacio_pendientes">Nadie en la fila: no hay solicitudes por confirmar.</string>
+  <string name="citas_vacio_proximas">Agenda libre como domingo: no hay citas próximas.</string>
   <string name="citas_vacio_historial">Todavía no hay citas pasadas.</string>
   <string name="cita_estado_pendiente">Pendiente</string>
   <string name="cita_estado_confirmada">Confirmada</string>
@@ -155,8 +157,8 @@
   <string name="cita_sin_horarios">No hay horarios disponibles ese día. Prueba otra fecha.</string>
   <string name="cita_motivo">Motivo de la consulta</string>
   <string name="cita_motivo_placeholder">Describe brevemente el motivo</string>
-  <string name="cita_solicitada">Cita solicitada. El médico debe confirmarla.</string>
-  <string name="cita_agendada">Cita agendada</string>
+  <string name="cita_solicitada">¡Va! Cita apartada; falta que el doc la confirme.</string>
+  <string name="cita_agendada">¡Sobres! Cita agendada</string>
   <string name="cita_accion_confirmar">Confirmar cita</string>
   <string name="cita_accion_rechazar">Rechazar solicitud</string>
   <string name="cita_accion_cancelar">Cancelar cita</string>
@@ -198,8 +200,8 @@
   <string name="expediente_agregar_contactos">Nuevo contacto de emergencia</string>
   <string name="expediente_eliminar_titulo">¿Eliminar registro?</string>
   <string name="expediente_eliminar_mensaje">Se eliminará "{elemento}" del expediente.</string>
-  <string name="expediente_guardado">Expediente actualizado</string>
-  <string name="expediente_eliminado">Registro eliminado</string>
+  <string name="expediente_guardado">¡Ya estás peinado pa\' trás! Expediente actualizado</string>
+  <string name="expediente_eliminado">¡Fuera! Registro borrado</string>
   <string name="alergia_alergeno">Alérgeno</string>
   <string name="alergia_severidad">Severidad (leve, moderada, alta)</string>
   <string name="alergia_reaccion">Reacción</string>
@@ -240,9 +242,9 @@
   <string name="tratamiento_actualizar_inventario">Actualizar inventario</string>
   <string name="tratamiento_inventario_mensaje">¿Cuántas dosis de {medicamento} tienes disponibles?</string>
   <string name="tratamiento_suspender">Suspender tratamiento</string>
-  <string name="tratamiento_guardado">Tratamiento registrado</string>
+  <string name="tratamiento_guardado">¡Sobres! Tratamiento registrado</string>
   <string name="tratamiento_suspendido">Tratamiento suspendido</string>
-  <string name="tratamiento_inventario_actualizado">Inventario actualizado</string>
+  <string name="tratamiento_inventario_actualizado">¡Sobres! Inventario al tiro</string>
   <string name="via_oral">Oral</string>
   <string name="via_sublingual">Sublingual</string>
   <string name="via_topica">Tópica</string>
@@ -299,7 +301,7 @@
 
   <!-- Perfil del paciente -->
   <string name="perfil_editar_datos">Datos personales</string>
-  <string name="perfil_guardado">Perfil actualizado</string>
+  <string name="perfil_guardado">¡Ya estás peinado pa\' trás! Perfil actualizado</string>
   <string name="perfil_datos_medicos">Datos médicos</string>
   <string name="perfil_tipo_sangre">Tipo de sangre</string>
   <string name="perfil_donador">Donador de órganos</string>
@@ -336,7 +338,7 @@
   <string name="pacientes_buscar">Buscar paciente</string>
   <string name="pacientes_semaforo">Semáforo de riesgo</string>
   <string name="pacientes_adherencia">{porcentaje}% de adherencia</string>
-  <string name="pacientes_vacio">Aún no tienes pacientes. Aparecerán cuando te autoricen.</string>
+  <string name="pacientes_vacio">Todavía no llega la clientela. Aparecerán cuando te autoricen.</string>
   <string name="pacientes_sin_resultados">Ningún paciente coincide con la búsqueda.</string>
   <string name="pacientes_no_verificado">Tu cédula está en revisión. Podrás ver expedientes cuando sea aprobada.</string>
   <string name="riesgo_alto">Riesgo alto</string>
@@ -360,10 +362,10 @@
   <string name="tema_oscuro">Oscuro</string>
 
   <!-- Errores de la API: error_<codigo> -->
-  <string name="error_generico">Algo salió mal. Intenta de nuevo.</string>
-  <string name="error_sin_conexion">No hay conexión con el servidor. Revisa tu red.</string>
-  <string name="error_no_autenticado">Tu sesión expiró. Inicia sesión de nuevo.</string>
-  <string name="error_credenciales_invalidas">Correo o contraseña incorrectos.</string>
+  <string name="error_generico">¡Uy, joven, no hay sistema! Intenta otra vez.</string>
+  <string name="error_sin_conexion">¡Uy, joven, no hay sistema! No llegamos al servidor; revisa tu red.</string>
+  <string name="error_no_autenticado">Se te fue el micro: tu sesión expiró. Pasa tu credencial otra vez.</string>
+  <string name="error_credenciales_invalidas">¿Quién pompó? Correo o contraseña incorrectos.</string>
   <string name="error_email_registrado">Ya existe una cuenta con ese correo.</string>
   <string name="error_email_invalido">El correo electrónico no es válido.</string>
   <string name="error_password_corta">La contraseña debe tener al menos 8 caracteres.</string>
@@ -407,16 +409,18 @@
   <string name="error_transicion_invalida">No se puede cambiar la cita a ese estado.</string>
   <string name="error_sin_cambios">No hay cambios por guardar.</string>
   <string name="error_archivo_requerido">Adjunta un archivo.</string>
-  <string name="error_archivo_muy_grande">El archivo pesa demasiado (máximo 8 MB).</string>
-  <string name="error_tipo_no_permitido">Ese tipo de archivo no se puede enviar por el chat.</string>
+  <string name="error_archivo_muy_grande">El archivo pesa demasiado (máximo 8 MB en el chat y 15 MB en el expediente).</string>
+  <string name="error_tipo_no_permitido">Ese tipo de archivo no se acepta aquí. En el expediente van fotos (JPG, PNG, WEBP, HEIC) y PDF.</string>
+  <string name="error_seccion_privada">El paciente decidió no compartir esta sección.</string>
+  <string name="error_documento_no_encontrado">Ese documento ya no existe.</string>
   <string name="error_subida_fallida">No se pudo enviar el archivo. Intenta de nuevo.</string>
   <string name="error_adjunto_no_encontrado">El adjunto ya no está disponible.</string>
   <string name="error_chat_no_permitido">Solo puedes escribir a médicos o pacientes con los que tienes una cita o vinculación.</string>
-  <string name="error_ruta_no_encontrada">El servicio no está disponible.</string>
-  <string name="error_metodo_no_permitido">El servicio no está disponible.</string>
-  <string name="error_base_de_datos_no_disponible">El servidor no puede conectarse a la base de datos.</string>
+  <string name="error_ruta_no_encontrada">¡Uy, joven, no hay sistema! El servicio no está disponible.</string>
+  <string name="error_metodo_no_permitido">¡Uy, joven, no hay sistema! El servicio no está disponible.</string>
+  <string name="error_base_de_datos_no_disponible">¡Uy, joven, no hay sistema! El servidor no alcanza la base de datos.</string>
   <string name="error_base_de_datos_no_instalada">La base de datos aún no está instalada.</string>
-  <string name="error_error_interno">Ocurrió un error en el servidor.</string>
+  <string name="error_error_interno">¡Uy, joven, no hay sistema! Falló el servidor.</string>
 
   <!-- Privacidad selectiva del expediente -->
   <string name="privacidad_titulo">Privacidad del historial</string>
@@ -651,9 +655,9 @@
   <string name="reco_repetir_medicion">Descansa diez minutos y repite la medición.</string>
 
   <!-- Bandeja de alertas del médico -->
-  <string name="tab_alertas">Alertas</string>
-  <string name="alertas_titulo">Alertas clínicas</string>
-  <string name="alertas_vacio">No hay alertas con este filtro.</string>
+  <string name="tab_alertas">¡Alarma!</string>
+  <string name="alertas_titulo">¡Alarma! Alertas clínicas</string>
+  <string name="alertas_vacio">Todo tranquilo en el barrio: no hay alertas con este filtro.</string>
   <string name="alertas_pendientes">{total} alertas sin revisar</string>
   <string name="alertas_filtro_nueva">Nuevas</string>
   <string name="alertas_filtro_vista">Vistas</string>
@@ -668,9 +672,27 @@
   <string name="alertas_marcar_atendida">Marcar como atendida</string>
   <string name="alertas_notas_titulo">Nota de atención</string>
   <string name="alertas_notas_mensaje">Queda registrada junto a la alerta.</string>
-  <string name="alertas_vista">Alerta marcada como vista</string>
-  <string name="alertas_atendida">Alerta marcada como atendida</string>
+  <string name="alertas_vista">¡Sobres! Alerta marcada como vista</string>
+  <string name="alertas_atendida">¡Sobres! Alerta marcada como atendida</string>
   <string name="alertas_medicion_no_confiable">La medición se registró en condiciones no ideales</string>
+
+  <!-- Gráficas del médico -->
+  <string name="grafica_pacientes_titulo">La Ruleta de tu Clientela</string>
+  <string name="grafica_vista_riesgo">Riesgo</string>
+  <string name="grafica_vista_adherencia">Adherencia</string>
+  <string name="grafica_adherencia_alta">Adherencia de 80% o más</string>
+  <string name="grafica_adherencia_media">Adherencia de 50 a 79%</string>
+  <string name="grafica_adherencia_baja">Adherencia menor a 50%</string>
+  <string name="grafica_adherencia_sin_datos">Sin tomas registradas</string>
+  <string name="grafica_alertas_titulo">La Ruleta de las Alertas</string>
+  <string name="grafica_vista_severidad">Severidad</string>
+  <string name="grafica_vista_origen">Origen</string>
+  <string name="grafica_alertas_urgente">Urgentes</string>
+  <string name="grafica_alertas_atencion">Requieren atención</string>
+  <string name="grafica_alertas_informativa">Informativas</string>
+  <string name="grafica_alertas_segmentacion">Tamizaje</string>
+  <string name="grafica_alertas_metrica">Métricas vitales</string>
+  <string name="grafica_alertas_adherencia">Adherencia</string>
   <string name="alerta_titulo_urgente">Requiere atención inmediata</string>
   <string name="alerta_titulo_atencion">Requiere atención médica</string>
   <string name="alerta_detalle_segmentacion">Cuestionario de seguimiento con resultado en segmento {segmento}</string>
@@ -684,4 +706,205 @@
   <string name="error_alerta_no_encontrada">La alerta ya no existe.</string>
   <string name="error_presion_invalida">La presión debe escribirse como sistólica/diastólica, por ejemplo 120/80.</string>
   <string name="expediente_datos_omitidos">El paciente ocultó {total} secciones de su historial. No es que no existan: decidió no compartirlas.</string>
+
+  <!-- Expediente ampliado: documentos, EXIF, vacunas, antecedentes y datos generales -->
+  <string name="si">Sí</string>
+  <string name="editar">Editar</string>
+  <string name="documentos_titulo">Documentos y estudios</string>
+  <string name="documentos_vacio">Sin documentos. Toma foto a tus recetas o escanea tus estudios para traerlos siempre contigo.</string>
+  <string name="documento_agregar">Agregar documento</string>
+  <string name="documento_tomar_foto">Tomar foto</string>
+  <string name="documento_escanear">Escanear documento</string>
+  <string name="documento_galeria">Elegir de la galería</string>
+  <string name="documento_archivo">Subir PDF o archivo</string>
+  <string name="documento_nuevo_titulo">Nuevo documento</string>
+  <string name="documento_pestana_datos">Datos</string>
+  <string name="documento_pestana_documento">Documento</string>
+  <string name="documento_pestana_metadatos">Metadatos</string>
+  <string name="documento_vista_previa">Vista previa del documento</string>
+  <string name="documento_titulo">Título</string>
+  <string name="documento_categoria">Categoría</string>
+  <string name="documento_fecha">Fecha del documento</string>
+  <string name="documento_notas">Notas</string>
+  <string name="documento_subido">Subido</string>
+  <string name="documento_por_paciente">por el paciente</string>
+  <string name="documento_por_medico">por el médico</string>
+  <string name="documento_subiendo">Subiendo documento…</string>
+  <string name="documento_guardado">¡Ya quedó! Documento guardado en el expediente</string>
+  <string name="documento_guardar_telefono">Guardar en el teléfono</string>
+  <string name="documento_guardado_telefono">Guardado en {ruta}</string>
+  <string name="documento_origen_camara">Foto de la cámara</string>
+  <string name="documento_origen_escaner">Documento escaneado</string>
+  <string name="documento_origen_galeria">Imagen de la galería</string>
+  <string name="documento_origen_archivo">Archivo del teléfono</string>
+  <string name="documento_categoria_receta">Receta</string>
+  <string name="documento_categoria_laboratorio">Estudio de laboratorio</string>
+  <string name="documento_categoria_imagenologia">Rayos X, ultrasonido o tomografía</string>
+  <string name="documento_categoria_nota_medica">Nota médica</string>
+  <string name="documento_categoria_identificacion">Identificación</string>
+  <string name="documento_categoria_seguro">Póliza o carnet de seguro</string>
+  <string name="documento_categoria_otro">Otro</string>
+
+  <string name="meta_sin_datos">Este archivo no trae metadatos (EXIF). Las capturas de pantalla y los escaneos casi nunca los tienen.</string>
+  <string name="meta_ver_mapa">Ver en el mapa</string>
+  <string name="meta_aviso_ubicacion">Ojo: esta foto guarda dónde se tomó. Quien vea el documento también verá la ubicación.</string>
+  <string name="meta_grupo_camara">Cámara</string>
+  <string name="meta_grupo_captura">Captura</string>
+  <string name="meta_grupo_imagen">Imagen</string>
+  <string name="meta_grupo_ubicacion">Ubicación (GPS)</string>
+  <string name="meta_grupo_escaneo">Escaneo</string>
+  <string name="meta_grupo_pdf">PDF</string>
+  <string name="meta_grupo_archivo">Archivo</string>
+  <string name="meta_marca">Marca</string>
+  <string name="meta_modelo">Modelo</string>
+  <string name="meta_software">Software</string>
+  <string name="meta_lente">Lente</string>
+  <string name="meta_fechaOriginal">Fecha de la toma</string>
+  <string name="meta_fechaCreacion">Fecha de creación</string>
+  <string name="meta_fechaModificacion">Última modificación</string>
+  <string name="meta_exposicion">Exposición</string>
+  <string name="meta_apertura">Apertura</string>
+  <string name="meta_iso">ISO</string>
+  <string name="meta_distanciaFocal">Distancia focal</string>
+  <string name="meta_flash">Flash</string>
+  <string name="meta_balanceBlancos">Balance de blancos</string>
+  <string name="meta_ancho">Ancho</string>
+  <string name="meta_alto">Alto</string>
+  <string name="meta_orientacion">Orientación</string>
+  <string name="meta_espacioColor">Espacio de color</string>
+  <string name="meta_latitud">Latitud</string>
+  <string name="meta_longitud">Longitud</string>
+  <string name="meta_altitud">Altitud</string>
+  <string name="meta_paginas">Páginas</string>
+  <string name="meta_titulo">Título</string>
+  <string name="meta_autor">Autor</string>
+  <string name="meta_creador">Creado con</string>
+  <string name="meta_programa">Programa</string>
+  <string name="meta_nombre">Nombre</string>
+  <string name="meta_tipo">Tipo</string>
+  <string name="meta_bytes">Tamaño</string>
+
+  <string name="expediente_vacunas">Vacunas</string>
+  <string name="expediente_agregar_vacunas">Nueva vacuna</string>
+  <string name="vacuna_nombre">Vacuna</string>
+  <string name="vacuna_fecha">Fecha de aplicación</string>
+  <string name="vacuna_dosis">Dosis (ej. 1a, refuerzo)</string>
+  <string name="vacuna_lote">Lote</string>
+  <string name="expediente_antecedentes">Antecedentes familiares</string>
+  <string name="expediente_agregar_antecedentes">Nuevo antecedente familiar</string>
+  <string name="antecedente_parentesco">Parentesco (ej. madre)</string>
+  <string name="antecedente_padecimiento">Padecimiento</string>
+  <string name="antecedente_notas">Notas</string>
+
+  <string name="complementarios_titulo">Datos médicos generales</string>
+  <string name="complementarios_cobertura">Cobertura y atención</string>
+  <string name="complementarios_seguro">Seguro médico</string>
+  <string name="complementarios_poliza">Número de póliza o afiliación</string>
+  <string name="complementarios_medico_cabecera">Médico de cabecera</string>
+  <string name="complementarios_estilo_vida">Estilo de vida</string>
+  <string name="complementarios_tabaquismo">Tabaco</string>
+  <string name="complementarios_alcohol">Alcohol</string>
+  <string name="complementarios_actividad">Actividad física</string>
+  <string name="complementarios_otros">Otros datos</string>
+  <string name="complementarios_discapacidad">Discapacidad o necesidad especial</string>
+  <string name="complementarios_notas">Notas para el médico</string>
+  <string name="tabaquismo_nunca">Nunca ha fumado</string>
+  <string name="tabaquismo_exfumador">Exfumador</string>
+  <string name="tabaquismo_actual">Fuma actualmente</string>
+  <string name="alcohol_no">No toma</string>
+  <string name="alcohol_ocasional">Ocasional</string>
+  <string name="alcohol_frecuente">Frecuente</string>
+  <string name="actividad_sedentaria">Sedentaria</string>
+  <string name="actividad_moderada">Moderada</string>
+  <string name="actividad_activa">Activa</string>
+
+  <string name="privacidad_seccion_vacunas">Vacunas</string>
+  <string name="privacidad_seccion_antecedentes">Antecedentes familiares</string>
+  <string name="privacidad_seccion_complementarios">Seguro, médico de cabecera y estilo de vida</string>
+  <string name="privacidad_seccion_documentos">Documentos y estudios</string>
+
+  <!-- Escáner de documentos de la app -->
+  <string name="escaner_titulo">Escanear documento</string>
+  <string name="escaner_pista">Pon la hoja sobre un fondo oscuro</string>
+  <string name="escaner_hoja_detectada">¡Ahí está la hoja! Toma la foto</string>
+  <string name="escaner_capturar">Tomar foto de la hoja</string>
+  <string name="escaner_linterna">Linterna</string>
+  <string name="escaner_ver_paginas">Ver páginas escaneadas</string>
+  <string name="escaner_ajusta_esquinas">Arrastra las esquinas a las orillas de la hoja</string>
+  <string name="escaner_retomar">Otra vez</string>
+  <string name="escaner_foto_completa">Toda la foto</string>
+  <string name="escaner_usar">Usar</string>
+  <string name="escaner_procesando">Enderezando la hoja…</string>
+  <string name="escaner_pagina">Página {n}</string>
+  <string name="escaner_filtro_documento">Documento</string>
+  <string name="escaner_filtro_gris">Gris</string>
+  <string name="escaner_filtro_color">Color</string>
+  <string name="escaner_girar">Girar</string>
+  <string name="escaner_otra_pagina">Otra página</string>
+  <string name="escaner_listo">Listo</string>
+  <string name="escaner_max_paginas">Máximo {max} páginas por documento</string>
+  <string name="escaner_sin_camara">No se pudo abrir la cámara. Revisa que la app tenga permiso de cámara en los ajustes del teléfono.</string>
+  <string name="meta_filtro">Filtro</string>
+  <string name="meta_resolucion">Resolución</string>
+  <string name="meta_fecha">Fecha</string>
+  <string name="meta_camara">Cámara</string>
+
+  <!-- Rastreo EXIF de los escaneos -->
+  <string name="escaner_exif_descripcion">Documento médico escaneado · página {pagina} de {paginas}</string>
+  <string name="escaner_ubicacion_si">Guardar ubicación</string>
+  <string name="escaner_ubicacion_no">Sin ubicación</string>
+  <string name="meta_grupo_rastreo">Rastreo del escaneo</string>
+  <string name="meta_idEscaneo">ID único del escaneo</string>
+  <string name="meta_app">Escaneado con</string>
+  <string name="meta_descripcion">Descripción</string>
+  <string name="meta_expediente">Expediente</string>
+  <string name="meta_escaneadoPor">ID de quien escaneó</string>
+  <string name="meta_rol">Rol</string>
+  <string name="meta_pagina">Página</string>
+  <string name="meta_zonaHoraria">Zona horaria</string>
+  <string name="meta_comentario">Comentario</string>
+
+  <!-- Estadísticas del sistema (GraphQL) -->
+  <string name="tab_estadisticas">El Censo</string>
+  <string name="est_rango">Periodo</string>
+  <string name="est_meses">{n} meses</string>
+  <string name="est_origen">{total} registros de todo Fued, servidos por GraphQL</string>
+  <string name="est_kpi_pacientes">Pacientes</string>
+  <string name="est_kpi_medicos">Médicos</string>
+  <string name="est_kpi_citas">Citas</string>
+  <string name="est_kpi_metricas">Signos vitales</string>
+  <string name="est_kpi_tomas">Tomas</string>
+  <string name="est_kpi_alertas">Alertas</string>
+  <string name="est_total">Total</string>
+  <string name="est_registros_titulo">Pacientes nuevos por mes</string>
+  <string name="est_citas_titulo">Citas por mes</string>
+  <string name="est_adherencia_titulo">Adherencia a tratamientos</string>
+  <string name="est_adherencia_actual">de las tomas se hicieron este mes</string>
+  <string name="est_presion_titulo">Presión arterial promedio</string>
+  <string name="est_glucosa_titulo">Glucosa promedio</string>
+  <string name="est_segmentos_titulo">Control de enfermedades crónicas</string>
+  <string name="est_alertas_titulo">Alertas por severidad</string>
+  <string name="est_edad_titulo">Pacientes por edad</string>
+  <string name="est_genero_titulo">Pacientes por género</string>
+  <string name="est_sangre_titulo">Pacientes por tipo de sangre</string>
+  <string name="est_especialidades_titulo">Médicos por especialidad</string>
+  <string name="est_top_titulo">Médicos con más pacientes</string>
+  <string name="est_top_detalle">{especialidad} · {citas} citas</string>
+  <string name="est_serie_pacientes">Pacientes</string>
+  <string name="est_serie_pacientes_nuevos">Pacientes nuevos</string>
+  <string name="est_serie_completadas">Completadas</string>
+  <string name="est_serie_canceladas">Canceladas</string>
+  <string name="est_serie_confirmadas">Confirmadas</string>
+  <string name="est_serie_pendientes">Pendientes</string>
+  <string name="est_serie_tomado">A tiempo</string>
+  <string name="est_serie_tarde">Tarde</string>
+  <string name="est_serie_omitido">Omitida</string>
+  <string name="est_serie_sistolica">Sistólica</string>
+  <string name="est_serie_diastolica">Diastólica</string>
+  <string name="est_serie_glucosa">Glucosa</string>
+  <string name="est_cond_hipertension">Hipertensión</string>
+  <string name="est_cond_diabetes">Diabetes</string>
+  <string name="est_cond_asma_epoc">Asma/EPOC</string>
+  <string name="est_cond_cardiopatia">Corazón</string>
+  <string name="est_cond_renal">Riñón</string>
 </resources>

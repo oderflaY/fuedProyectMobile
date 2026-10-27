@@ -22,6 +22,14 @@ final class Paciente extends Modelo
         'telefono' => 'texto',
         'tipo_sangre' => 'texto',
         'donador_organos' => 'booleano',
+        'seguro_medico' => 'texto',
+        'numero_poliza' => 'texto',
+        'medico_cabecera' => 'texto',
+        'tabaquismo' => 'texto',
+        'alcohol' => 'texto',
+        'actividad_fisica' => 'texto',
+        'discapacidad' => 'texto',
+        'notas_medicas' => 'texto',
     ];
     protected static array $pertenece = ['cuenta' => [Cuenta::class, 'id_paciente']];
 
@@ -54,6 +62,18 @@ final class Paciente extends Modelo
     public function cirugias(): array
     {
         return $this->tieneMuchos(Cirugia::class, 'id_paciente')->ordenar('fecha', 'DESC')->obtener();
+    }
+
+    /** @return array<int, Vacuna> */
+    public function vacunas(): array
+    {
+        return $this->tieneMuchos(Vacuna::class, 'id_paciente')->ordenar('fecha', 'DESC')->obtener();
+    }
+
+    /** @return array<int, AntecedenteFamiliar> */
+    public function antecedentesFamiliares(): array
+    {
+        return $this->tieneMuchos(AntecedenteFamiliar::class, 'id_paciente')->ordenar('parentesco')->obtener();
     }
 
     /** @return array<int, ContactoEmergencia> */
@@ -131,6 +151,21 @@ final class Paciente extends Modelo
         ];
     }
 
+    /** Seguro, médico de cabecera y estilo de vida: lo que el paciente configura de su expediente. */
+    public function datosComplementarios(): array
+    {
+        return [
+            'seguroMedico' => $this->seguro_medico,
+            'numeroPoliza' => $this->numero_poliza,
+            'medicoCabecera' => $this->medico_cabecera,
+            'tabaquismo' => $this->tabaquismo,
+            'alcohol' => $this->alcohol,
+            'actividadFisica' => $this->actividad_fisica,
+            'discapacidad' => $this->discapacidad,
+            'notasMedicas' => $this->notas_medicas,
+        ];
+    }
+
     /** Expediente completo según DM_HistorialMedico.md. */
     public function expediente(): array
     {
@@ -149,7 +184,12 @@ final class Paciente extends Modelo
             'contactosEmergencia' => array_map(fn (ContactoEmergencia $c) => $c->aDto(), $this->contactos()),
             'perfilEmergenciaReducido' => $this->perfilEmergencia(),
             'metricasVitalesActuales' => $this->metricasActuales(),
-            'historialClinico' => ['cirugias' => array_map(fn (Cirugia $c) => $c->aDto(), $this->cirugias())],
+            'datosComplementarios' => $this->datosComplementarios(),
+            'historialClinico' => [
+                'cirugias' => array_map(fn (Cirugia $c) => $c->aDto(), $this->cirugias()),
+                'vacunas' => array_map(fn (Vacuna $v) => $v->aDto(), $this->vacunas()),
+                'antecedentesFamiliares' => array_map(fn (AntecedenteFamiliar $a) => $a->aDto(), $this->antecedentesFamiliares()),
+            ],
             'tratamientosActivos' => array_map(fn (Tratamiento $t) => $t->aDto(), $this->tratamientos()),
             'registroAdherencia' => array_map(
                 fn (RegistroAdherencia $r) => $r->aDto(true),
@@ -187,7 +227,13 @@ final class Paciente extends Modelo
     {
         $expediente = $this->expediente();
         $expediente['segmentacion'] = $this->segmentacionDto();
-        return filtrarExpediente($expediente, $audiencia, $this->preferenciasPrivacidad($audiencia));
+        $preferencias = $this->preferenciasPrivacidad($audiencia);
+        $filtrado = filtrarExpediente($expediente, $audiencia, $preferencias);
+        // Los documentos se piden aparte, pero el aviso de datos retenidos también los cuenta.
+        if ($audiencia === 'medico' && !seccionVisible('documentos', $audiencia, $preferencias)) {
+            $filtrado['privacidad']['seccionesOmitidas'][] = 'documentos';
+        }
+        return $filtrado;
     }
 
     /**

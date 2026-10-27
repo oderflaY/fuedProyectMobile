@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancelar()">{{ 'cancelar' | t }}</ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'documento_nuevo_titulo' | t }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [strong]="true" [disabled]="!puedeGuardar()" (click)="guardar()">{{ 'guardar' | t }}</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [value]="pestana()" (ionChange)="pestana.set($any($event.detail.value))">
+      <ion-segment-button value="datos">{{ 'documento_pestana_datos' | t }}</ion-segment-button>
+      <ion-segment-button value="metadatos">{{ 'documento_pestana_metadatos' | t }}</ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="agrupado">
+  <div class="vista-previa">
+    @if (esImagen) {
+      <img [src]="capturado.vistaPrevia" [alt]="'documento_vista_previa' | t" />
+    } @else {
+      <div class="pdf">
+        <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+        <span>{{ capturado.archivo.name }}</span>
+      </div>
+    }
+  </div>
+
+  @if (pestana() === 'datos') {
+    <ion-list [inset]="true" lines="full">
+      <ion-item>
+        <ion-input labelPlacement="stacked" [label]="'documento_titulo' | t" [maxlength]="160"
+          [value]="titulo()" (ionInput)="titulo.set($event.detail.value ?? '')"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-select labelPlacement="stacked" [label]="'documento_categoria' | t" interface="action-sheet"
+          [value]="categoria()" (ionChange)="categoria.set($event.detail.value)" [cancelText]="'cancelar' | t">
+          @for (c of categorias; track c) {
+            <ion-select-option [value]="c">{{ 'documento_categoria_' + c | t }}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-input type="date" labelPlacement="stacked" [label]="'documento_fecha' | t"
+          [value]="fecha()" (ionInput)="fecha.set($event.detail.value ?? '')"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-textarea labelPlacement="stacked" [label]="'documento_notas' | t" [autoGrow]="true" [maxlength]="500"
+          [value]="notas()" (ionInput)="notas.set($event.detail.value ?? '')"></ion-textarea>
+      </ion-item>
+    </ion-list>
+  } @else {
+    <app-metadatos-documento [metadatos]="capturado.metadatos" />
+  }
+</ion-content>

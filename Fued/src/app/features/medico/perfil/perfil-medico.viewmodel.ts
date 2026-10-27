@@ -4,6 +4,7 @@ import { SessionService } from '../../../core/auth/session.service';
 import type { PerfilMedico } from '../../../core/models';
 import { MedicosRepository } from '../../../core/repositories/medicos.repository';
 import { AvisosService } from '../../../core/ui/avisos.service';
+import { SonidosService } from '../../../core/ui/sonidos.service';
 
 /** Estado del perfil propio del médico: lo carga, lo guarda y cierra la sesión. */
 @Injectable()
@@ -11,6 +12,7 @@ export class PerfilMedicoViewModel {
   private readonly medicos = inject(MedicosRepository);
   private readonly sesion = inject(SessionService);
   private readonly avisos = inject(AvisosService);
+  private readonly sonidos = inject(SonidosService);
   private readonly router = inject(Router);
 
   readonly perfil = signal<PerfilMedico | null>(null);
@@ -49,6 +51,7 @@ export class PerfilMedicoViewModel {
   }
 
   async cerrarSesion(): Promise<void> {
+    this.sonidos.silbatazo();
     this.sesion.cerrar();
     await this.router.navigateByUrl('/login', { replaceUrl: true });
   }

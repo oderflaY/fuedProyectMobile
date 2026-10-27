@@ -2,7 +2,16 @@
 
 import type { AvisoPrivacidad } from '../privacidad/privacidad.model';
 import type { MetricasActuales } from '../metrica/metrica.model';
-import type { EstadoRfid, NivelAcceso, TipoSangre } from './paciente.types';
+import type {
+  ActividadFisica,
+  CategoriaDocumento,
+  ConsumoAlcohol,
+  EstadoRfid,
+  NivelAcceso,
+  OrigenDocumento,
+  Tabaquismo,
+  TipoSangre,
+} from './paciente.types';
 import type { PerfilCronico } from '../segmentacion/segmentacion.model';
 import type { RegistroToma } from '../adherencia/adherencia.model';
 import type { Tratamiento } from '../tratamiento/tratamiento.model';
@@ -76,9 +85,59 @@ export interface Identificaciones {
   nss: string | null;
 }
 
-/** Antecedentes clínicos; hoy sólo guarda cirugías. */
+export interface Vacuna {
+  id: string;
+  vacuna: string;
+  fecha: string;
+  dosis: string | null;
+  lote: string | null;
+}
+
+/** Padecimiento de un familiar directo (riesgo hereditario). */
+export interface AntecedenteFamiliar {
+  id: string;
+  parentesco: string;
+  padecimiento: string;
+  notas: string | null;
+}
+
+/** Antecedentes clínicos del paciente. */
 export interface HistorialClinico {
   cirugias: Cirugia[];
+  vacunas: Vacuna[];
+  antecedentesFamiliares: AntecedenteFamiliar[];
+}
+
+/** Lo que el paciente configura de su expediente además de los datos personales. */
+export interface DatosComplementarios {
+  seguroMedico: string | null;
+  numeroPoliza: string | null;
+  medicoCabecera: string | null;
+  tabaquismo: Tabaquismo | null;
+  alcohol: ConsumoAlcohol | null;
+  actividadFisica: ActividadFisica | null;
+  discapacidad: string | null;
+  notasMedicas: string | null;
+}
+
+/**
+ * Metadatos de una foto agrupados por tema (`camara`, `captura`, `imagen`, `ubicacion`…):
+ * el EXIF que se leyó al tomarla o escanearla.
+ */
+export type MetadatosDocumento = Record<string, Record<string, string | number | boolean>>;
+
+/** Foto, escaneo o PDF guardado en el expediente. */
+export interface DocumentoMedico {
+  id: string;
+  categoria: CategoriaDocumento;
+  titulo: string;
+  fechaDocumento: string | null;
+  notas: string | null;
+  origen: OrigenDocumento;
+  archivo: { nombre: string; mime: string; bytes: number; url: string };
+  metadatos: MetadatosDocumento | null;
+  subidoPorRol: 'paciente' | 'medico';
+  fechaSubida: string;
 }
 
 /** Quién puede leer el expediente además del propio paciente. */
@@ -97,6 +156,8 @@ export interface Expediente {
   dispositivosRfid: DispositivoRfid[];
   datosPersonales: DatosPersonalesPaciente;
   contactosEmergencia: ContactoEmergencia[];
+  /** `null` cuando el paciente se lo ocultó a quien consulta. */
+  datosComplementarios: DatosComplementarios | null;
   perfilEmergenciaReducido: PerfilEmergencia;
   metricasVitalesActuales: MetricasActuales | null;
   historialClinico: HistorialClinico;

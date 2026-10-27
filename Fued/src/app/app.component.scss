@@ -1,0 +1,30 @@
+
+/* Cargas de datos después del arranque: una franja fina arriba, sin tapar la pantalla. */
+.barra-carga {
+  position: fixed;
+  top: env(safe-area-inset-top, 0);
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 10000;
+  pointer-events: none;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    background: var(--barrio-barda, var(--ion-color-primary));
+    animation: barra-carga 1s ease-in-out infinite;
+  }
+}
+
+@keyframes barra-carga {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}

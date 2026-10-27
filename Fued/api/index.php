@@ -27,7 +27,7 @@ aplicarCors((array) config('origenes_permitidos'), (string) config('origenes_pat
 $router = new Router();
 $router->get('/', fn () => responder(['nombre' => 'Fued API', 'version' => '1.0.0', 'estado' => 'ok']));
 
-foreach (['auth', 'pacientes', 'privacidad', 'segmentacion', 'alertas', 'medicos', 'tratamientos', 'adherencia', 'metricas', 'citas', 'chat', 'emergencia'] as $modulo) {
+foreach (['auth', 'pacientes', 'privacidad', 'segmentacion', 'alertas', 'medicos', 'tratamientos', 'adherencia', 'metricas', 'citas', 'chat', 'documentos', 'emergencia', 'graphql'] as $modulo) {
     (require __DIR__ . "/routes/$modulo.php")($router);
 }
 

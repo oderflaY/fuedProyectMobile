@@ -429,5 +429,52 @@ afirmar($estado === 200 && count($r) >= 1, 'el paciente ve qué alertas se gener
 $delSistema = array_filter($r ?? [], fn (array $m) => $m['remitente'] === 'sistema');
 afirmar($delSistema !== [] && reset($delSistema)['propio'] === false, 'el aviso también queda en el chat como mensaje del sistema');
 
+echo "Documentos y expediente ampliado\n";
+$jpegDanado = "\xFF\xD8\xFF\xE1\x00\x10Exif\x00\x00II*\x00" . str_repeat("\x00", 64) . "\xFF\xD9";
+[$estado, $r] = subir('/pacientes/pac_01H8X9A/documentos', 'receta.jpg', 'image/jpeg', $jpegDanado, $juan, [
+    'titulo' => 'Receta', 'categoria' => 'receta', 'origen' => 'camara',
+    'metadatos' => json_encode(['camara' => ['marca' => 'Realme', 'modelo' => 'RMX3393'], 'basura' => 'x']),
+]);
+afirmar($estado === 201 && $r['metadatos'] === ['camara' => ['marca' => 'Realme', 'modelo' => 'RMX3393']], 'sube una foto y guarda su EXIF depurado', $r);
+$idDocumento = $r['id'] ?? '';
+[$estado, $r] = subir('/pacientes/pac_01H8X9A/documentos', 'estudio.jpg', 'image/jpeg', $jpegDanado, $juan, ['titulo' => 'Estudio']);
+afirmar($estado === 201 && $r['metadatos'] === null, 'un EXIF dañado no impide la subida', $r);
+[$estado, $r] = subir('/pacientes/pac_01H8X9A/documentos', 'x.txt', 'text/plain', 'hola', $juan, ['titulo' => 'Texto']);
+afirmar($estado === 415, 'sólo acepta fotos y PDF', $r);
+[$estado, $r] = subir('/pacientes/pac_02J9Y8B/documentos', 'lab.pdf', 'application/pdf', "%PDF-1.4\n%%EOF\n", $elena, ['titulo' => 'Lab']);
+afirmar($estado === 403, 'un médico de sólo lectura no sube documentos', $r);
+[$estado, $cabeceras] = descargar("/pacientes/pac_01H8X9A/documentos/$idDocumento/archivo", $elena);
+afirmar($estado === 200, 'el médico con acceso descarga el documento');
+http('PUT', '/pacientes/pac_01H8X9A/privacidad', ['audiencia' => 'medico', 'secciones' => ['documentos' => false]], $juan);
+[$estado, $r] = http('GET', '/pacientes/pac_01H8X9A/documentos', null, $elena);
+afirmar($estado === 200 && $r === [], 'si el paciente los oculta, el médico no los ve', $r);
+[$estado] = descargar("/pacientes/pac_01H8X9A/documentos/$idDocumento/archivo", $elena);
+afirmar($estado === 403, 'ni puede descargarlos por URL directa');
+[$estado, $r] = http('GET', '/pacientes/pac_01H8X9A', null, $elena);
+afirmar(in_array('documentos', $r['privacidad']['seccionesOmitidas'], true), 'y el aviso de datos retenidos los cuenta', $r['privacidad']);
+http('PUT', '/pacientes/pac_01H8X9A/privacidad', ['audiencia' => 'medico', 'secciones' => ['documentos' => true]], $juan);
+[$estado] = http('DELETE', "/pacientes/pac_01H8X9A/documentos/$idDocumento", null, $juan);
+afirmar($estado === 204, 'el paciente borra un documento');
+
+[$estado, $r] = http('POST', '/pacientes/pac_01H8X9A/vacunas', ['vacuna' => 'Influenza', 'fecha' => '2025-11-02'], $juan);
+afirmar($estado === 201 && str_starts_with($r['id'], 'vac_'), 'registra una vacuna', $r);
+[$estado, $r] = http('POST', '/pacientes/pac_01H8X9A/antecedentes', ['parentesco' => 'Madre', 'padecimiento' => 'Diabetes'], $juan);
+afirmar($estado === 201 && str_starts_with($r['id'], 'ant_'), 'registra un antecedente familiar', $r);
+[$estado, $r] = http('PUT', '/pacientes/pac_01H8X9A', ['datosComplementarios' => ['seguroMedico' => 'IMSS', 'tabaquismo' => 'nunca']], $juan);
+afirmar(
+    $estado === 200 && $r['datosComplementarios']['seguroMedico'] === 'IMSS' && count($r['historialClinico']['vacunas']) === 1,
+    'el expediente trae datos complementarios, vacunas y antecedentes',
+    $r['datosComplementarios'] ?? $r
+);
+[$estado, $r] = http('PUT', '/pacientes/pac_01H8X9A', ['datosComplementarios' => ['tabaquismo' => 'diario']], $juan);
+afirmar($estado === 422, 'valida las opciones de estilo de vida', $r);
+http('PUT', '/pacientes/pac_01H8X9A/privacidad', ['audiencia' => 'emergencia', 'secciones' => ['cirugias' => true]], $juan);
+[$estado, $r] = http('GET', '/emergencia/rfid/rfid_hash_abc123');
+afirmar(
+    !isset($r['historialClinico']) || isset($r['historialClinico']['cirugias']),
+    'las vacunas ocultas no se llevan las cirugías del perfil de emergencia',
+    $r
+);
+
 echo "\n$total pruebas, $fallos fallos\n";
 exit($fallos === 0 ? 0 : 1);

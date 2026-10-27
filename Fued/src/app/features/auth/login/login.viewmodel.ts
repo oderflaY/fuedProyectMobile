@@ -5,6 +5,7 @@ import { SessionService } from '../../../core/auth/session.service';
 import type { Rol } from '../../../core/models';
 import { AuthRepository } from '../../../core/repositories/auth.repository';
 import { AvisosService } from '../../../core/ui/avisos.service';
+import { SonidosService } from '../../../core/ui/sonidos.service';
 
 export interface CuentaDemo {
   nombre: string;
@@ -23,6 +24,7 @@ export class LoginViewModel {
   private readonly auth = inject(AuthRepository);
   private readonly sesion = inject(SessionService);
   private readonly avisos = inject(AvisosService);
+  private readonly sonidos = inject(SonidosService);
   private readonly router = inject(Router);
 
   readonly email = signal('');
@@ -46,9 +48,11 @@ export class LoginViewModel {
     this.error.set(null);
     try {
       this.sesion.iniciar(await this.auth.login(this.email().trim(), this.password()));
+      this.sonidos.claxon();
       await this.router.navigateByUrl(this.sesion.rutaInicio(), { replaceUrl: true });
     } catch (error) {
       this.error.set(this.avisos.mensajeDeError(error));
+      this.sonidos.trompetaTriste();
     } finally {
       this.enviando.set(false);
     }

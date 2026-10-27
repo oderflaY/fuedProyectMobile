@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancelar()">{{ 'cancelar' | t }}</ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'complementarios_titulo' | t }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [strong]="true" (click)="guardar()">{{ 'guardar' | t }}</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="agrupado">
+  <div class="titulo-seccion">{{ 'complementarios_cobertura' | t }}</div>
+  <ion-list [inset]="true" lines="full">
+    <ion-item>
+      <ion-select labelPlacement="stacked" [label]="'complementarios_seguro' | t" interface="action-sheet" [cancelText]="'cancelar' | t"
+        [value]="valores().seguroMedico" (ionChange)="cambiar('seguroMedico', $event.detail.value)" [placeholder]="'sin_dato' | t">
+        @for (s of seguros; track s) {
+          <ion-select-option [value]="s">{{ s }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-input labelPlacement="stacked" [label]="'complementarios_poliza' | t" [maxlength]="40"
+        [value]="valores().numeroPoliza" (ionChange)="cambiar('numeroPoliza', $event.detail.value)"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input labelPlacement="stacked" [label]="'complementarios_medico_cabecera' | t" [maxlength]="120"
+        [value]="valores().medicoCabecera" (ionChange)="cambiar('medicoCabecera', $event.detail.value)"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <div class="titulo-seccion">{{ 'complementarios_estilo_vida' | t }}</div>
+  <ion-list [inset]="true" lines="full">
+    <ion-item>
+      <ion-select labelPlacement="stacked" [label]="'complementarios_tabaquismo' | t" interface="action-sheet" [cancelText]="'cancelar' | t"
+        [value]="valores().tabaquismo" (ionChange)="cambiar('tabaquismo', $event.detail.value)" [placeholder]="'sin_dato' | t">
+        @for (o of tabaquismo; track o) {
+          <ion-select-option [value]="o">{{ 'tabaquismo_' + o | t }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-select labelPlacement="stacked" [label]="'complementarios_alcohol' | t" interface="action-sheet" [cancelText]="'cancelar' | t"
+        [value]="valores().alcohol" (ionChange)="cambiar('alcohol', $event.detail.value)" [placeholder]="'sin_dato' | t">
+        @for (o of alcohol; track o) {
+          <ion-select-option [value]="o">{{ 'alcohol_' + o | t }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-select labelPlacement="stacked" [label]="'complementarios_actividad' | t" interface="action-sheet" [cancelText]="'cancelar' | t"
+        [value]="valores().actividadFisica" (ionChange)="cambiar('actividadFisica', $event.detail.value)" [placeholder]="'sin_dato' | t">
+        @for (o of actividad; track o) {
+          <ion-select-option [value]="o">{{ 'actividad_' + o | t }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+  <div class="titulo-seccion">{{ 'complementarios_otros' | t }}</div>
+  <ion-list [inset]="true" lines="full">
+    <ion-item>
+      <ion-input labelPlacement="stacked" [label]="'complementarios_discapacidad' | t" [maxlength]="255"
+        [value]="valores().discapacidad" (ionChange)="cambiar('discapacidad', $event.detail.value)"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-textarea labelPlacement="stacked" [label]="'complementarios_notas' | t" [autoGrow]="true" [maxlength]="1000"
+        [value]="valores().notasMedicas" (ionChange)="cambiar('notasMedicas', $event.detail.value)"></ion-textarea>
+    </ion-item>
+  </ion-list>
+</ion-content>

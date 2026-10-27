@@ -69,6 +69,97 @@
       </div>
     </section>
 
+    <!-- Datos médicos generales: lo que el paciente configura de su expediente -->
+    @if (exp.datosComplementarios; as dc) {
+      <div class="titulo-seccion">
+        <span>{{ 'complementarios_titulo' | t }}</span>
+        @if (vm.esPropio()) {
+          <ion-button fill="clear" size="small" (click)="editarComplementarios()">{{ 'editar' | t }}</ion-button>
+        }
+      </div>
+      <ion-list [inset]="true" lines="full">
+        <ion-item>
+          <ion-icon slot="start" name="id-card-outline" color="tertiary" aria-hidden="true"></ion-icon>
+          <ion-label class="ion-text-wrap">
+            <p>{{ 'complementarios_seguro' | t }}</p>
+            <h3>{{ dc.seguroMedico ?? ('sin_dato' | t) }}{{ dc.numeroPoliza ? ' · ' + dc.numeroPoliza : '' }}</h3>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon slot="start" name="person-circle-outline" color="tertiary" aria-hidden="true"></ion-icon>
+          <ion-label class="ion-text-wrap">
+            <p>{{ 'complementarios_medico_cabecera' | t }}</p>
+            <h3>{{ dc.medicoCabecera ?? ('sin_dato' | t) }}</h3>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon slot="start" name="fitness-outline" color="success" aria-hidden="true"></ion-icon>
+          <ion-label class="ion-text-wrap">
+            <p>{{ 'complementarios_estilo_vida' | t }}</p>
+            <h3 class="habitos">
+              <span>{{ 'complementarios_tabaquismo' | t }}: {{ dc.tabaquismo ? ('tabaquismo_' + dc.tabaquismo | t) : ('sin_dato' | t) }}</span>
+              <span>{{ 'complementarios_alcohol' | t }}: {{ dc.alcohol ? ('alcohol_' + dc.alcohol | t) : ('sin_dato' | t) }}</span>
+              <span>{{ 'complementarios_actividad' | t }}: {{ dc.actividadFisica ? ('actividad_' + dc.actividadFisica | t) : ('sin_dato' | t) }}</span>
+            </h3>
+          </ion-label>
+        </ion-item>
+        @if (dc.discapacidad) {
+          <ion-item>
+            <ion-icon slot="start" name="accessibility-outline" color="warning" aria-hidden="true"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>{{ 'complementarios_discapacidad' | t }}</p>
+              <h3>{{ dc.discapacidad }}</h3>
+            </ion-label>
+          </ion-item>
+        }
+        @if (dc.notasMedicas) {
+          <ion-item>
+            <ion-icon slot="start" name="document-text-outline" color="medium" aria-hidden="true"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>{{ 'complementarios_notas' | t }}</p>
+              <h3>{{ dc.notasMedicas }}</h3>
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+    }
+
+    <!-- Documentos: fotos, escaneos y PDF con su EXIF -->
+    <div class="titulo-seccion">
+      <span>{{ 'documentos_titulo' | t }}</span>
+      @if (vm.puedeEscribir()) {
+        <ion-button fill="clear" size="small" [disabled]="vm.subiendo()" (click)="agregarDocumento()">{{ 'agregar' | t }}</ion-button>
+      }
+    </div>
+    <ion-list [inset]="true" lines="full">
+      @if (vm.subiendo()) {
+        <ion-item>
+          <ion-spinner slot="start" name="crescent"></ion-spinner>
+          <ion-label>{{ 'documento_subiendo' | t }}</ion-label>
+        </ion-item>
+      }
+      @for (doc of vm.documentos(); track doc.id) {
+        <ion-item [button]="true" [detail]="true" (click)="abrirDocumento(doc)">
+          <ion-icon slot="start" [name]="iconoCategoria[doc.categoria]" color="secondary" aria-hidden="true"></ion-icon>
+          <ion-label>
+            <h3>{{ doc.titulo }}</h3>
+            <p>
+              {{ 'documento_categoria_' + doc.categoria | t }}
+              · {{ (doc.fechaDocumento ?? doc.fechaSubida) | fecha: 'fecha' }}
+              · {{ tamano(doc.archivo.bytes) }}
+            </p>
+          </ion-label>
+          @if (doc.metadatos) {
+            <ion-badge slot="end" color="tertiary">EXIF</ion-badge>
+          }
+        </ion-item>
+      } @empty {
+        @if (!vm.subiendo()) {
+          <ion-item><ion-label class="texto-secundario ion-text-wrap">{{ 'documentos_vacio' | t }}</ion-label></ion-item>
+        }
+      }
+    </ion-list>
+
     <!-- Perfil de emergencia -->
     <div class="titulo-seccion">
       <span>{{ 'expediente_alergias' | t }}</span>
@@ -290,6 +381,60 @@
           @if (vm.puedeEscribir()) {
             <ion-button slot="end" fill="clear" color="medium" (click)="eliminar('cirugias', cirugia.id, cirugia.procedimiento)"
               [attr.aria-label]="'eliminar_elemento' | t: { elemento: cirugia.procedimiento }">
+              <ion-icon slot="icon-only" name="trash-outline" aria-hidden="true"></ion-icon>
+            </ion-button>
+          }
+        </ion-item>
+      } @empty {
+        <ion-item><ion-label class="texto-secundario">{{ 'sin_registros' | t }}</ion-label></ion-item>
+      }
+    </ion-list>
+
+    <div class="titulo-seccion">
+      <span>{{ 'expediente_vacunas' | t }}</span>
+      @if (vm.puedeEscribir()) {
+        <ion-button fill="clear" size="small" (click)="agregar('vacunas')">{{ 'agregar' | t }}</ion-button>
+      }
+    </div>
+    <ion-list [inset]="true" lines="full">
+      @for (vacuna of exp.historialClinico.vacunas; track vacuna.id) {
+        <ion-item>
+          <ion-icon slot="start" name="bandage-outline" color="success" aria-hidden="true"></ion-icon>
+          <ion-label>
+            <h3>{{ vacuna.vacuna }}</h3>
+            <p>
+              {{ vacuna.fecha | fecha: 'fecha' }}{{ vacuna.dosis ? ' · ' + vacuna.dosis : '' }}{{ vacuna.lote ? ' · ' + ('vacuna_lote' | t) + ' ' + vacuna.lote : '' }}
+            </p>
+          </ion-label>
+          @if (vm.puedeEscribir()) {
+            <ion-button slot="end" fill="clear" color="medium" (click)="eliminar('vacunas', vacuna.id, vacuna.vacuna)"
+              [attr.aria-label]="'eliminar_elemento' | t: { elemento: vacuna.vacuna }">
+              <ion-icon slot="icon-only" name="trash-outline" aria-hidden="true"></ion-icon>
+            </ion-button>
+          }
+        </ion-item>
+      } @empty {
+        <ion-item><ion-label class="texto-secundario">{{ 'sin_registros' | t }}</ion-label></ion-item>
+      }
+    </ion-list>
+
+    <div class="titulo-seccion">
+      <span>{{ 'expediente_antecedentes' | t }}</span>
+      @if (vm.puedeEscribir()) {
+        <ion-button fill="clear" size="small" (click)="agregar('antecedentes')">{{ 'agregar' | t }}</ion-button>
+      }
+    </div>
+    <ion-list [inset]="true" lines="full">
+      @for (ant of exp.historialClinico.antecedentesFamiliares; track ant.id) {
+        <ion-item>
+          <ion-icon slot="start" name="people-circle-outline" color="warning" aria-hidden="true"></ion-icon>
+          <ion-label class="ion-text-wrap">
+            <h3>{{ ant.padecimiento }}</h3>
+            <p>{{ ant.parentesco }}{{ ant.notas ? ' · ' + ant.notas : '' }}</p>
+          </ion-label>
+          @if (vm.puedeEscribir()) {
+            <ion-button slot="end" fill="clear" color="medium" (click)="eliminar('antecedentes', ant.id, ant.padecimiento)"
+              [attr.aria-label]="'eliminar_elemento' | t: { elemento: ant.padecimiento }">
               <ion-icon slot="icon-only" name="trash-outline" aria-hidden="true"></ion-icon>
             </ion-button>
           }

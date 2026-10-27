@@ -1,0 +1,8 @@
+# Sólo lo que usa deploy/Dockerfile: la API, la web compilada y deploy/.
+*
+!api
+!www
+!deploy
+api/tests
+api/almacenamiento/chat/*
+deploy/.env
